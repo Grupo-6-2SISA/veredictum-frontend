@@ -2,52 +2,48 @@ import { Link } from 'react-router-dom';
 import "./Cadastro.css";
 import logo from './../../assets/svg/logo_veredictum.svg';
 import voltarIcon from './../../assets/img/voltar-icon.png';
-import imgCadastro from './../../assets/img/img-cadastro.png';
 
 function Cadastro() {
- return (
-    <>
-      <div id="alert-container"></div>
-
-      <div className="cadastro-image">
-        <div className="image-text">
-          <img src={imgCadastro} alt="" />
-          <span className="subtitle-image">Já tem uma conta?</span>
-          <span className="subtitle-image">Faça login aqui</span>
-          <a href="./login.html" className="login-btn">Login</a>
+  return (
+    <div className="cadastro-container">
+      <div className="left-side">
+        <div className="login-content">
+          <h2>Já tem uma conta?</h2>
+          <h3>Faça login aqui</h3>
+          <Link to="/login" className="login-btn">Login</Link>
         </div>
       </div>
 
-      <div className="cadastro-info">
-        <div className="voltar-icon">
-          <a href="./home.html">
-            <img src={voltarIcon} alt="Icone de voltar" />
-          </a>
+      <div className="right-side">
+        <div className="back-button">
+          <Link to="/">
+            <img src={voltarIcon} alt="Voltar" />
+          </Link>
         </div>
 
-        <div className="logo-row">
-          <img src={logo} alt="Veredictum" />
-          <span className="logo-title">Veredictum</span>
-          <p className="subtitle-logo">Gestão do Escritório de Advocacia</p>
+        <div className="logo-section">
+          <img src={logo} alt="Veredictum" className="logo" />
+          <h1>Veredictum</h1>
+          <p>Gestão do Escritório de Advocacia</p>
         </div>
 
-        <form id="cadastro-form" className="login-form" noValidate>
-          <div className="login-form-row">
-            <label htmlFor="nome">Nome</label>
-            <input type="text" id="nome" placeholder="Nome" required />
+        <form className="register-form">
+          <div className="form-field">
+            <label>Nome</label>
+            <input type="text" placeholder="Nome" />
           </div>
-          <div className="login-form-row">
-            <label htmlFor="email">E-mail</label>
-            <input type="email" id="email" placeholder="E-mail" required />
+          <div className="form-field">
+            <label>E-mail</label>
+            <input type="email" placeholder="E-mail" />
           </div>
-          <div className="login-form-row">
-            <label htmlFor="senha">Senha</label>
-            <input type="password" id="senha" placeholder="Senha" required />
+          <div className="form-field">
+            <label>Senha</label>
+            <input type="password" placeholder="Senha" />
           </div>
-          <button className="cadastro-btn" type="submit">Cadastrar</button>
+          <button type="submit" className="register-button"  onClick={() =>navigate ('/VisaoGeral')}>Cadastrar</button>
         </form>
       </div>
-    </>
+    </div>
   );
 }
 

@@ -1,0 +1,33 @@
+/* Estilo do Card (Bloco Branco) */
+.card-box {
+    background-color: #fff;
+    border-radius: 12px;
+    padding: 25px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05); /* Sombra suave */
+    display: flex;
+    flex-direction: column;
+}
+
+.card-header {
+    display: flex;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.card-icon {
+    font-size: 1.5em;
+    margin-right: 10px;
+}
+
+.card-header h2 {
+    font-size: 1.1em;
+    font-weight: 700;
+    color: #444;
+}
+
+/* Wrapper para controlar a altura e a barra de rolagem (scroll) */
+.card-content-wrapper {
+    max-height: 250px; /* Limite a altura como no design */
+    overflow-y: auto; /* Adiciona a barra de rolagem */
+    padding-right: 10px; /* Espaço para a barra de rolagem não colidir com o conteúdo */
+}

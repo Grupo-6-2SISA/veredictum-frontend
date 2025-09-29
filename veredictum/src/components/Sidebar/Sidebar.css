@@ -1,0 +1,212 @@
+/* Definições de variáveis de cor (Mantenha isso no topo) */
+:root {
+    --dark-black: #2a2a2a; /* Cor escura para o menu */
+    --white-normal: #fff;
+    --border-color: #555;
+    --accent-color: #007bff; /* Cor de destaque */
+    --darkness-black: #1a1a1a; /* Preto mais escuro para texto ativo */
+    --text-color: #fff;
+}
+
+/* -------------------------------------------------------------------------- */
+/* BASE DO SIDEBAR - SUBSTITUI O SELETOR 'ASIDE' COM 'POSITION: FIXED'         */
+/* -------------------------------------------------------------------------- */
+.sidebar {
+    /* Mantido 'position: fixed' para que funcione como barra lateral */
+    position: fixed; 
+    width: 8%; /* Nova largura inicial definida: 8% */
+    height: 100vh;
+    background-color: var(--dark-black);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-around;
+    padding: 0;
+    margin: 0; /* Removido o margin-left que causava desalinhamento com 'fixed' */
+    border-right: 1px solid var(--border-color);
+    box-shadow: 1px 4px 6px rgba(0, 0, 0, 0.384);
+    transition: width 0.2s ease-out;
+    overflow: hidden;
+    z-index: 1000;
+}
+
+/* -------------------------------------------------------------------------- */
+/* CABEÇALHO (LOGO E NOME)                                                    */
+/* -------------------------------------------------------------------------- */
+.sidebar-header {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    text-align: center;
+    padding: 10px 0;
+    margin-bottom: 10%;
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--white-normal);
+}
+
+.logo {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.menu-text-logo {
+    display: none;
+    margin-left: 5px;
+    font-size: 20px;
+    font-weight: 600;
+    color: var(--white-normal);
+    transition: opacity 0.3s ease;
+}
+
+.sidebar-header .logo img {
+    height: 40px;
+    width: auto;
+    object-fit: contain;
+    margin-bottom: 10px;
+    /* Removido 'margin-right: 30px' que estava desalinhando o logo na versão minimizada */
+}
+
+.sidebar-header .user-name {
+    display: block;
+    font-weight: 600;
+    line-height: 1.2;
+    padding: 0 10px;
+}
+
+/* -------------------------------------------------------------------------- */
+/* NAVEGAÇÃO (LINKS)                                                          */
+/* -------------------------------------------------------------------------- */
+.sidebar-nav {
+    list-style: none;
+    width: 100%;
+    flex-grow: 0;
+}
+
+.sidebar-nav ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.sidebar-nav a {
+    display: flex;
+    justify-content: center; /* Centraliza ícones na versão minimizada */
+    align-items: center;
+    width: 100%;
+    height: 50px;
+    color: var(--text-color);
+    text-decoration: none;
+    font-size: 24px;
+    transition: all 0.3s ease;
+}
+
+.menu-text {
+    display: none;
+    margin-left: 10px;
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--white-normal);
+    transition: opacity 0.3s ease;
+}
+
+.menu-text-active {
+    display: none;
+    margin-left: 10px;
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--darkness-black);
+    transition: opacity 0.3s ease;
+}
+
+
+/* Estilo para o item de menu ativo */
+.sidebar-nav a.active {
+    background-color: var(--white-normal);
+    color: var(--accent-color);
+    border-left: 3px solid var(--accent-color);
+}
+
+/* Estilos de hover para links de navegação */
+.sidebar-nav a:hover {
+    border: 2px solid var(--white-normal);
+    border-radius: 10px;
+}
+
+/* -------------------------------------------------------------------------- */
+/* RODAPÉ (FOOTER)                                                            */
+/* -------------------------------------------------------------------------- */
+.sidebar-footer {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: auto;
+    padding-top: 20px;
+    margin-bottom: 5%;
+    height: 60px;
+}
+
+.sidebar-footer a {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 50px;
+    color: var(--text-color);
+    text-decoration: none;
+    font-size: 24px;
+    transition: all 0.3s ease;
+    gap: 10px;
+}
+
+/* Estilos de hover para link do rodapé */
+.sidebar-footer a:hover {
+    border: 2px solid var(--white-normal);
+    border-radius: 10px;
+}
+
+
+/* -------------------------------------------------------------------------- */
+/* HOVER: SIDEBAR EXPANDIDA (CONSOLIDADO E AJUSTADO)                          */
+/* -------------------------------------------------------------------------- */
+.sidebar:hover {
+    width: 17%; /* Largura expandida */
+    margin-right: 30px;
+}
+
+/* 1. Exibir Textos e LogoText */
+.sidebar:hover .menu-text,
+.sidebar:hover .menu-text-active,
+.sidebar:hover .menu-text-logo {
+    display: inline; 
+    opacity: 1;
+}
+
+/* 2. Alinhar Ícones à Esquerda */
+.sidebar:hover .sidebar-nav a,
+.sidebar:hover .sidebar-footer a {
+    justify-content: flex-start;
+    padding-left: 18px; /* Ajuste para espaçamento consistente */
+}
+
+/* 3. Ajuste do Texto "Sair" no Rodapé */
+.sidebar:hover .sidebar-footer {
+    justify-content: flex-start;
+    padding-left: 10px;
+}
+
+.sidebar:hover .sidebar-footer a {
+    /* Garante que o ícone esteja alinhado com os outros */
+    justify-content: flex-start;
+    padding-left: 0; /* O padding de alinhamento já está no .sidebar-footer */
+    width: auto; /* Permite que o link não ocupe 100% da largura, deixando espaço para o span */
+}
+
+.sidebar:hover .sidebar-footer span {
+    /* Oculta o span do rodapé na versão minimizada */
+    display: inline; 
+    align-items: center;
+    margin-left: 10px; /* Espaçamento entre o ícone (agora em 'a') e o texto */
+}

@@ -1,10 +1,12 @@
-import { Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import './Home.css';
 import efeito from './../../assets/svg/efeito.svg';
 import logo from './../../assets/svg/logo_veredictum.svg';
 import imgHome from './../../assets/img/img-home.jpeg'; 
 
 export default function Home() {
+  const navigate = useNavigate();
+
   return (
     <div className="home-card">
       <div className="home-info">
@@ -23,8 +25,8 @@ export default function Home() {
         </div>
 
         <div className="button-row">
-          <a href="/login"><button className="login-btn">Login</button></a>
-          <a href="./pages/Cadastro/Cadastro.jsx"><button className="cadastro-btn">Cadastre-se</button></a>
+          <a ><button onClick={() =>navigate ('/login')} className="btn-login">Login</button></a>
+          <a><button onClick={() =>navigate ('/cadastro')} className="btn-cadastro">Cadastre-se</button></a>
         </div>
       </div>
 
