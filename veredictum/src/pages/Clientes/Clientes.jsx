@@ -27,8 +27,9 @@ const initialClients = [
       "localidade": "Cidade Exemplo 4",
       "numero": "451",
       "inscricaoEstadual": null,
-      "proBono": false,
-      "status": "Inativo",
+            "proBono": false,
+            "status": "Inativo",
+            "ativo": false,
       "dataInicio": "2024-02-02",
       "indicacao": "Marketing",
       "descricao": "Contrato de serviço"
@@ -49,8 +50,9 @@ const initialClients = [
       "localidade": "Cidade Exemplo 2",
       "numero": "456",
       "inscricaoEstadual": null,
-      "proBono": false,
-      "status": "Ativo",
+            "proBono": false,
+            "status": "Ativo",
+            "ativo": true,
       "dataInicio": "2024-02-02",
       "indicacao": "Marketing",
       "descricao": "Contrato de serviço"
@@ -146,6 +148,7 @@ function Clientes() {
             dataInicio: formData.get('dataInicio'),
             indicacao: formData.get('indicacao'),
             descricao: formData.get('descricao'),
+
         };
         setClients([...clients, newClient]);
         handleCloseAdd();
@@ -158,27 +161,26 @@ function Clientes() {
             if (client.id === selectedClient.id) {
                 return {
                     ...client,
-                    id: Date.now(),
-            nome: formData.get('nome'),
-            email: formData.get('email'),
-            telefone: formData.get('telefone'),
-            ativo: formData.get('status') !== 'Inativo',
-            status: formData.get('status') || 'Ativo',
-            dataNascimento: formData.get('dataNascimento'),
-            rg: formData.get('rg'),
-            cpf: formData.get('cpf'),
-            cnpj: formData.get('cnpj'),
-            cep: formData.get('cep'),
-            logradouro: formData.get('logradouro'),
-            bairro: formData.get('bairro'),
-            complemento: formData.get('complemento'),
-            localidade: formData.get('localidade'),
-            numero: formData.get('numero'),
-            inscricaoEstadual: formData.get('inscricaoEstadual'),
-            proBono: formData.get('proBono') === 'true',
-            dataInicio: formData.get('dataInicio'),
-            indicacao: formData.get('indicacao'),
-            descricao: formData.get('descricao'),
+                    nome: formData.get('nome'),
+                    email: formData.get('email'),
+                    telefone: formData.get('telefone'),
+                    ativo: formData.get('status') !== 'Inativo',
+                    status: formData.get('status') || 'Ativo',
+                    dataNascimento: formData.get('dataNascimento'),
+                    rg: formData.get('rg'),
+                    cpf: formData.get('cpf'),
+                    cnpj: formData.get('cnpj'),
+                    cep: formData.get('cep'),
+                    logradouro: formData.get('logradouro'),
+                    bairro: formData.get('bairro'),
+                    complemento: formData.get('complemento'),
+                    localidade: formData.get('localidade'),
+                    numero: formData.get('numero'),
+                    inscricaoEstadual: formData.get('inscricaoEstadual'),
+                    proBono: formData.get('proBono') === 'true',
+                    dataInicio: formData.get('dataInicio'),
+                    indicacao: formData.get('indicacao'),
+                    descricao: formData.get('descricao'),
                 };
             }
             return client;
@@ -217,26 +219,34 @@ function Clientes() {
 
             <main className="main-content">
                 <div className="header-top">
+                
                     <div className="head-description">
                         <h1>Gestão de Clientes</h1>
+                         <Button className="btn-new-appointment" onClick={handleOpenAdd}>
+                        <img src={btnIcon} alt="Adicionar" />
+                        Cadastrar Cliente
+                    </Button>
                         <p className="description">
                             Acesse, altere e mantenha as informações dos clientes
                             <br /> sempre atualizadas.
                         </p>
+                       
                     </div>
 
-                    <Button className="btn-new-appointment" onClick={handleOpenAdd}>
-                        <img src={btnIcon} alt="Adicionar" />
-                        Cadastrar Cliente
-                    </Button>
+                
                 </div>
 
                 <section className="client-management-section">
                     <Card
                         icone={<img src={clientsIcon} alt="Clientes" />}
                         className="client-table-card"
+                        variant="clientes"
                     >
-                        <Listagem dados={tableData} colunas={columns} />
+                        <Listagem
+                            dados={tableData}
+                            colunas={columns}
+                            variant="clientes"
+                        />
                     </Card>
                 </section>
 

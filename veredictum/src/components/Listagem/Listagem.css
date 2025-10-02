@@ -13,8 +13,29 @@
     padding-bottom: 5px;
 }
 
+#clientes-listagem-header {
+    display: grid;
+    font-weight: 600;
+    color: var(--normal-black);
+    font-size: 0.9em;
+    margin-bottom: 5px;
+    font-weight: bold;
+    padding-bottom: 5px;
+}
+
 /* Estilo das linhas de dados */
 .listagem-row {
+    display: grid;
+    align-items: center;
+    padding: 12px 15px;
+    margin-bottom: 10px;
+    background-color: #fcfcfc;
+    border-radius: 8px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08); /* Sombra sutil na linha, como no design */
+    border: 1px solid #eee;
+}
+
+#clientes-listagem-row {
     display: grid;
     align-items: center;
     padding: 12px 15px;
@@ -46,6 +67,10 @@
     grid-template-columns: 3fr 2fr 1fr;
 }
 
+#clientes-listagem-header, #clientes-listagem-row {
+    /* Layout para Clientes: 4 colunas, 3fr (Nome), 1fr (CPF), 1.5fr (Telefone), 1fr (Status) */
+    grid-template-columns: 3fr 1fr 1.5fr 1fr;
+}
 /* Card 2: Prazos de Notas Fiscais (Número, Data Limite) - 2 colunas */
 /* OBS: Esta classe é opcional, mas garante que o layout funcione se houver 
    variações nas chaves ou ordem dos dados. É mais robusto definir a grade
@@ -71,4 +96,4 @@
 .cards-grid > div:nth-child(4) .listagem-header,
 .cards-grid > div:nth-child(4) .listagem-row {
     grid-template-columns: 3fr 2fr; /* 2 colunas (tamanho longo, tamanho curto) */
-}
+} 

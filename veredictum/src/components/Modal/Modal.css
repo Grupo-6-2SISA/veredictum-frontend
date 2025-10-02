@@ -260,7 +260,7 @@
 #new-appointment-modal-add-client{
     position: fixed;
     top: 50%;
-    left: 53%;
+    left: 54%;
     transform: translate(-50%, -50%);
     background-color: var(--light-black);
     border-radius: 12px;
@@ -274,7 +274,7 @@
 #new-appointment-modal-edit-client{
     position: fixed;
     top: 50%;
-    left: 53%;
+    left: 54%;
     transform: translate(-50%, -50%);
     background-color: var(--light-black);
     border-radius: 12px;
@@ -287,7 +287,7 @@
 #new-appointment-modal-view-client{
     position: fixed;
     top: 50%;
-    left: 53%;
+    left: 54%;
     transform: translate(-50%, -50%);
     background-color: var(--light-black);
     border-radius: 12px;
