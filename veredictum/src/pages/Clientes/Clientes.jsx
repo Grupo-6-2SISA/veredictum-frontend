@@ -8,6 +8,7 @@ import clientsIcon from '../../assets/svg/clientes.svg';
 import Card from '../../components/Card/Card';
 import Modal from '../../components/Modal/Modal';
 import Button from '../../components/Button/Button';
+import Toggle from '../../components/Toggle/Toggle';
 
 const initialClients = [
     {
@@ -203,14 +204,10 @@ function Clientes() {
             </Button>
         ),
         status: (
-            <label className="toggle-switch">
-                <input
-                    type="checkbox"
-                    checked={client.ativo}
-                    onChange={() => handleOpenDelete(client)}
-                />
-                <span className="slider" />
-            </label>
+            <Toggle
+                checked={client.ativo}
+                onChange={() => handleOpenDelete(client)}
+            />
         ),
     }));
 
