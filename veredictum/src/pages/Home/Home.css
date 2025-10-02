@@ -1,4 +1,10 @@
-body {
+@import "tailwindcss";
+
+
+
+
+
+/* body {
     min-height: 100vh;
     background: #222;
     display: flex;
@@ -164,7 +170,7 @@ body {
         height: auto;
         margin-right: -20px;
     }
-}
+} */
 
 
-
+ 
