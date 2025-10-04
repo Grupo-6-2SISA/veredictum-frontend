@@ -1,0 +1,101 @@
+/* Container principal da página Notas Fiscais */
+.notas-fiscais-container {
+    display: flex;
+    min-height: 100vh;
+    height: 100vh;
+    background-color: #f0f0f0;
+    width: 100vw;
+    overflow: hidden;
+    position: fixed;
+    top: 0;
+    left: 0;
+}
+
+/* Conteúdo principal (à direita do sidebar) */
+.notas-fiscais-content {
+    flex: 1;
+    margin-left: 6%; /* Compensa a largura fixa do sidebar */
+    padding: 20px;
+    transition: margin-left 0.2s ease-out;
+    width: calc(100vw - 6%);
+    height: 100vh;
+    overflow-y: auto;
+    box-sizing: border-box;
+}
+
+/* Cabeçalho da página */
+.page-header {
+    margin-bottom: 30px;
+}
+
+.page-header h1 {
+    color: var(--dark-black);
+    font-size: 32px;
+    font-weight: 700;
+    margin: 0;
+}
+
+/* Container para os cards */
+.cards-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    justify-content: center;
+    width: 100%;
+    height: calc(100vh - 120px); /* Altura total menos header e padding */
+}
+
+/* Ajuste do card para ocupar uma largura maior */
+.cards-container .card-box {
+    width: 85%;
+    max-width: none;
+    min-width: 600px;
+    height: fit-content;
+    max-height: calc(100vh - 150px);
+}
+
+/* Responsividade */
+@media (max-width: 1200px) {
+    .cards-container .card-box {
+        width: 90%;
+        min-width: 500px;
+    }
+    
+    .page-header h1 {
+        font-size: 28px;
+    }
+}
+
+@media (max-width: 768px) {
+    .notas-fiscais-container {
+        position: relative;
+        height: auto;
+        min-height: 100vh;
+    }
+    
+    .notas-fiscais-content {
+        margin-left: 0;
+        padding: 15px;
+        width: 100vw;
+        height: auto;
+        position: relative;
+    }
+    
+    .cards-container {
+        height: auto;
+    }
+    
+    .cards-container .card-box {
+        width: 95%;
+        min-width: 300px;
+        max-height: none;
+    }
+    
+    .page-header h1 {
+        font-size: 24px;
+    }
+    
+    .page-header {
+        margin-bottom: 20px;
+    }
+}
