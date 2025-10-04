@@ -24,15 +24,61 @@
 }
 
 /* Cabeçalho da página */
-.page-header {
+.header-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
     margin-bottom: 30px;
+    padding: 0 20px;
 }
 
-.page-header h1 {
+.head-description {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: center;
+}
+
+.div_topo h1 {
     color: var(--dark-black);
     font-size: 32px;
     font-weight: 700;
     margin: 0;
+}
+
+.head-description .description {
+    font-size: 18px;
+    font-weight: 400;
+    color: var(--dark-black);
+    margin: 8px 0 0 0;
+    max-width: 500px;
+}
+
+/* Botão de adicionar */
+.btn-new-appointment {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background-color: var(--darkness-black);
+    color: var(--white-normal);
+    border: none;
+    padding: 12px 20px;
+    border-radius: 8px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    white-space: nowrap;
+}
+
+.btn-new-appointment:hover {
+    background-color: var(--dark-black);
+    transform: translateY(-2px);
+}
+
+.btn-new-appointment img {
+    width: 20px;
+    height: 20px;
 }
 
 /* Container para os cards */
@@ -61,7 +107,7 @@
         min-width: 500px;
     }
     
-    .page-header h1 {
+    .div_topo h1 {
         font-size: 28px;
     }
 }
@@ -91,11 +137,179 @@
         max-height: none;
     }
     
-    .page-header h1 {
+    .div_topo h1 {
         font-size: 24px;
     }
     
-    .page-header {
-        margin-bottom: 20px;
+    .header-top {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 20px;
+        padding: 0;
     }
+}
+
+/* Modal */
+.modal {
+    position: fixed;
+    z-index: 9999;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.4);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.modal-content {
+    background: var(--white-normal);
+    border-radius: 12px;
+    padding: 0;
+    width: 90%;
+    max-width: 800px;
+    max-height: 90vh;
+    overflow-y: auto;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+}
+
+.modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px 24px;
+    border-bottom: 1px solid #eee;
+    background-color: var(--darkness-black);
+    border-radius: 12px 12px 0 0;
+}
+
+.modal-header h2 {
+    margin: 0;
+    color: var(--white-normal);
+    font-size: 24px;
+    font-weight: 700;
+}
+
+.modal-close-btn {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 8px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+    width: 40px;
+    height: 40px;
+}
+
+.modal-close-btn:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+    transform: scale(1.1);
+}
+
+.modal-close-btn img {
+    width: 24px;
+    height: 24px;
+    filter: invert(1); /* Torna o ícone branco */
+}
+
+/* Alternativa: Botão X textual */
+.modal-close-btn-text {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 8px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+    width: 40px;
+    height: 40px;
+    font-size: 24px;
+    font-weight: bold;
+    color: #666;
+}
+
+.modal-close-btn-text:hover {
+    background-color: #f5f5f5;
+    color: #333;
+    transform: scale(1.1);
+}
+
+/* Overlay do modal para fechar ao clicar fora */
+.modal-overlay {
+    position: fixed;
+    z-index: 9999;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.4);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Formulário */
+.appointment-form {
+    padding: 24px;
+}
+
+.form-row {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+    margin-bottom: 20px;
+}
+
+.form-column {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.form-group-notas {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.form-group-notas label {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--dark-black);
+}
+
+.form-group-notas input,
+.form-group-notas select {
+    padding: 12px;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    font-size: 14px;
+    transition: border-color 0.3s ease;
+}
+
+.form-group-notas input:focus,
+.form-group-notas select:focus {
+    outline: none;
+    border-color: var(--primary-color);
+}
+
+.form-footer-notas {
+    display: flex;
+    justify-content: flex-end;
+    padding-top: 20px;
+    border-top: 1px solid #eee;
+}
+
+.form-footer-notas .btn-new-appointment {
+    background-color: var(--darkness-black);
+}
+
+.form-footer-notas .btn-new-appointment:hover {
+    background-color: var(--dark-black);
 }
