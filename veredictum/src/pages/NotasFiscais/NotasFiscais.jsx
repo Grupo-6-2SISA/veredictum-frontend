@@ -5,8 +5,10 @@ import Sidebar from '../../components/Sidebar/Sidebar';
 import Card from '../../components/Card/Card';
 
 const NotasFiscais = () => {
-  // Estado para controlar o modal
+  // Estado para controlar os modais
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+  const [editingNota, setEditingNota] = useState(null);
   
   // Dados de exemplo para notas fiscais
   const notasFiscaisData = [
@@ -68,9 +70,18 @@ const NotasFiscais = () => {
     { key: 'informacoes', titulo: 'Informações' }
   ];
 
-  // Funções para controlar o modal
+  // Funções para controlar os modais
   const openModal = () => setIsModalOpen(true);
   const closeModal = () => setIsModalOpen(false);
+  
+  const openEditModal = (nota) => {
+    setEditingNota(nota);
+    setIsEditModalOpen(true);
+  };
+  const closeEditModal = () => {
+    setIsEditModalOpen(false);
+    setEditingNota(null);
+  };
 
   // Função para fechar modal clicando fora
   const handleOverlayClick = (e) => {
@@ -79,10 +90,16 @@ const NotasFiscais = () => {
     }
   };
 
+  // Função para fechar modal de edição clicando fora
+  const handleEditOverlayClick = (e) => {
+    if (e.target === e.currentTarget) {
+      closeEditModal();
+    }
+  };
+
   // Função para editar nota fiscal
   const handleEdit = (nota) => {
-    console.log('Editar nota:', nota);
-    // Aqui você implementaria a lógica de edição
+    openEditModal(nota);
   };
 
   // Função para excluir nota fiscal
@@ -102,6 +119,13 @@ const NotasFiscais = () => {
     e.preventDefault();
     // Aqui você adicionaria a lógica para salvar
     closeModal();
+  };
+
+  // Função para salvar edições da nota fiscal
+  const handleEditSubmit = (e) => {
+    e.preventDefault();
+    // Aqui você adicionaria a lógica para salvar edições
+    closeEditModal();
   };
 
   return (
@@ -220,6 +244,101 @@ const NotasFiscais = () => {
                 </div>
                 <div className="form-footer-notas">
                   <button type="submit" className="btn-new-appointment">Salvar</button>
+                </div>
+              </form>
+            </div>
+          </div>
+        )}
+
+        {/* Modal para editar nota fiscal */}
+        {isEditModalOpen && editingNota && (
+          <div className="modal" onClick={handleEditOverlayClick}>
+            <div className="modal-content">
+              <div className="modal-header">
+                <h2>Editar Nota Fiscal</h2>
+                <button className="modal-close-btn" onClick={closeEditModal} type="button" title="Fechar">
+                  <img src="src/assets/svg/close.svg" alt="Fechar" />
+                </button>
+              </div>
+              <form className="appointment-form" onSubmit={handleEditSubmit}>
+                <div className="form-row">
+                  <div className="form-column">
+                    <div className="form-group-notas">
+                      <label htmlFor="numeroNotaEdit">Número da Nota</label>
+                      <input 
+                        type="text" 
+                        id="numeroNotaEdit" 
+                        name="numeroNota" 
+                        defaultValue={editingNota.numero}
+                        required 
+                      />
+                    </div>
+                    <div className="form-group-notas">
+                      <label htmlFor="dataVencimentoEdit">Data de Vencimento</label>
+                      <input 
+                        type="date" 
+                        id="dataVencimentoEdit" 
+                        name="dataVencimento" 
+                        defaultValue={editingNota.dataVencimento?.split('/').reverse().join('-')}
+                        required 
+                      />
+                    </div>
+                    <div className="form-group-notas">
+                      <label htmlFor="emitidaEdit">Emitida</label>
+                      <select 
+                        id="emitidaEdit" 
+                        name="emitida" 
+                        defaultValue={editingNota.emitida ? 'true' : 'false'}
+                        required
+                      >
+                        <option value="true">Sim</option>
+                        <option value="false">Não</option>
+                      </select>
+                    </div>
+                    <div className="form-group-notas">
+                      <label htmlFor="clienteEdit">Cliente</label>
+                      <input 
+                        type="text" 
+                        id="clienteEdit" 
+                        name="cliente" 
+                        defaultValue={editingNota.cliente}
+                        required 
+                      />
+                    </div>
+                  </div>
+                  <div className="form-column">
+                    <div className="form-group-notas">
+                      <label htmlFor="valorEdit">Valor</label>
+                      <input 
+                        type="text" 
+                        id="valorEdit" 
+                        name="valor" 
+                        defaultValue={editingNota.valor}
+                        required 
+                      />
+                    </div>
+                    <div className="form-group-notas">
+                      <label htmlFor="etiquetaEdit">Etiqueta</label>
+                      <input 
+                        type="text" 
+                        id="etiquetaEdit" 
+                        name="etiqueta" 
+                        defaultValue={editingNota.etiqueta}
+                      />
+                    </div>
+                    <div className="form-group-notas">
+                      <label htmlFor="urlCloudEdit">URL Cloud</label>
+                      <input 
+                        type="text" 
+                        id="urlCloudEdit" 
+                        name="urlCloud" 
+                        defaultValue={editingNota.urlCloud}
+                      />
+                    </div>
+                  </div>
+                </div>
+                <div className="form-footer-notas">
+                  <button type="submit" className="btn-new-appointment">Salvar Alterações</button>
                 </div>
               </form>
             </div>
