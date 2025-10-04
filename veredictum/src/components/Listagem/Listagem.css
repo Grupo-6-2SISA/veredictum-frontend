@@ -3,42 +3,41 @@
     width: 100%;
 }
 
-/* Estilo do cabeçalho */
 .listagem-header {
     display: grid;
     font-weight: 600;
-    color: #555;
-    font-size: 0.9em;
-    margin-bottom: 5px;
-    padding-bottom: 5px;
+    color: var(--dark-black);
+    font-size: 1.08em;
+    position: sticky;
+    top: 0;
+    background: var(--white-normal);
+    z-index: 2;
+    padding-top: 0;
+    padding-bottom: 8px;
+    margin-left: 15px;
+    box-shadow: 0 2px 6px -4px #0002;
 }
 
-/* Estilo das linhas de dados */
 .listagem-row {
     display: grid;
     align-items: center;
+    margin-top: 10px;
     padding: 12px 15px;
     margin-bottom: 10px;
-    background-color: #fcfcfc;
-    border-radius: 8px;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08); /* Sombra sutil na linha, como no design */
-    border: 1px solid #eee;
+    background-color: #f6f6f6;
+    border-radius: 12px;
+    margin-left: 13px;
+    box-shadow: 0 1px 3px #424242;
 }
 
 .listagem-data {
-    color: #333;
-    font-size: 0.95em;
-    /* Garante que textos longos (como o Número da Nota) sejam tratados */
+    color: #161617;
+    font-size: 16px;
+    font-weight: 700;
     overflow: hidden;
     white-space: nowrap;
     text-overflow: ellipsis;
 }
-
-/* *** DEFINIÇÃO DO LAYOUT (GRID TEMPLATE) POR CARD ***
-   
-   Usamos o CSS do componente pai (VisaoGeral) para definir o layout.
-   Ajuste as proporções (fr) conforme a necessidade:
-*/
 
 /* Card 1: Próximos Atendimentos (Nome, Dia, Horário) - 3 colunas */
 .listagem-header, .listagem-row {
@@ -46,22 +45,12 @@
     grid-template-columns: 3fr 2fr 1fr;
 }
 
-/* Card 2: Prazos de Notas Fiscais (Número, Data Limite) - 2 colunas */
-/* OBS: Esta classe é opcional, mas garante que o layout funcione se houver 
-   variações nas chaves ou ordem dos dados. É mais robusto definir a grade
-   diretamente nas classes do cabeçalho.
-*/
 .header-numero, .data-numero {
     grid-column: 1 / span 1; /* Primeira Coluna */
 }
 .header-dataLimite, .data-dataLimite {
     grid-column: 2 / span 1; /* Segunda Coluna */
 }
-/* No Card de Notas Fiscais, o grid-template-columns é de 2fr 1fr */
-/* Se estiver usando a Listagem, você teria que definir as colunas no CSS
-   ou de forma dinâmica no JSX, o que é mais complexo. 
-   Para o seu caso, a melhor prática é:
-*/
 
 /* Definir o layout para cards de 2 colunas (mais genérico) */
 .cards-grid > div:nth-child(2) .listagem-header,
