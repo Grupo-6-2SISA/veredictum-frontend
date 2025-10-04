@@ -3,7 +3,6 @@ import './NotasFiscais.css';
 import '../../index.css';
 import Sidebar from '../../components/Sidebar/Sidebar';
 import Card from '../../components/Card/Card';
-import Listagem from '../../components/Listagem/Listagem';
 
 const NotasFiscais = () => {
   // Estado para controlar o modal
@@ -11,18 +10,62 @@ const NotasFiscais = () => {
   
   // Dados de exemplo para notas fiscais
   const notasFiscaisData = [
-    { numero: 'NF-001', dataLimite: '15/10/2025', valor: 'R$ 2.500,00' },
-    { numero: 'NF-002', dataLimite: '20/10/2025', valor: 'R$ 1.800,00' },
-    { numero: 'NF-003', dataLimite: '25/10/2025', valor: 'R$ 3.200,00' },
-    { numero: 'NF-004', dataLimite: '30/10/2025', valor: 'R$ 950,00' },
-    { numero: 'NF-005', dataLimite: '05/11/2025', valor: 'R$ 4.100,00' },
+    { 
+      numero: 'NF-001', 
+      etiqueta: 'Vendas', 
+      dataVencimento: '15/10/2025', 
+      emitida: true,
+      cliente: 'João Silva',
+      valor: 'R$ 2.500,00',
+      urlCloud: 'https://cloud.exemplo.com/nf001'
+    },
+    { 
+      numero: 'NF-002', 
+      etiqueta: 'Serviços', 
+      dataVencimento: '20/10/2025', 
+      emitida: false,
+      cliente: 'Maria Santos',
+      valor: 'R$ 1.800,00',
+      urlCloud: 'https://cloud.exemplo.com/nf002'
+    },
+    { 
+      numero: 'NF-003', 
+      etiqueta: 'Consultoria', 
+      dataVencimento: '25/10/2025', 
+      emitida: true,
+      cliente: 'Pedro Costa',
+      valor: 'R$ 3.200,00',
+      urlCloud: 'https://cloud.exemplo.com/nf003'
+    },
+    { 
+      numero: 'NF-004', 
+      etiqueta: 'Produtos', 
+      dataVencimento: '30/10/2025', 
+      emitida: false,
+      cliente: 'Ana Oliveira',
+      valor: 'R$ 950,00',
+      urlCloud: 'https://cloud.exemplo.com/nf004'
+    },
+    { 
+      numero: 'NF-005', 
+      etiqueta: 'Manutenção', 
+      dataVencimento: '05/11/2025', 
+      emitida: true,
+      cliente: 'Carlos Ferreira',
+      valor: 'R$ 4.100,00',
+      urlCloud: 'https://cloud.exemplo.com/nf005'
+    },
   ];
 
-  // Definição das colunas para a listagem
+  // Definição das colunas para a listagem com todos os campos
   const colunas = [
-    { key: 'numero', titulo: 'Número' },
-    { key: 'dataLimite', titulo: 'Data Limite' },
-    { key: 'valor', titulo: 'Valor' }
+    { key: 'numero', titulo: 'Número da Nota' },
+    { key: 'etiqueta', titulo: 'Etiqueta' },
+    { key: 'dataVencimento', titulo: 'Data de Vencimento' },
+    { key: 'emitida', titulo: 'Emitida' },
+    { key: 'editar', titulo: 'Editar' },
+    { key: 'excluir', titulo: 'Excluir' },
+    { key: 'informacoes', titulo: 'Informações' }
   ];
 
   // Funções para controlar o modal
@@ -34,6 +77,24 @@ const NotasFiscais = () => {
     if (e.target === e.currentTarget) {
       closeModal();
     }
+  };
+
+  // Função para editar nota fiscal
+  const handleEdit = (nota) => {
+    console.log('Editar nota:', nota);
+    // Aqui você implementaria a lógica de edição
+  };
+
+  // Função para excluir nota fiscal
+  const handleDelete = (nota) => {
+    console.log('Excluir nota:', nota);
+    // Aqui você implementaria a lógica de exclusão
+  };
+
+  // Função para ver informações da nota fiscal
+  const handleViewInfo = (nota) => {
+    console.log('Ver informações:', nota);
+    // Aqui você implementaria a lógica para ver detalhes
   };
 
   // Função para salvar nova nota fiscal
@@ -63,14 +124,50 @@ const NotasFiscais = () => {
           </button>
         </div>
         
-        <div className="cards-container">
-          <Card 
-            titulo="Notas Fiscais Pendentes" 
-            iconePath="src/assets/svg/notas_fiscais.svg"
-            alt="Ícone Notas Fiscais"
-          >
-            <Listagem dados={notasFiscaisData} colunas={colunas} />
-          </Card>
+        <div className="nf-management-section">
+          <div className="card nf-table-card">
+            <div className="card-header">
+            </div>
+            <div className="card-content">
+              <div className="list-header-nf nf-list-header-grid">
+                <p className="col-name">Número da Nota</p>
+                <p className="col-etiqueta">Etiqueta</p>
+                <p className="col-data">Data de Vencimento</p>
+                <p className="col-emitida">Emitida</p>
+                <p className="col-editar">Editar</p>
+                <p className="col-excluir">Excluir</p>
+                <p className="col-info">Informações</p>
+              </div>
+              <div className="list-items-container nf-list-items-container">
+                {notasFiscaisData.map((nota, index) => (
+                  <div key={index} className="nf-list-item">
+                    <p>{nota.numero}</p>
+                    <p>{nota.etiqueta}</p>
+                    <p>{nota.dataVencimento}</p>
+                    <div className="toggle-switch">
+                      <input 
+                        type="checkbox" 
+                        checked={nota.emitida} 
+                        onChange={() => {}} 
+                      />
+                      <span className="slider"></span>
+                    </div>
+                    <img 
+                      src="src/assets/svg/edit.svg" 
+                      alt="Editar" 
+                      onClick={() => handleEdit(nota)}
+                    />
+                    <img 
+                      src="src/assets/svg/lixo.svg" 
+                      alt="Excluir" 
+                      onClick={() => handleDelete(nota)}
+                    />
+                    <a href="#" onClick={() => handleViewInfo(nota)}>Ver mais</a>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
         </div>
 
         {/* Modal para adicionar nota fiscal */}

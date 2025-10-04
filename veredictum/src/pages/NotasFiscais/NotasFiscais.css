@@ -91,20 +91,148 @@
     height: calc(100vh - 120px); /* Altura total menos header e padding */
 }
 
-/* Ajuste do card para ocupar uma largura maior */
-.cards-container .card-box {
-    width: 85%;
-    max-width: none;
-    min-width: 600px;
-    height: fit-content;
-    max-height: calc(100vh - 150px);
+/* Seção de Gestão de Notas Fiscais */
+.nf-management-section {
+    margin-top: 3%;
+    display: flex;
+    justify-content: center;
+    height: 75%;
+}
+
+.nf-table-card {
+    width: 85vw;
+    height: 400px;
+    max-height: 100vh;
+    border-radius: 10px;
+    background-color: var(--white-normal);
+    box-shadow: 0 1px 3px #4242425e;
+}
+
+.card-header {
+    padding: 20px;
+}
+
+.card-content {
+    padding: 0 20px 20px 20px;
+}
+
+.nf-list-items-container {
+    display: flex;
+    flex-direction: column;
+    overflow-y: auto;
+    padding-right: 1rem;
+}
+
+.list-header-nf {
+    display: grid;
+    grid-template-columns: 2fr 2fr 2fr 1fr 1fr 1fr 1.5fr;
+    gap: 1rem;
+    padding: 0.75rem 1.2rem;
+    font-weight: 700;
+    color: var(--normal-black-strong);
+    width: 92%;
+}
+
+.list-header-nf p {
+    font-weight: bold;
+    margin: 0;
+}
+
+.nf-list-item {
+    display: grid;
+    grid-template-columns: 2fr 2fr 2fr 1fr 1fr 1fr 1.5fr;
+    gap: 1rem;
+    align-items: center;
+    padding: 0.3rem 1.2rem;
+    box-shadow: 0 4px 10px 1px rgba(0, 0, 0, 0.151);
+    border-radius: 10px;
+    margin-bottom: 0.7rem;
+    background: var(--white-darknes);
+    margin-left: 1%;
+}
+
+.nf-list-item p {
+    margin: 0;
+    font-size: 1rem;
+    color: var(--dark-black);
+    font-weight: bold;
+}
+
+.nf-list-item img {
+    width: 30px;
+    height: 30px;
+    cursor: pointer;
+    transition: transform 0.2s ease;
+}
+
+.nf-list-item img:hover {
+    transform: scale(1.1);
+}
+
+.nf-list-item a {
+    color: var(--primary-color);
+    text-decoration: none;
+    font-weight: 500;
+}
+
+.nf-list-item a:hover {
+    text-decoration: underline;
+}
+
+/* Toggle Switch para status "Emitida" */
+.toggle-switch {
+    position: relative;
+    display: inline-block;
+    width: 50px;
+    height: 28px;
+}
+
+.toggle-switch input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+.toggle-switch .slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: var(--green-normal);
+    transition: 0.4s;
+    border-radius: 28px;
+}
+
+.toggle-switch .slider:before {
+    position: absolute;
+    content: "";
+    height: 20px;
+    width: 20px;
+    left: 4px;
+    bottom: 4px;
+    background-color: white;
+    transition: 0.4s;
+    border-radius: 50%;
+}
+
+.toggle-switch input:checked + .slider {
+    background-color: var(--red-normal);
+}
+
+.toggle-switch input:focus + .slider {
+    box-shadow: 0 0 1px #007bff;
+}
+
+.toggle-switch input:checked + .slider:before {
+    transform: translateX(22px);
 }
 
 /* Responsividade */
 @media (max-width: 1200px) {
-    .cards-container .card-box {
-        width: 90%;
-        min-width: 500px;
+    .nf-table-card {
+        width: 90vw;
     }
     
     .div_topo h1 {
@@ -127,14 +255,44 @@
         position: relative;
     }
     
-    .cards-container {
+    .nf-management-section {
         height: auto;
+        margin-top: 20px;
     }
     
-    .cards-container .card-box {
-        width: 95%;
-        min-width: 300px;
-        max-height: none;
+    .nf-table-card {
+        width: 95vw;
+        height: auto;
+        min-height: 400px;
+    }
+    
+    .list-header-nf,
+    .nf-list-item {
+        grid-template-columns: 1fr 1fr 1fr 0.8fr 0.8fr 0.8fr 1fr;
+        gap: 0.5rem;
+        padding: 0.5rem;
+        font-size: 0.8rem;
+    }
+    
+    .nf-list-item img {
+        width: 24px;
+        height: 24px;
+    }
+    
+    .toggle-switch {
+        width: 40px;
+        height: 22px;
+    }
+    
+    .toggle-switch .slider:before {
+        height: 16px;
+        width: 16px;
+        left: 3px;
+        bottom: 3px;
+    }
+    
+    .toggle-switch input:checked + .slider:before {
+        transform: translateX(18px);
     }
     
     .div_topo h1 {
