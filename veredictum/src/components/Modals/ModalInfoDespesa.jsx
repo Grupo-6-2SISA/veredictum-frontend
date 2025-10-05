@@ -7,9 +7,10 @@ export default function ModalInfoDespesa({ show, onClose, infoItem }) {
 
   return (
     <div className="modal-backdrop">
-      <div  id="infoExpenseModal" className="modal-content-despesas">
+      <div id="infoExpenseModal" className="modal-content-despesas">
+
         <button className="close" onClick={onClose}>
-          <img src={FecharIcon} alt="Fechar" />
+          <img  style={{transform: "translateY(-43%)"}} src={FecharIcon} alt="Fechar" />
         </button>
         <h2>Informação sobre a Despesa</h2>
         <br />

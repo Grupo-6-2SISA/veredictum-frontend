@@ -8,6 +8,7 @@
 
 }
 
+
 /* Main Content */
 .main-content {
     margin-left: 120px;
@@ -326,7 +327,6 @@ button.info-link {
     color: black;
 }
 
-
 .close {
     position: absolute;
     top: 16px;
@@ -549,6 +549,8 @@ button.info-link {
 }
 
 #infoExpenseModal .close {
+    background-color: #424242;
+    border: none;
     position: absolute;
     top: 16px;
     right: 20px;
@@ -871,3 +873,5 @@ button.info-link {
 .modal-close-btn:hover {
     transform: scale(1.1);
 }
+
+
