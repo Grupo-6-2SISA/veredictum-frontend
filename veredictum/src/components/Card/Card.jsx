@@ -6,38 +6,59 @@ import './Card.css';
 
 const variantConfigs = {
     clientes: {
-        boxId: 'clientes-card-box',
-        headerId: 'clientes-card-header',
-        containerClass: 'card-clientes',
+        inheritBaseClass: false,
+        containerClasses: ['card-clientes'],
+        headerClasses: ['card-clientes-header'],
+        contentClasses: ['card-clientes-content'],
     },
 };
 
-const Card = ({ titulo, icone, children, className, variant }) => {
+const Card = ({ titulo, icone, children, className, variant, headerContent }) => {
     const variantConfig = variant ? variantConfigs[variant] : undefined;
-    const boxClassNames = ['card-box'];
+    const shouldUseBaseClass = variantConfig?.inheritBaseClass !== false;
+    const boxClassNames = shouldUseBaseClass ? ['card-box'] : [];
+    const headerClassNames = ['card-header'];
+    const contentClassNames = ['card-content-wrapper'];
 
     if (className) {
         boxClassNames.push(className);
     }
 
-    if (variantConfig?.containerClass) {
-        boxClassNames.push(variantConfig.containerClass);
+    if (variantConfig?.containerClasses) {
+        boxClassNames.push(...variantConfig.containerClasses);
     }
+
+    if (variantConfig?.headerClasses) {
+        headerClassNames.push(...variantConfig.headerClasses);
+    }
+
+    if (variantConfig?.contentClasses) {
+        contentClassNames.push(...variantConfig.contentClasses);
+    }
+
+    const renderHeaderContent = () => {
+        if (headerContent !== undefined) {
+            return headerContent;
+        }
+
+        return (
+            <>
+                {icone ? <span className="card-icon">{icone}</span> : null}
+                {titulo ? <h2>{titulo}</h2> : null}
+            </>
+        );
+    };
 
     return (
         <div
             className={boxClassNames.join(' ')}
-            id={variantConfig?.boxId}
             data-variant={variant}
         >
-            <div className="card-header" id={variantConfig?.headerId}>
-                {/* Aqui você usaria o ícone da biblioteca, ou o 'icone' passado como prop */}
-                <span className="card-icon">{icone}</span> 
-                <h2>{titulo}</h2>
+            <div className={headerClassNames.join(' ')}>
+                {renderHeaderContent()}
             </div>
-            <div className="card-content-wrapper">
-                 {/* O conteúdo (sua Listagem) vai aqui */}
-                {children} 
+            <div className={contentClassNames.join(' ')}>
+                {children}
             </div>
         </div>
     );

@@ -1,19 +1,9 @@
-/* Estilo do Card (Bloco Branco) */
+/* Estilo base do Card */
 .card-box {
     background-color: #fff;
     border-radius: 12px;
     padding: 25px;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05); /* Sombra suave */
-    display: flex;
-    flex-direction: column;
-}
-
-
-#clientes-card-box {
-    background-color: #fff;
-    border-radius: 12px;
-    padding: 25px;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05); /* Sombra suave */
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
     display: flex;
     flex-direction: column;
 }
@@ -24,11 +14,6 @@
     margin-bottom: 20px;
 }
 
-#clientes-card-header {
-    display: flex;
-    align-items: center;
-    margin-bottom: 20px;
-}
 .card-icon {
     font-size: 1.5em;
     margin-right: 10px;
@@ -40,16 +25,52 @@
     color: #444;
 }
 
-#clientes-card-header h2 {
-    font-size: 1.1em;
-    font-weight: 700;
-    color: #444;
+ /* Alvo da barra de rolagem inteira */
+.card-content::-webkit-scrollbar {
+    width: 5px; /* Define a largura da barra de rolagem */
+    background-color: transparent; /* Fundo invisível */
 }
 
-/* Wrapper para controlar a altura e a barra de rolagem (scroll) */
-.card-content-wrapper {
-    max-height: 250px; /* Limite a altura como no design */
-    overflow-y: auto; /* Adiciona a barra de rolagem */
-    padding-right: 10px; /* Espaço para a barra de rolagem não colidir com o conteúdo */
+/* A trilha da barra de rolagem */
+.card-content::-webkit-scrollbar-track {
+    background-color: #f1f1f1; /* Cor de fundo da trilha, levemente cinza */
+    border-radius: 4px;
 }
 
+/* A parte "arrastável" da barra de rolagem */
+.card-content::-webkit-scrollbar-thumb {
+    background-color: var(--normal-black); /* A cor do "thumb" (o elemento que você move) */
+    border-radius: 4px;
+    border: 2px solid var(--normal-black); /* Cria um pequeno espaçamento visual, como na imagem */
+}
+
+/* Estilo para a barra de rolagem no Firefox */
+/* Esta é a forma padrão do CSS, mas só é suportada pelo Firefox */
+.card-content {
+    scrollbar-width: thin;
+    scrollbar-color: var(--light-black) var(--white-normal); /* Cor do thumb e da trilha */
+}
+
+/* Variante Clientes */
+.card-clientes {
+   width: 75vw;
+    height: 400px;
+    max-height: 100vh;
+    border-radius: 10px;
+    background-color: var(--white-normal);
+    overflow-y: auto;
+}
+
+.card-clientes-header {
+    display: none;
+}
+
+.card-clientes-content {
+    max-height: none;
+    overflow: visible;
+    padding: 1.5rem 1.75rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    padding-right: 0;
+}

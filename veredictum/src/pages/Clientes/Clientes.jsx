@@ -1,62 +1,204 @@
 import React, { useState } from 'react';
 import './Clientes.css';
 import Sidebar from '../../components/Sidebar/Sidebar';
-import Listagem from '../../components/Listagem/Listagem';
 import btnIcon from '../../assets/svg/btn.svg';
-import closeIcon from '../../assets/svg/close.svg';
-import clientsIcon from '../../assets/svg/clientes.svg';
-import Card from '../../components/Card/Card';
+import editIcon from '../../assets/svg/edit.svg';
+import Toggle from '../../components/Toggle/Toggle';
 import Modal from '../../components/Modal/Modal';
 import Button from '../../components/Button/Button';
-import Toggle from '../../components/Toggle/Toggle';
+import Listagem from '../../components/Listagem/Listagem';
+import Card from '../../components/Card/Card';
+import '../../components/Css/Main.css';
 
 const initialClients = [
     {
-       "id": 1,
-      "nome": "Manu Monteiro",
-      "dataNascimento": "1992-04-04",
-      "email": "gabriel@example.com",
-      "rg": "987654301",
-      "cpf": "987.654.323-00",
-      "cnpj": null,
-      "telefone": "11888888887",
-      "cep": "10000-000",
-      "logradouro": "Rua Exemplo 3",
-      "bairro": "Bairro Exemplo 3",
-      "complemento": null,
-      "localidade": "Cidade Exemplo 4",
-      "numero": "451",
-      "inscricaoEstadual": null,
-            "proBono": false,
-            "status": "Inativo",
-            "ativo": false,
-      "dataInicio": "2024-02-02",
-      "indicacao": "Marketing",
-      "descricao": "Contrato de serviço"
+        id: 1,
+        nome: 'Manu Monteiro',
+        dataNascimento: '1992-04-04',
+        email: 'gabriel@example.com',
+        rg: '987654301',
+        cpf: '987.654.323-00',
+        cnpj: '',
+        telefone: '11 88888-8887',
+        cep: '10000-000',
+        logradouro: 'Rua Exemplo 3',
+        bairro: 'Bairro Exemplo 3',
+        complemento: '',
+        localidade: 'Cidade Exemplo 4',
+        numero: '451',
+        inscricaoEstadual: '',
+        proBono: false,
+        status: 'Inativo',
+        ativo: false,
+        dataInicio: '2024-02-02',
+        indicacao: 'Marketing',
+        descricao: 'Contrato de serviço',
     },
     {
-        "id": 2,
-      "nome": "Gabriel Cordeiro",
-      "dataNascimento": "1992-02-02",
-      "email": "gabriel@example.com",
-      "rg": "987654321",
-      "cpf": "987.654.321-00",
-      "cnpj": null,
-      "telefone": "11888888888",
-      "cep": "00000-000",
-      "logradouro": "Rua Exemplo 2",
-      "bairro": "Bairro Exemplo 2",
-      "complemento": null,
-      "localidade": "Cidade Exemplo 2",
-      "numero": "456",
-      "inscricaoEstadual": null,
-            "proBono": false,
-            "status": "Ativo",
-            "ativo": true,
-      "dataInicio": "2024-02-02",
-      "indicacao": "Marketing",
-      "descricao": "Contrato de serviço"
+        id: 2,
+        nome: 'Gabriel Cordeiro',
+        dataNascimento: '1992-02-02',
+        email: 'gabriel@example.com',
+        rg: '987654321',
+        cpf: '987.654.321-00',
+        cnpj: '',
+        telefone: '11 88888-8888',
+        cep: '00000-000',
+        logradouro: 'Rua Exemplo 2',
+        bairro: 'Bairro Exemplo 2',
+        complemento: '',
+        localidade: 'Cidade Exemplo 2',
+        numero: '456',
+        inscricaoEstadual: '',
+        proBono: false,
+        status: 'Ativo',
+        ativo: true,
+        dataInicio: '2024-02-02',
+        indicacao: 'Marketing',
+        descricao: 'Contrato de serviço',
     },
+];
+
+const CLIENT_FORM_COLUMNS = [
+    [
+        { name: 'nome', label: 'Nome', type: 'text', required: true },
+        { name: 'dataNascimento', label: 'Data de Nascimento', type: 'date' },
+        { name: 'email', label: 'E-mail', type: 'email', required: true },
+        { name: 'rg', label: 'RG', type: 'text', required: true },
+        { name: 'cpf', label: 'CPF', type: 'text', required: true },
+    ],
+    [
+        { name: 'cnpj', label: 'CNPJ', type: 'text' },
+        { name: 'telefone', label: 'Telefone', type: 'text', required: true },
+        { name: 'cep', label: 'CEP', type: 'text', required: true },
+        { name: 'logradouro', label: 'Logradouro', type: 'text', required: true },
+        { name: 'bairro', label: 'Bairro', type: 'text', required: true },
+    ],
+    [
+        { name: 'complemento', label: 'Complemento', type: 'text' },
+        { name: 'localidade', label: 'Localidade', type: 'text' },
+        { name: 'numero', label: 'Número', type: 'text', required: true },
+        { name: 'inscricaoEstadual', label: 'Inscrição Estadual', type: 'text' },
+        {
+            name: 'proBono',
+            label: 'Pro-Bono?',
+            type: 'select',
+            defaultValue: 'false',
+            options: [
+                { value: 'false', label: 'Não' },
+                { value: 'true', label: 'Sim' },
+            ],
+        },
+    ],
+    [
+        {
+            name: 'status',
+            label: 'Status',
+            type: 'select',
+            defaultValue: 'Ativo',
+            options: [
+                { value: 'Ativo', label: 'Ativo' },
+                { value: 'Inativo', label: 'Inativo' },
+            ],
+        },
+        { name: 'dataInicio', label: 'Data Início', type: 'date' },
+        {
+            name: 'indicacao',
+            label: 'Indicação',
+            type: 'select',
+            defaultValue: 'Lista de clientes',
+            options: [
+                { value: 'Lista de clientes', label: 'Lista de clientes' },
+                { value: 'Indicação', label: 'Indicação' },
+                { value: 'Marketing', label: 'Marketing' },
+            ],
+        },
+        {
+            name: 'descricao',
+            label: 'Descrição',
+            type: 'textarea',
+            placeholder: 'Caso de Herança...',
+        },
+    ],
+];
+
+const getFieldValue = (clientData, field) => {
+    if (!clientData) {
+        return field.defaultValue ?? '';
+    }
+
+    if (field.name === 'proBono') {
+        return clientData.proBono ? 'true' : 'false';
+    }
+
+    const value = clientData[field.name];
+    return value ?? field.defaultValue ?? '';
+};
+
+const renderFormColumns = (mode, clientData) => (
+    CLIENT_FORM_COLUMNS.map((column, columnIndex) => (
+        <div className="form-column" key={`column-${columnIndex}`}>
+            {column.map((field) => {
+                const baseProps = {
+                    id: field.name,
+                    name: field.name,
+                    required: field.required,
+                    disabled: mode === 'view',
+                };
+
+                const defaultValue = getFieldValue(clientData, field);
+
+                if (field.type === 'select') {
+                    return (
+                        <div className="form-group-client" key={field.name}>
+                            <label htmlFor={field.name}>{field.label}</label>
+                            <select
+                                {...baseProps}
+                                defaultValue={defaultValue}
+                            >
+                                {field.options?.map((option) => (
+                                    <option key={option.value} value={option.value}>
+                                        {option.label}
+                                    </option>
+                                ))}
+                            </select>
+                        </div>
+                    );
+                }
+
+                if (field.type === 'textarea') {
+                    return (
+                        <div className="form-group-client" key={field.name}>
+                            <label htmlFor={field.name}>{field.label}</label>
+                            <textarea
+                                {...baseProps}
+                                placeholder={field.placeholder}
+                                defaultValue={defaultValue}
+                            />
+                        </div>
+                    );
+                }
+
+                return (
+                    <div className="form-group-client" key={field.name}>
+                        <label htmlFor={field.name}>{field.label}</label>
+                        <input
+                            {...baseProps}
+                            type={field.type}
+                            defaultValue={defaultValue}
+                        />
+                    </div>
+                );
+            })}
+        </div>
+    ))
+);
+
+const TABLE_COLUMNS = [
+    { key: 'nome', titulo: 'Nome', className: 'col-name' },
+    { key: 'editar', titulo: 'Editar', className: 'col-edit' },
+    { key: 'informacoes', titulo: 'Informações', className: 'col-info' },
+    { key: 'status', titulo: 'Status', className: 'col-status' },
 ];
 
 function Clientes() {
@@ -67,12 +209,40 @@ function Clientes() {
     const [isViewOpen, setIsViewOpen] = useState(false);
     const [isDeleteOpen, setIsDeleteOpen] = useState(false);
 
-    const columns = [
-        { key: 'nome', titulo: 'Nome' },
-        { key: 'editar', titulo: 'Editar' },
-        { key: 'informacoes', titulo: 'Informações' },
-        { key: 'status', titulo: 'Status' },
-    ];
+        const tableData = clients.map((client) => ({
+            nome: (
+                <div className="client-list-name">
+                    <p>{client.nome}</p>
+               
+                </div>
+            ),
+            editar: (
+                <Button
+                    className="btn-icon-only"
+                    type="button"
+                    onClick={() => handleOpenEdit(client)}
+                    aria-label={`Editar ${client.nome}`}
+                >
+                    <img src={editIcon} alt="Editar" />
+                </Button>
+            ),
+            informacoes: (
+                <Button
+                    className="btn-link"
+                    type="button"
+                    onClick={() => handleOpenView(client)}
+                >
+                    Ver mais
+                </Button>
+            ),
+            status: (
+                <Toggle
+                    label=""
+                    checked={client.ativo}
+                    onChange={(event) => handleToggleStatus(client, event.target.checked)}
+                />
+            ),
+        }));
 
     function handleOpenAdd() {
         setIsAddOpen(true);
@@ -89,6 +259,7 @@ function Clientes() {
 
     function handleCloseEdit() {
         setIsEditOpen(false);
+        setSelectedClient(null);
     }
 
     function handleOpenView(client) {
@@ -98,6 +269,7 @@ function Clientes() {
 
     function handleCloseView() {
         setIsViewOpen(false);
+        setSelectedClient(null);
     }
 
     function handleOpenDelete(client) {
@@ -105,8 +277,24 @@ function Clientes() {
         setIsDeleteOpen(true);
     }
 
+    function handleToggleStatus(client, shouldActivate) {
+        if (shouldActivate) {
+            const updatedClients = clients.map((currentClient) => {
+                if (currentClient.id === client.id) {
+                    return { ...currentClient, ativo: true, status: 'Ativo' };
+                }
+                return currentClient;
+            });
+            setClients(updatedClients);
+            return;
+        }
+
+        handleOpenDelete(client);
+    }
+
     function handleCloseDelete() {
         setIsDeleteOpen(false);
+        setSelectedClient(null);
     }
     
     function handleConfirmDelete() {
@@ -150,6 +338,7 @@ function Clientes() {
             descricao: formData.get('descricao'),
 
         };
+        event.currentTarget.reset();
         setClients([...clients, newClient]);
         handleCloseAdd();
     }
@@ -189,102 +378,117 @@ function Clientes() {
         handleCloseEdit();
     }
     
-    const tableData = clients.map((client) => ({
-        nome: (
-            <div className="client-list-name">
-                <strong>{client.nome}</strong>
-            </div>
-        ),
-        editar: (
-            <Button className="btn-secondary" onClick={() => handleOpenEdit(client)}>
-                <img src="../../src/assets/svg/edit.svg" alt="Editar" />
-            </Button>
-        ),
-        informacoes: (
-            <Button className="btn-link" onClick={() => handleOpenView(client)}>
-                Ver mais
-            </Button>
-        ),
-        status: (
-            <Toggle
-                checked={client.ativo}
-                onChange={() => handleOpenDelete(client)}
-            />
-        ),
-    }));
-
     return (
-        <div className="clientes">
+        <div className="container clientes-page">
             <Sidebar />
 
-            <main className="main-content">
+            <main className="main-content clientes-main">
                 <div className="header-top">
-                
                     <div className="head-description">
                         <h1>Gestão de Clientes</h1>
-                         <Button className="btn-new-appointment" onClick={handleOpenAdd}>
-                        <img src={btnIcon} alt="Adicionar" />
-                        Cadastrar Cliente
-                    </Button>
                         <p className="description">
                             Acesse, altere e mantenha as informações dos clientes
                             <br /> sempre atualizadas.
                         </p>
-                       
                     </div>
 
-                
+                    <Button className="btn-new-appointment" onClick={handleOpenAdd}>
+                        Cadastrar Cliente
+                        <img src={btnIcon} alt="Cadastrar novo cliente" />
+                    </Button>
                 </div>
 
                 <section className="client-management-section">
                     <Card
-                        icone={<img src={clientsIcon} alt="Clientes" />}
                         className="client-table-card"
                         variant="clientes"
+                        headerContent={null}
                     >
-                        <Listagem
-                            dados={tableData}
-                            colunas={columns}
-                            variant="clientes"
-                        />
+                        {clients.length ? (
+                            <Listagem
+                                dados={tableData}
+                                colunas={TABLE_COLUMNS}
+                                variant="clientes"
+                            />
+                        ) : (
+                            <p className="listagem-vazia">Nenhum cliente cadastrado.</p>
+                        )}
                     </Card>
                 </section>
 
-                {isAddOpen && (
-                 <>
-                    <div className="modal-backdrop-add" onClick={handleCloseAdd}></div>
-                    <div id="new-appointment-modal-add-client" className="modal">
-                       <div className="modal-content">
-                         <div className="modal-header">
-                           <h2>Cadastrar Clientes</h2>
-                           <button type="button" className="modal-close-btn" onClick={handleCloseAdd}>
-                             <img src={closeIcon} alt="Fechar" />
-                           </button>
-                         </div>
-                         <form className="appointment-form" id="formCadastrarCliente" onSubmit={handleSubmitAdd}>
-                             <div className="form-footer-client">
-                                 <Button type="submit" className="btn-new-appointment">
-                                     Cadastrar
-                                 </Button>
-                             </div>
-                         </form>
-                       </div>
+                <Modal
+                    isOpen={isAddOpen}
+                    variant="add"
+                    title="Cadastrar Clientes"
+                    onClose={handleCloseAdd}
+                    modalId="new-appointment-modal-add-client"
+                    formProps={{ id: 'formCadastrarCliente', onSubmit: handleSubmitAdd, className: 'appointment-form' }}
+                    footer={(
+                        <div className="form-footer-client">
+                            <Button className="btn-new-appointment" type="submit">
+                                Cadastrar
+                            </Button>
+                        </div>
+                    )}
+                >
+                    <div className="form-row form-grid">
+                        {renderFormColumns('add', null)}
                     </div>
-                 </>
-                )}
+                </Modal>
 
                 <Modal
-                    isEditOpen={isEditOpen}
-                    isViewOpen={isViewOpen}
-                    isDeleteOpen={isDeleteOpen}
-                    clientName={selectedClient ? selectedClient.nome : ''}
-                    clientData={selectedClient}
-                    onCloseEdit={handleCloseEdit}
-                    onCloseView={handleCloseView}
-                    onCloseDelete={handleCloseDelete}
-                    onSubmitEdit={handleSubmitEdit}
-                    onConfirmDelete={handleConfirmDelete}
-                />
+                    isOpen={isEditOpen && Boolean(selectedClient)}
+                    variant="edit"
+                    title="Editar Clientes"
+                    onClose={handleCloseEdit}
+                    modalId="new-appointment-modal-edit-client"
+                    formProps={{ id: 'formEditarCliente', onSubmit: handleSubmitEdit, className: 'appointment-form' }}
+                    footer={(
+                        <div className="form-footer-client">
+                            <Button className="btn-new-appointment" type="submit">
+                                Editar
+                            </Button>
+                        </div>
+                    )}
+                >
+                    <div className="form-row form-grid">
+                        {selectedClient && renderFormColumns('edit', selectedClient)}
+                    </div>
+                </Modal>
+
+                <Modal
+                    isOpen={isViewOpen && Boolean(selectedClient)}
+                    variant="view"
+                    title="Informações sobre o Cliente"
+                    onClose={handleCloseView}
+                    modalId="new-appointment-modal-view-client"
+                >
+                    <div className="form-row form-grid">
+                        {selectedClient && renderFormColumns('view', selectedClient)}
+                    </div>
+                </Modal>
+
+                <Modal
+                    isOpen={isDeleteOpen && Boolean(selectedClient)}
+                    variant="delete"
+                    title="Desativar Clientes"
+                    onClose={handleCloseDelete}
+                    modalId="modal-delete-schedule"
+                    footer={(
+                        <>
+                            <Button className="btn-cancel-delete" onClick={handleCloseDelete}>
+                                Não
+                            </Button>
+                            <Button className="btn-confirm-delete" onClick={handleConfirmDelete}>
+                                Sim
+                            </Button>
+                        </>
+                    )}
+                >
+                    <p>
+                        Deseja desativar <span className="client-name">{selectedClient?.nome}</span>?
+                    </p>
+                </Modal>
             </main>
         </div>
     );

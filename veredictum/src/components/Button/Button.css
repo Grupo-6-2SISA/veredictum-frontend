@@ -37,7 +37,8 @@
     display: flex;
     align-items: center;
     gap: 0.5rem;
-    transition: background-color 0.3s ease;
+    transition: background-color 0.3s 
+ease;
 }
 .btn-new-appointment__desativar {
     background-color: var(--gray-9);

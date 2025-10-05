@@ -1,12 +1,12 @@
-// src/components/Listagem/Listagem.jsx
 import React from 'react';
 import './Listagem.css'; 
 
 const variantConfigs = {
     clientes: {
-        containerClass: 'listagem-clientes',
-        headerId: 'clientes-listagem-header',
-        rowId: 'clientes-listagem-row',
+        containerClasses: ['listagem-clientes'],
+        headerClasses: ['list-header', 'client-list-header-grid', 'clientes-listagem-header'],
+        bodyClasses: ['list-items-container', 'client-list-items-container'],
+        rowClasses: ['client-list-item-grid', 'clientes-listagem-row'],
     },
 };
 
@@ -17,39 +17,56 @@ const Listagem = ({ dados, colunas, variant }) => {
     }
 
     const variantConfig = variant ? variantConfigs[variant] : undefined;
-    const containerClassNames = ['listagem-container'];
 
-    if (variantConfig?.containerClass) {
-        containerClassNames.push(variantConfig.containerClass);
+    const containerClassNames = ['listagem-container'];
+    const headerClassNames = ['listagem-header'];
+    const bodyClassNames = ['listagem-body'];
+    const rowClassNames = ['listagem-row'];
+
+    if (variantConfig?.containerClasses) {
+        containerClassNames.push(...variantConfig.containerClasses);
     }
+
+    if (variantConfig?.headerClasses) {
+        headerClassNames.push(...variantConfig.headerClasses);
+    }
+
+    if (variantConfig?.bodyClasses) {
+        bodyClassNames.push(...variantConfig.bodyClasses);
+    }
+
+    if (variantConfig?.rowClasses) {
+        rowClassNames.push(...variantConfig.rowClasses);
+    }
+
+    const getColumnClassName = (coluna) => coluna.className ?? `col-${coluna.key}`;
 
     return (
         <div className={containerClassNames.join(' ')} data-variant={variant}>
             {/* Cabeçalho da Lista */}
-            <div
-                className="listagem-header"
-                id={variantConfig?.headerId}
-            >
+            <div className={headerClassNames.join(' ')}>
                 {colunas.map((coluna, index) => (
                     // Usa a chave do objeto (ex: nome, dia) para aplicar o estilo correto
-                    <span key={index} className={`header-item header-${coluna.key}`}>
+                    <p
+                        key={index}
+                        className={`header-item header-${coluna.key} ${getColumnClassName(coluna)}`.trim()}
+                    >
                         {coluna.titulo}
-                    </span>
+                    </p>
                 ))}
             </div>
 
             {/* Linhas de Dados */}
-            <div className="listagem-body">
+            <div className={bodyClassNames.join(' ')}>
                 {dados.map((item, index) => (
                     <div
                         key={index}
-                        className="listagem-row"
-                        id={variantConfig?.rowId}
+                        className={rowClassNames.join(' ')}
                     >
                         {colunas.map((coluna) => (
-                            <div 
-                                key={coluna.key} 
-                                className={`listagem-data data-${coluna.key}`}
+                            <div
+                                key={coluna.key}
+                                className={`listagem-data data-${coluna.key} ${getColumnClassName(coluna)}`.trim()}
                             >
                                 {item[coluna.key]}
                             </div>

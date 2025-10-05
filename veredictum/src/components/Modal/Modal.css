@@ -1,4 +1,4 @@
-@import url(../Css/Main.css);
+
 
 
 /* Fundo escuro que cobre a tela */
@@ -24,6 +24,7 @@
     max-width: 65%; /* Garante que ele seja responsivo */
     height: 80%;
     z-index: 1000;
+    
 }
 /* Modal Editar Agendamento */
 #new-appointment-modal-edit {
@@ -71,7 +72,9 @@
     gap: 20px;
 }
 .form-row {
-    display: flex;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 20px;
 }
 .form-group {
     flex: 1;
@@ -347,7 +350,7 @@
 
 /* ============================================= */
 /* MODAIS (NOTAS) */
-
+/* ============================================= */
 
 /* Estilos para o modal de Adicionar Nota Fiscal */
 #new-appointment-modal-add-note {
