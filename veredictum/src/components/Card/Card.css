@@ -53,12 +53,14 @@
 
 /* Variante Clientes */
 .card-clientes {
-   width: 75vw;
+    width: 75vw;
     height: 400px;
     max-height: 100vh;
     border-radius: 10px;
     background-color: var(--white-normal);
-    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
 }
 
 .card-clientes-header {
@@ -66,8 +68,10 @@
 }
 
 .card-clientes-content {
-    max-height: none;
-    overflow: visible;
+    flex: 1;
+    min-height: 0;
+    overflow-y: scroll;
+    scrollbar-gutter: stable;
     padding: 1.5rem 1.75rem;
     display: flex;
     flex-direction: column;

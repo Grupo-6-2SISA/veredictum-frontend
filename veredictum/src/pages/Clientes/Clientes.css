@@ -73,8 +73,6 @@
     max-height: 100vh;
     border-radius: 10px;
     background-color: var(--white-normal);
-    overflow-y: scroll;
-    scrollbar-gutter: stable;
 }
 
 .client-table-card::-webkit-scrollbar {
