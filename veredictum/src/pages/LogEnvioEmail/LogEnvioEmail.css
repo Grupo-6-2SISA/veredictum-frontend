@@ -1,0 +1,63 @@
+.log-email-content {
+    font-size: 14px;
+    /* background-color: #555; */
+    height: 12.5vh;
+    width: 100%;
+    height: 78vh;
+    margin-top: 5px;
+}
+
+.log-email-filtro {
+    font-size: 14px;
+    border-radius: 12px;
+    padding: 20px;
+    margin-bottom: 20px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+    display: flex;
+    flex-direction: row;
+    gap: 70px;
+    align-items: center;
+    width: 50%;
+    height: 15vh;
+    border: 1px solid black;
+    display: flex;
+    justify-content: space-around;
+}
+
+.log-email-filtro-group {
+     display: flex;
+     flex-direction: column;
+     gap: 15px;
+ }
+
+ .filter-label {
+     font-size: 14px;
+     font-weight: 700;
+     color: #000000;
+ }
+
+.log-email-listagem {
+    font-size: 14px;
+    width: 100%;
+    height: 60vh;       /* mantém altura fixa para o container */
+    margin-top: 5px;
+    background-color: #fff;
+    border-radius: 12px;
+    
+    /* NOVO: scroll interno */
+    overflow-y: auto;   /* barra de rolagem vertical */
+    overflow-x: hidden; /* opcional, evita scroll horizontal se não precisar */
+    padding: 10px;      /* opcional, para dar espaço interno */
+}
+
+/* DÚVIDA */
+
+ /* .page-description {
+     color: #000;
+     font-size: 16px;
+     font-weight: 500;
+     padding-top: 5px;
+     padding-bottom: 5px;
+     line-height: 1.5;
+     max-width: 580px;
+ } */

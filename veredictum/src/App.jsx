@@ -35,6 +35,7 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Home from './pages/Home/Home.jsx';
 import Cadastro from './pages/Cadastro/Cadastro.jsx';
 import VisaoGeral from './pages/VisaoGeral/VisaoGeral.jsx';
+import LogEnvioEmail from './pages/LogEnvioEmail/LogEnvioEmail.jsx';
 
 function App() {
   return (
@@ -43,6 +44,7 @@ function App() {
         <Route path="/" element={<Home />} />
         <Route path="/cadastro" element={<Cadastro />} />
         <Route path="/VisaoGeral" element={<VisaoGeral />} />
+        <Route path="/LogEnvioEmail" element={<LogEnvioEmail />} />
       </Routes>
     </Router>
   );

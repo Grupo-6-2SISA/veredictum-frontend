@@ -4,11 +4,8 @@ import '../../index.css';
 
 const Listagem = ({ dados, colunas }) => {
   // Define o grid dinamicamente conforme o número de colunas
-  const gridTemplate = colunas.length === 3
-    ? '3fr 2fr 1fr'
-    : colunas.length === 2
-      ? '3fr 2fr'
-      : '1fr';
+  // Cria uma string para grid-template-columns baseada no número de colunas
+  const gridTemplate = colunas.map(() => '1fr').join(' ');
 
   return (
     <div className="listagem-container">
