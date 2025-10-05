@@ -35,6 +35,8 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Home from './pages/Home/Home.jsx';
 import Cadastro from './pages/Cadastro/Cadastro.jsx';
 import VisaoGeral from './pages/VisaoGeral/VisaoGeral.jsx';
+import PainelControle from "./pages/PainelControle/PainelControle.jsx";
+import GestaoDespesas from './pages/GestadoDespesas/GestaoDespesas.jsx';
 
 function App() {
   return (
@@ -43,6 +45,8 @@ function App() {
         <Route path="/" element={<Home />} />
         <Route path="/cadastro" element={<Cadastro />} />
         <Route path="/VisaoGeral" element={<VisaoGeral />} />
+        <Route path="/painel-controle" element={<PainelControle />} />
+        <Route path="/gestao-despesas" element={<GestaoDespesas />} />
       </Routes>
     </Router>
   );
