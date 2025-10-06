@@ -1,0 +1,96 @@
+/*
+=========================================
+ESTILOS ESPECÍFICOS DA PÁGINA AGENDA
+=========================================
+*/
+
+.agenda-container {
+    display: flex;
+    min-height: 100vh;
+    background-color: #f0f0f0; 
+    transition: padding-left 0.2s ease-out; /* Transição suave */
+    width: 100vw;
+}
+
+/* --- Cabeçalho e Botão --- */
+.agenda-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.agenda-header h1 {
+    /* Garante que o H1 da Agenda use o mesmo estilo grande da Visão Geral */
+    margin: 0; 
+}
+
+
+
+/* --- Layout da Página (Atendimento + Painel Lateral) --- */
+.agenda-layout-grid {
+    display: grid;
+    /* Define o layout principal: Área de atendimento (maior) e Painel (menor) */
+    grid-template-columns: 3fr 1fr; 
+    gap: 20px;
+    height: calc(100vh - 120px); /* Ocupa a altura restante da viewport */
+}
+
+.atendimento-container {
+    display: flex;
+    flex-direction: column;
+    /* Estilos para o Card de Atendimento do Mês (se não estiver usando um Card.jsx) */
+    background-color: var(--white-normal);
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    overflow-y: hidden; /* Mantém o scroll dentro da listagem */
+}
+
+.month-selector {
+    margin-bottom: 15px;
+}
+
+.month-button {
+    background-color: var(--white-normal);
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    padding: 10px 15px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.aniversariantes-panel {
+    /* Estilos para garantir que o painel lateral se comporte como um bloco */
+    display: block;
+}
+
+/* --- Estilo de Listagem Específico da Agenda (Para a Listagem Principal) --- */
+
+/* Sobrescreve a definição de colunas para a lista principal de atendimentos */
+#atendimento-list .list-header {
+    /* Colunas: Checkbox, Nome, Dia, Horário, Status, Editar, Excluir */
+    grid-template-columns: 0.2fr 2fr 1fr 1fr 1fr 0.5fr 0.5fr;
+    gap: 15px;
+}
+
+#atendimento-list .list-item {
+     /* Colunas: Checkbox, Nome, Dia, Horário, Status, Editar, Excluir */
+    grid-template-columns: 0.2fr 2fr 1fr 1fr 1fr 0.5fr 0.5fr;
+    gap: 15px;
+}
+
+/* Garante que o Card de Aniversariantes do Mês na Agenda use 2 colunas */
+#agenda-birthdays-card .list-header,
+#agenda-birthdays-card .list-item {
+     /* Colunas: Nome (2fr) e Dia (1fr) */
+    grid-template-columns: 2fr 1fr;
+    gap: 10px;
+}
+
+/* ALINHAMENTO ESPECÍFICO DOS BOTÕES (ÍCONES) */
+.list-item p.list-item-editar,
+.list-item p.list-item-excluir {
+    text-align: center;
+}

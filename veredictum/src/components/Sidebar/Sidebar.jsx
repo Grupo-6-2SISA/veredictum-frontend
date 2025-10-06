@@ -4,14 +4,14 @@ import '../../index.css';
 
 
 const navItems = [
-    { name: 'Visão Geral', iconPath: 'src/assets/svg/visao-geral.svg', path: './visao_geral.html', iconClass: 'icon_vg' },
-    { name: 'Dashboard', iconPath: 'src/assets/svg/dash.svg', path: 'src/dashboard.html', iconClass: 'icon_dash' },
-    { name: 'Painel', iconPath: 'src/assets/svg/painel.svg', path: 'src/painel_controle.html', iconClass: 'icon_painel' },
-    { name: 'Gestão de Clientes', iconPath: 'src/assets/svg/funcionario.svg', path: 'src/clientes.html', iconClass: 'icon_funcionario' },
-    { name: 'Agenda & Relacionamento', iconPath: 'src/assets/svg/agenda.svg', path: 'src/agenda_relacionamento.html', iconClass: 'icon_agenda' },
-    { name: 'Gestão de Despesas', iconPath: 'src/assets/svg/despezas.svg', path: 'src/gestao_dispesas.html', iconClass: 'icon_notas' },
-    { name: 'Gestão de Notas Fiscais', iconPath: 'src/assets/svg/notas_fiscais.svg', path: 'src/notas-fiscais.html', iconClass: 'icon_notas' },
-    { name: 'Gestão de Logs', iconPath: 'src/assets/svg/logs.svg', path: 'src/log_envio_email.html', iconClass: 'icon_logs' },
+    { name: 'Visão Geral', iconPath: 'src/assets/svg/visao-geral.svg', path: './VisaoGeral', iconClass: 'icon_vg' },
+    { name: 'Dashboard', iconPath: 'src/assets/svg/dash.svg', path: './Dashboard', iconClass: 'icon_dash' },
+    { name: 'Painel', iconPath: 'src/assets/svg/painel.svg', path: './Painel', iconClass: 'icon_painel' },
+    { name: 'Gestão de Clientes', iconPath: 'src/assets/svg/funcionario.svg', path: './Clientes', iconClass: 'icon_funcionario' },
+    { name: 'Agenda & Relacionamento', iconPath: 'src/assets/svg/agenda.svg', path: './Agenda', iconClass: 'icon_agenda' },
+    { name: 'Gestão de Despesas', iconPath: 'src/assets/svg/despezas.svg', path: './GestaoDespesas', iconClass: 'icon_notas' },
+    { name: 'Gestão de Notas Fiscais', iconPath: 'src/assets/svg/notas_fiscais.svg', path: './NotasFiscais', iconClass: 'icon_notas' },
+    { name: 'Gestão de Logs', iconPath: 'src/assets/svg/logs.svg', path: './Logs', iconClass: 'icon_logs' },
 ];
 
 const Sidebar = () => {
