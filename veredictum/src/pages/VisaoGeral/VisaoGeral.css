@@ -1,38 +1,32 @@
-/* Definições de cores base (coloque aqui ou no seu arquivo de variáveis global) */
-:root {
-    --dark-black: #333; 
-    --white-normal: #fff;
-    --accent-color: #ffc107; 
-}
 
-/* 1. Base do Layout */
 .container {
     display: flex;
-    /* Define o padding inicial baseado na largura do sidebar não expandido (6%) */
-    /* padding-left: 4.5%;  */
     min-height: 100vh;
     background-color: #f0f0f0; 
     transition: padding-left 0.2s ease-out; /* Transição suave */
+    width: 100vw;
 }
 
-/* 2. Ajuste do Layout quando o Sidebar expande (A chave do seu design!) */
-/* :has() é um seletor moderno de CSS. Se o seu projeto não o suportar, 
-   precisaremos usar um estado React para adicionar classes ao 'container'. */
-.container:has(.sidebar:hover) {
-    padding-left: 17%; /* Nova largura expandida do sidebar */
-}
-
-/* 3. Conteúdo Principal */
 .main-content {
     flex-grow: 1; /* Ocupa todo o espaço restante */
     padding: 20px 40px;
     background-color: #f0f0f0;
-    
+    padding-left: 8%;    
 }
 
 .main-content h1 {
     font-size: 50px;
     font-weight: 700;
     color: var(--dark-black);
-    margin-bottom: 5%;
+    margin-bottom: 2%;
+}
+
+.cards-grid {
+    display: flex;
+    flex-direction: row;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 20px;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 20px;
 }
