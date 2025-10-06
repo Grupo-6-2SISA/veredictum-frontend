@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import './Clientes.css';
 import Sidebar from '../../components/Sidebar/Sidebar';
 import btnIcon from '../../assets/svg/btn.svg';
@@ -9,134 +9,98 @@ import Button from '../../components/Button/Button';
 import Listagem from '../../components/Listagem/Listagem';
 import Card from '../../components/Card/Card';
 import '../../components/Css/Main.css';
+import { getClientes, createCliente, updateCliente, activateCliente, deactivateCliente } from './Clientes.js';
 
-const initialClients = [
-    {
-        id: 1,
-        nome: 'Manu Monteiro',
-        dataNascimento: '1992-04-04',
-        email: 'gabriel@example.com',
-        rg: '987654301',
-        cpf: '987.654.323-00',
-        cnpj: '',
-        telefone: '11 88888-8887',
-        cep: '10000-000',
-        logradouro: 'Rua Exemplo 3',
-        bairro: 'Bairro Exemplo 3',
-        complemento: '',
-        localidade: 'Cidade Exemplo 4',
-        numero: '451',
-        inscricaoEstadual: '',
-        proBono: false,
-        status: 'Inativo',
-        ativo: false,
-        dataInicio: '2024-02-02',
-        indicacao: 'Marketing',
-        descricao: 'Contrato de serviço',
-    },
-    {
-        id: 2,
-        nome: 'Gabriel Cordeiro',
-        dataNascimento: '1992-02-02',
-        email: 'gabriel@example.com',
-        rg: '987654321',
-        cpf: '987.654.321-00',
-        cnpj: '',
-        telefone: '11 88888-8888',
-        cep: '00000-000',
-        logradouro: 'Rua Exemplo 2',
-        bairro: 'Bairro Exemplo 2',
-        complemento: '',
-        localidade: 'Cidade Exemplo 2',
-        numero: '456',
-        inscricaoEstadual: '',
-        proBono: false,
-        status: 'Ativo',
-        ativo: true,
-        dataInicio: '2024-02-02',
-        indicacao: 'Marketing',
-        descricao: 'Contrato de serviço',
-    },
-];
 
-const CLIENT_FORM_COLUMNS = [
-    [
-        { name: 'nome', label: 'Nome', type: 'text', required: true },
-        { name: 'dataNascimento', label: 'Data de Nascimento', type: 'date' },
-        { name: 'email', label: 'E-mail', type: 'email', required: true },
-        { name: 'rg', label: 'RG', type: 'text', required: true },
-        { name: 'cpf', label: 'CPF', type: 'text', required: true },
-    ],
-    [
-        { name: 'cnpj', label: 'CNPJ', type: 'text' },
-        { name: 'telefone', label: 'Telefone', type: 'text', required: true },
-        { name: 'cep', label: 'CEP', type: 'text', required: true },
-        { name: 'logradouro', label: 'Logradouro', type: 'text', required: true },
-        { name: 'bairro', label: 'Bairro', type: 'text', required: true },
-    ],
-    [
-        { name: 'complemento', label: 'Complemento', type: 'text' },
-        { name: 'localidade', label: 'Localidade', type: 'text' },
-        { name: 'numero', label: 'Número', type: 'text', required: true },
-        { name: 'inscricaoEstadual', label: 'Inscrição Estadual', type: 'text' },
-        {
-            name: 'proBono',
-            label: 'Pro-Bono?',
-            type: 'select',
-            defaultValue: 'false',
-            options: [
-                { value: 'false', label: 'Não' },
-                { value: 'true', label: 'Sim' },
-            ],
-        },
-    ],
-    [
-        {
-            name: 'status',
+const CLIENT_FORM_COLUMNS = (clientList = [], mode = 'add') => {
+    const columns = [
+        [
+            { name: 'nome', label: 'Nome', type: 'text', required: true },
+            { name: 'dataNascimento', label: 'Data de Nascimento', type: 'date' },
+            { name: 'email', label: 'E-mail', type: 'email', required: true },
+            { name: 'rg', label: 'RG', type: 'text', required: true },
+            { name: 'cpf', label: 'CPF', type: 'text' },
+        ],
+        [
+            { name: 'cnpj', label: 'CNPJ', type: 'text' },
+            { name: 'telefone', label: 'Telefone', type: 'text', required: true, placeholder: '+5511999999999' },
+            { name: 'cep', label: 'CEP', type: 'text', required: true },
+            { name: 'logradouro', label: 'Logradouro', type: 'text', required: true },
+            { name: 'bairro', label: 'Bairro', type: 'text', required: true },
+        ],
+        [
+            { name: 'complemento', label: 'Complemento', type: 'text' },
+            { name: 'localidade', label: 'Localidade', type: 'text' },
+            { name: 'numero', label: 'Número', type: 'text', required: true },
+            { name: 'inscricaoEstadual', label: 'Inscrição Estadual', type: 'text' },
+            {
+                name: 'isProBono',
+                label: 'Pro-Bono?',
+                type: 'select',
+                defaultValue: 'false',
+                options: [
+                    { value: 'false', label: 'Não' },
+                    { value: 'true', label: 'Sim' },
+                ],
+            },
+        ],
+        [
+            { name: 'dataInicio', label: 'Data Início', type: 'date', required: true },
+            {
+                name: 'fkIndicador',
+                label: 'Indicação',
+                type: 'select',
+                defaultValue: '',
+                options: [
+                    { value: '', label: 'Nenhuma' },
+                    ...clientList.map(client => ({ value: client.idCliente, label: client.nome })),
+                ],
+            },
+            {
+                name: 'descricao',
+                label: 'Descrição',
+                type: 'textarea',
+                placeholder: 'Detalhes do cliente...',
+            },
+        ],
+    ];
+
+ 
+    if (mode === 'edit' || mode === 'view') {
+        columns[3].unshift({ 
+            name: 'isAtivo',
             label: 'Status',
             type: 'select',
-            defaultValue: 'Ativo',
+            defaultValue: 'true',
             options: [
-                { value: 'Ativo', label: 'Ativo' },
-                { value: 'Inativo', label: 'Inativo' },
-            ],
-        },
-        { name: 'dataInicio', label: 'Data Início', type: 'date' },
-        {
-            name: 'indicacao',
-            label: 'Indicação',
-            type: 'select',
-            defaultValue: 'Lista de clientes',
-            options: [
-                { value: 'Lista de clientes', label: 'Lista de clientes' },
-                { value: 'Indicação', label: 'Indicação' },
-                { value: 'Marketing', label: 'Marketing' },
-            ],
-        },
-        {
-            name: 'descricao',
-            label: 'Descrição',
-            type: 'textarea',
-            placeholder: 'Caso de Herança...',
-        },
-    ],
-];
+                { value: 'true', label: 'Ativo' },
+                { value: 'false', label: 'Inativo' },
+            ]
+        });
+    }
+
+    return columns;
+};
+
+
 
 const getFieldValue = (clientData, field) => {
-    if (!clientData) {
-        return field.defaultValue ?? '';
-    }
-
-    if (field.name === 'proBono') {
-        return clientData.proBono ? 'true' : 'false';
-    }
-
+    if (!clientData) return field.defaultValue ?? '';
+    if (field.name === 'isProBono') return String(clientData.isProBono);
+    if (field.name === 'isAtivo') return String(clientData.isAtivo); 
+    if (field.name === 'fkIndicador') return clientData.fkIndicador ?? '';
+    
     const value = clientData[field.name];
+    
+    if (field.type === 'date' && value) {
+        return value.split('T')[0];
+    }
+    
     return value ?? field.defaultValue ?? '';
 };
 
-const renderFormColumns = (mode, clientData) => (
-    CLIENT_FORM_COLUMNS.map((column, columnIndex) => (
+const renderFormColumns = (mode, clientData, clientList) => (
+    CLIENT_FORM_COLUMNS(clientList, mode).map((column, columnIndex) => (
         <div className="form-column" key={`column-${columnIndex}`}>
             {column.map((field) => {
                 const baseProps = {
@@ -144,49 +108,33 @@ const renderFormColumns = (mode, clientData) => (
                     name: field.name,
                     required: field.required,
                     disabled: mode === 'view',
+                    placeholder: field.placeholder || '',
                 };
-
                 const defaultValue = getFieldValue(clientData, field);
-
                 if (field.type === 'select') {
                     return (
                         <div className="form-group-client" key={field.name}>
                             <label htmlFor={field.name}>{field.label}</label>
-                            <select
-                                {...baseProps}
-                                defaultValue={defaultValue}
-                            >
+                            <select {...baseProps} defaultValue={defaultValue}>
                                 {field.options?.map((option) => (
-                                    <option key={option.value} value={option.value}>
-                                        {option.label}
-                                    </option>
+                                    <option key={option.value} value={option.value}>{option.label}</option>
                                 ))}
                             </select>
                         </div>
                     );
                 }
-
                 if (field.type === 'textarea') {
                     return (
                         <div className="form-group-client" key={field.name}>
                             <label htmlFor={field.name}>{field.label}</label>
-                            <textarea
-                                {...baseProps}
-                                placeholder={field.placeholder}
-                                defaultValue={defaultValue}
-                            />
+                            <textarea {...baseProps} defaultValue={defaultValue} />
                         </div>
                     );
                 }
-
                 return (
                     <div className="form-group-client" key={field.name}>
                         <label htmlFor={field.name}>{field.label}</label>
-                        <input
-                            {...baseProps}
-                            type={field.type}
-                            defaultValue={defaultValue}
-                        />
+                        <input {...baseProps} type={field.type} defaultValue={defaultValue} />
                     </div>
                 );
             })}
@@ -202,220 +150,166 @@ const TABLE_COLUMNS = [
 ];
 
 function Clientes() {
-    const [clients, setClients] = useState(initialClients);
+    const [clients, setClients] = useState([]);
     const [selectedClient, setSelectedClient] = useState(null);
     const [isAddOpen, setIsAddOpen] = useState(false);
     const [isEditOpen, setIsEditOpen] = useState(false);
     const [isViewOpen, setIsViewOpen] = useState(false);
     const [isDeleteOpen, setIsDeleteOpen] = useState(false);
 
-        const tableData = clients.map((client) => ({
-            nome: (
-                <div className="client-list-name">
-                    <p>{client.nome}</p>
-               
-                </div>
-            ),
-            editar: (
-                <Button
-                    className="btn-icon-only"
-                    type="button"
-                    onClick={() => handleOpenEdit(client)}
-                    aria-label={`Editar ${client.nome}`}
-                >
-                    <img src={editIcon} alt="Editar" />
-                </Button>
-            ),
-            informacoes: (
-                <Button
-                    className="btn-link"
-                    type="button"
-                    onClick={() => handleOpenView(client)}
-                >
-                    Ver mais
-                </Button>
-            ),
-            status: (
-                <Toggle
-                    label=""
-                    checked={client.ativo}
-                    onChange={(event) => handleToggleStatus(client, event.target.checked)}
-                />
-            ),
-        }));
-
-    function handleOpenAdd() {
-        setIsAddOpen(true);
-    }
-
-    function handleCloseAdd() {
-        setIsAddOpen(false);
-    }
-
-    function handleOpenEdit(client) {
-        setSelectedClient(client);
-        setIsEditOpen(true);
-    }
-
-    function handleCloseEdit() {
-        setIsEditOpen(false);
-        setSelectedClient(null);
-    }
-
-    function handleOpenView(client) {
-        setSelectedClient(client);
-        setIsViewOpen(true);
-    }
-
-    function handleCloseView() {
-        setIsViewOpen(false);
-        setSelectedClient(null);
-    }
-
-    function handleOpenDelete(client) {
-        setSelectedClient(client);
-        setIsDeleteOpen(true);
-    }
-
-    function handleToggleStatus(client, shouldActivate) {
-        if (shouldActivate) {
-            const updatedClients = clients.map((currentClient) => {
-                if (currentClient.id === client.id) {
-                    return { ...currentClient, ativo: true, status: 'Ativo' };
-                }
-                return currentClient;
-            });
-            setClients(updatedClients);
-            return;
+    const fetchClients = async () => {
+        try {
+            const response = await getClientes();
+            setClients(response.data || []);
+        } catch (error) {
+            console.error("Erro ao buscar clientes:", error);
+            setClients([]);
         }
+    };
 
-        handleOpenDelete(client);
+    useEffect(() => {
+        fetchClients();
+    }, []);
+
+    const tableData = clients.map((client) => ({
+        nome: (<div className="client-list-name"><p>{client.nome}</p></div>),
+        editar: (
+            <Button className="btn-icon-only" type="button" onClick={() => handleOpenEdit(client)} aria-label={`Editar ${client.nome}`}>
+                <img src={editIcon} alt="Editar" />
+            </Button>
+        ),
+        informacoes: (
+            <Button className="btn-link" type="button" onClick={() => handleOpenView(client)}>Ver mais</Button>
+        ),
+        status: (
+            <Toggle label="" checked={client.isAtivo} onChange={() => handleToggleStatus(client)} />
+        ),
+    }));
+
+    function handleOpenAdd() { setIsAddOpen(true); }
+    function handleCloseAdd() { setIsAddOpen(false); }
+    function handleOpenEdit(client) { setSelectedClient(client); setIsEditOpen(true); }
+    function handleCloseEdit() { setIsEditOpen(false); setSelectedClient(null); }
+    function handleOpenView(client) { setSelectedClient(client); setIsViewOpen(true); }
+    function handleCloseView() { setIsViewOpen(false); setSelectedClient(null); }
+    function handleOpenDelete(client) { setSelectedClient(client); setIsDeleteOpen(true); }
+    function handleCloseDelete() { setIsDeleteOpen(false); setSelectedClient(null); }
+
+    async function handleToggleStatus(client) {
+        try {
+            if (!client.isAtivo) {
+                await activateCliente(client.idCliente);
+                fetchClients();
+            } else {
+                handleOpenDelete(client);
+            }
+        } catch (error) {
+            console.error("Erro ao alterar status do cliente:", error);
+        }
     }
 
-    function handleCloseDelete() {
-        setIsDeleteOpen(false);
-        setSelectedClient(null);
-    }
-    
-    function handleConfirmDelete() {
+    async function handleConfirmDelete() {
         if (selectedClient) {
-            const updatedClients = clients.map((client) => {
-                if (client.id === selectedClient.id) {
-                    const newAtivo = !client.ativo;
-                    return { ...client, ativo: newAtivo, status: newAtivo ? 'Ativo' : 'Inativo' };
-                }
-                return client;
-            });
-            setClients(updatedClients);
+            try {
+                await deactivateCliente(selectedClient.idCliente);
+                fetchClients();
+            } catch (error) {
+                console.error("Erro ao desativar cliente:", error);
+            }
         }
         handleCloseDelete();
     }
+
     
-    function handleSubmitAdd(event) {
-        event.preventDefault();
-        const formData = new FormData(event.currentTarget);
-        const newClient = {
-            id: Date.now(),
+    const getClientDataFromForm = (formData) => {
+        const fkIndicadorValue = formData.get('fkIndicador');
+        const data = {
             nome: formData.get('nome'),
             email: formData.get('email'),
-            telefone: formData.get('telefone'),
-            ativo: formData.get('status') !== 'Inativo',
-            status: formData.get('status') || 'Ativo',
-            dataNascimento: formData.get('dataNascimento'),
             rg: formData.get('rg'),
-            cpf: formData.get('cpf'),
-            cnpj: formData.get('cnpj'),
+            cpf: formData.get('cpf') || null,
+            cnpj: formData.get('cnpj') || null,
+            telefone: formData.get('telefone'),
+            dataNascimento: formData.get('dataNascimento') || null,
+            dataInicio: formData.get('dataInicio') || null,
             cep: formData.get('cep'),
             logradouro: formData.get('logradouro'),
             bairro: formData.get('bairro'),
-            complemento: formData.get('complemento'),
             localidade: formData.get('localidade'),
             numero: formData.get('numero'),
-            inscricaoEstadual: formData.get('inscricaoEstadual'),
-            proBono: formData.get('proBono') === 'true',
-            dataInicio: formData.get('dataInicio'),
-            indicacao: formData.get('indicacao'),
+            complemento: formData.get('complemento'),
             descricao: formData.get('descricao'),
-
+            inscricaoEstadual: formData.get('inscricaoEstadual') || null,
+            isProBono: formData.get('isProBono') === 'true',
+            isJuridico: !!formData.get('cnpj'),
+            fkIndicador: fkIndicadorValue ? parseInt(fkIndicadorValue, 10) : null,
         };
-        event.currentTarget.reset();
-        setClients([...clients, newClient]);
-        handleCloseAdd();
-    }
-    
-    function handleSubmitEdit(event) {
+
+        
+        if (formData.has('isAtivo')) {
+            data.isAtivo = formData.get('isAtivo') === 'true';
+        }
+
+        return data;
+    };
+
+
+    async function handleSubmitAdd(event) {
         event.preventDefault();
         const formData = new FormData(event.currentTarget);
-        const updatedClients = clients.map((client) => {
-            if (client.id === selectedClient.id) {
-                return {
-                    ...client,
-                    nome: formData.get('nome'),
-                    email: formData.get('email'),
-                    telefone: formData.get('telefone'),
-                    ativo: formData.get('status') !== 'Inativo',
-                    status: formData.get('status') || 'Ativo',
-                    dataNascimento: formData.get('dataNascimento'),
-                    rg: formData.get('rg'),
-                    cpf: formData.get('cpf'),
-                    cnpj: formData.get('cnpj'),
-                    cep: formData.get('cep'),
-                    logradouro: formData.get('logradouro'),
-                    bairro: formData.get('bairro'),
-                    complemento: formData.get('complemento'),
-                    localidade: formData.get('localidade'),
-                    numero: formData.get('numero'),
-                    inscricaoEstadual: formData.get('inscricaoEstadual'),
-                    proBono: formData.get('proBono') === 'true',
-                    dataInicio: formData.get('dataInicio'),
-                    indicacao: formData.get('indicacao'),
-                    descricao: formData.get('descricao'),
-                };
-            }
-            return client;
-        });
-        setClients(updatedClients);
-        handleCloseEdit();
+        const newClient = getClientDataFromForm(formData);
+        
+        try {
+            await createCliente(newClient);
+            fetchClients();
+            handleCloseAdd();
+        } catch (error) {
+            console.error("Erro ao cadastrar cliente:", error.response?.data || error);
+        }
     }
-    
+
+    async function handleSubmitEdit(event) {
+        event.preventDefault();
+        const formData = new FormData(event.currentTarget);
+        const updatedData = {
+            ...selectedClient,
+            ...getClientDataFromForm(formData),
+        };
+        
+        try {
+            await updateCliente(selectedClient.idCliente, updatedData);
+            fetchClients();
+            handleCloseEdit();
+        } catch (error) {
+            console.error("Erro ao editar cliente:", error.response?.data || error);
+        }
+    }
+
     return (
         <div className="container clientes-page">
             <Sidebar />
-
             <main className="main-content clientes-main">
                 <div className="header-top">
                     <div className="head-description">
                         <h1>Gestão de Clientes</h1>
-                        <p className="description">
-                            Acesse, altere e mantenha as informações dos clientes
-                            <br /> sempre atualizadas.
-                        </p>
+                        <p className="description">Acesse, altere e mantenha as informações dos clientes<br /> sempre atualizadas.</p>
                     </div>
-
                     <Button className="btn-new-appointment" onClick={handleOpenAdd}>
                         Cadastrar Cliente
                         <img src={btnIcon} alt="Cadastrar novo cliente" />
                     </Button>
                 </div>
-
                 <section className="client-management-section">
-                    <Card
-                        className="client-table-card"
-                        variant="clientes"
-                        headerContent={null}
-                    >
-                        {clients.length ? (
-                            <Listagem
-                                dados={tableData}
-                                colunas={TABLE_COLUMNS}
-                                variant="clientes"
-                            />
+                    <Card className="client-table-card" variant="clientes" headerContent={null}>
+                        {clients.length > 0 ? (
+                            <Listagem dados={tableData} colunas={TABLE_COLUMNS} variant="clientes" />
                         ) : (
                             <p className="listagem-vazia">Nenhum cliente cadastrado.</p>
                         )}
                     </Card>
                 </section>
 
+              
                 <Modal
                     isOpen={isAddOpen}
                     variant="add"
@@ -425,17 +319,13 @@ function Clientes() {
                     formProps={{ id: 'formCadastrarCliente', onSubmit: handleSubmitAdd, className: 'appointment-form' }}
                     footer={(
                         <div className="form-footer-client">
-                            <Button className="btn-new-appointment" type="submit">
-                                Cadastrar
-                            </Button>
+                            <Button className="btn-new-appointment" type="submit">Cadastrar</Button>
                         </div>
-                    )}
-                >
-                    <div className="form-row form-grid">
-                        {renderFormColumns('add', null)}
-                    </div>
+                    )}>
+                    <div className="form-row form-grid">{renderFormColumns('add', null, clients)}</div>
                 </Modal>
 
+                
                 <Modal
                     isOpen={isEditOpen && Boolean(selectedClient)}
                     variant="edit"
@@ -445,49 +335,35 @@ function Clientes() {
                     formProps={{ id: 'formEditarCliente', onSubmit: handleSubmitEdit, className: 'appointment-form' }}
                     footer={(
                         <div className="form-footer-client">
-                            <Button className="btn-new-appointment" type="submit">
-                                Editar
-                            </Button>
+                            <Button className="btn-new-appointment" type="submit">Salvar Alterações</Button>
                         </div>
-                    )}
-                >
-                    <div className="form-row form-grid">
-                        {selectedClient && renderFormColumns('edit', selectedClient)}
-                    </div>
+                    )}>
+                    <div className="form-row form-grid">{selectedClient && renderFormColumns('edit', selectedClient, clients)}</div>
                 </Modal>
 
+              
                 <Modal
                     isOpen={isViewOpen && Boolean(selectedClient)}
                     variant="view"
                     title="Informações sobre o Cliente"
                     onClose={handleCloseView}
-                    modalId="new-appointment-modal-view-client"
-                >
-                    <div className="form-row form-grid">
-                        {selectedClient && renderFormColumns('view', selectedClient)}
-                    </div>
+                    modalId="new-appointment-modal-view-client">
+                    <div className="form-row form-grid">{selectedClient && renderFormColumns('view', selectedClient, clients)}</div>
                 </Modal>
-
+                
                 <Modal
                     isOpen={isDeleteOpen && Boolean(selectedClient)}
                     variant="delete"
-                    title="Desativar Clientes"
+                    title="Desativar Cliente"
                     onClose={handleCloseDelete}
                     modalId="modal-delete-schedule"
                     footer={(
                         <>
-                            <Button className="btn-cancel-delete" onClick={handleCloseDelete}>
-                                Não
-                            </Button>
-                            <Button className="btn-confirm-delete" onClick={handleConfirmDelete}>
-                                Sim
-                            </Button>
+                            <Button className="btn-cancel-delete" onClick={handleCloseDelete}>Não</Button>
+                            <Button className="btn-confirm-delete" onClick={handleConfirmDelete}>Sim</Button>
                         </>
-                    )}
-                >
-                    <p>
-                        Deseja desativar <span className="client-name">{selectedClient?.nome}</span>?
-                    </p>
+                    )}>
+                    <p>Deseja desativar <span className="client-name">{selectedClient?.nome}</span>?</p>
                 </Modal>
             </main>
         </div>
