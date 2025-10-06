@@ -182,7 +182,13 @@ function Clientes() {
             <Button className="btn-link" type="button" onClick={() => handleOpenView(client)}>Ver mais</Button>
         ),
         status: (
-            <Toggle label="" checked={client.isAtivo} onChange={() => handleToggleStatus(client)} />
+            <Toggle
+                label=""
+                checked={client.isAtivo}
+                onChange={() => handleToggleStatus(client)}
+                id={`toggle-status-${client.idCliente}`}
+                name={`toggle-status-${client.idCliente}`}
+            />
         ),
     }));
 
@@ -223,11 +229,24 @@ function Clientes() {
     
     const getClientDataFromForm = (formData) => {
         const fkIndicadorValue = formData.get('fkIndicador');
+
+        const rawCpf = formData.get('cpf') || '';
+        const sanitizedCpf = rawCpf.replace(/\D/g, '');
+        if (sanitizedCpf.length > 11) {
+            throw new Error('O CPF deve ter no máximo 11 dígitos.');
+        }
+
+        const rawInscricao = formData.get('inscricaoEstadual') || '';
+        const sanitizedInscricao = rawInscricao.replace(/\D/g, '');
+        if (sanitizedInscricao.length > 0 && sanitizedInscricao.length !== 9) {
+            throw new Error('A inscrição estadual deve ter exatamente 9 dígitos.');
+        }
+
         const data = {
             nome: formData.get('nome'),
             email: formData.get('email'),
             rg: formData.get('rg'),
-            cpf: formData.get('cpf') || null,
+            cpf: sanitizedCpf || null,
             cnpj: formData.get('cnpj') || null,
             telefone: formData.get('telefone'),
             dataNascimento: formData.get('dataNascimento') || null,
@@ -239,7 +258,7 @@ function Clientes() {
             numero: formData.get('numero'),
             complemento: formData.get('complemento'),
             descricao: formData.get('descricao'),
-            inscricaoEstadual: formData.get('inscricaoEstadual') || null,
+            inscricaoEstadual: sanitizedInscricao || null,
             isProBono: formData.get('isProBono') === 'true',
             isJuridico: !!formData.get('cnpj'),
             fkIndicador: fkIndicadorValue ? parseInt(fkIndicadorValue, 10) : null,
@@ -257,7 +276,14 @@ function Clientes() {
     async function handleSubmitAdd(event) {
         event.preventDefault();
         const formData = new FormData(event.currentTarget);
-        const newClient = getClientDataFromForm(formData);
+        let newClient;
+
+        try {
+            newClient = getClientDataFromForm(formData);
+        } catch (validationError) {
+            window.alert(validationError.message);
+            return;
+        }
         
         try {
             await createCliente(newClient);
@@ -273,8 +299,14 @@ function Clientes() {
         const formData = new FormData(event.currentTarget);
         const updatedData = {
             ...selectedClient,
-            ...getClientDataFromForm(formData),
         };
+        
+        try {
+            Object.assign(updatedData, getClientDataFromForm(formData));
+        } catch (validationError) {
+            window.alert(validationError.message);
+            return;
+        }
         
         try {
             await updateCliente(selectedClient.idCliente, updatedData);
@@ -335,7 +367,7 @@ function Clientes() {
                     formProps={{ id: 'formEditarCliente', onSubmit: handleSubmitEdit, className: 'appointment-form' }}
                     footer={(
                         <div className="form-footer-client">
-                            <Button className="btn-new-appointment" type="submit">Salvar Alterações</Button>
+                            <Button className="btn-new-appointment" type="submit">Editar</Button>
                         </div>
                     )}>
                     <div className="form-row form-grid">{selectedClient && renderFormColumns('edit', selectedClient, clients)}</div>

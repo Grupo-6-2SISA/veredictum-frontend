@@ -33,6 +33,12 @@ function Modal({
     ? { ...formProps, className: wrapperClassName }
     : { className: wrapperClassName };
 
+  const footerContent = footer ? (
+    <div className="modal-footer">
+      {footer}
+    </div>
+  ) : null;
+
   return (
     <>
       <div className={backdropClass} onClick={onClose}></div>
@@ -49,13 +55,10 @@ function Modal({
             <div className="modal-body">
               {children}
             </div>
+            {formProps ? footerContent : null}
           </Wrapper>
 
-          {footer && (
-            <div className="modal-footer">
-              {footer}
-            </div>
-          )}
+          {!formProps ? footerContent : null}
         </div>
       </div>
     </>
