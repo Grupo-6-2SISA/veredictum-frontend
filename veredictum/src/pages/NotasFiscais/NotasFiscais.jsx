@@ -43,6 +43,7 @@ const NotasFiscais = () => {
     try {
       setLoading(true);
       const response = await getNotasFiscais();
+      console.log('Dados recebidos da API:', response.data);
       setNotasFiscaisData(response.data);
       setError(null);
     } catch (err) {
@@ -51,24 +52,26 @@ const NotasFiscais = () => {
       // Manter dados de exemplo em caso de erro
       setNotasFiscaisData([
         { 
-          id: 1,
+          id_nota_fiscal: 1,
           numero: 'NF-001', 
           etiqueta: 'Vendas', 
-          dataVencimento: '15/10/2025', 
-          emitida: true,
-          cliente: 'João Silva',
-          valor: 'R$ 2.500,00',
-          urlCloud: 'https://cloud.exemplo.com/nf001'
+          data_vencimento: '15/10/2025', 
+          is_emitida: 1, // 1 = verde (emitida)
+          fk_cliente: 1,
+          valor: 2500.00,
+          url_nuvem: 'https://cloud.exemplo.com/nf001',
+          descricao: 'Nota fiscal de vendas'
         },
         { 
-          id: 2,
+          id_nota_fiscal: 2,
           numero: 'NF-002', 
           etiqueta: 'Serviços', 
-          dataVencimento: '20/10/2025', 
-          emitida: false,
-          cliente: 'Maria Santos',
-          valor: 'R$ 1.800,00',
-          urlCloud: 'https://cloud.exemplo.com/nf002'
+          data_vencimento: '20/10/2025', 
+          is_emitida: 0, // 0 = vermelho (não emitida)
+          fk_cliente: 2,
+          valor: 1800.00,
+          url_nuvem: 'https://cloud.exemplo.com/nf002',
+          descricao: 'Nota fiscal de serviços'
         }
       ]);
     } finally {
@@ -112,9 +115,9 @@ const NotasFiscais = () => {
   const handleDelete = async (nota) => {
     if (window.confirm(`Deseja excluir a nota fiscal ${nota.numero}?`)) {
       try {
-        await deleteNotaFiscal(nota.id);
+        await deleteNotaFiscal(nota.id_nota_fiscal);
         // Atualizar a lista removendo a nota excluída
-        setNotasFiscaisData(prev => prev.filter(item => item.id !== nota.id));
+        setNotasFiscaisData(prev => prev.filter(item => item.id_nota_fiscal !== nota.id_nota_fiscal));
       } catch (err) {
         console.error('Erro ao excluir nota fiscal:', err);
         alert('Erro ao excluir nota fiscal');
@@ -134,25 +137,28 @@ const NotasFiscais = () => {
     const formData = new FormData(e.target);
     
     const notaFiscalData = {
-      numero: formData.get('numeroNota'),
+      numero: parseInt(formData.get('numeroNota')),
+      fkCliente: parseInt(formData.get('cliente')), // ID do cliente como número
       etiqueta: formData.get('etiqueta'),
-      dataVencimento: formData.get('dataVencimento'),
-      emitida: formData.get('emitida') === 'true',
-      cliente: formData.get('cliente'),
-      valor: formData.get('valor'),
-      urlCloud: formData.get('urlCloud')
+      valor: parseFloat(formData.get('valor')),
+      dataVencimento: formData.get('dataVencimento'), // Formato: YYYY-MM-DD
+      descricao: formData.get('descricao') || '',
+      urlNuvem: formData.get('urlCloud'),
+      isEmitida: formData.get('emitida') === 'true' ? 1 : 0 // Converte para numérico
     };
 
     try {
-      const response = await createNotaFiscal(notaFiscalData);
+      const response = await createNotaFiscal(notaFiscalData, 1); // statusInicialId = 1
       // Adicionar a nova nota à lista
       setNotasFiscaisData(prev => [...prev, response.data]);
       closeModal();
       // Limpar formulário
+
       e.target.reset();
     } catch (err) {
       console.error('Erro ao criar nota fiscal:', err);
-      alert('Erro ao criar nota fiscal');
+      console.error('Dados enviados:', notaFiscalData);
+      alert('Erro ao criar nota fiscal: ' + (err.response?.data?.message || err.message));
     }
   };
 
@@ -162,21 +168,21 @@ const NotasFiscais = () => {
     const formData = new FormData(e.target);
     
     const updatedData = {
-      numero: formData.get('numeroNota'),
+      fkCliente: parseInt(formData.get('cliente')), // ID do cliente como número
       etiqueta: formData.get('etiqueta'),
+      valor: parseFloat(formData.get('valor')),
       dataVencimento: formData.get('dataVencimento'),
-      emitida: formData.get('emitida') === 'true',
-      cliente: formData.get('cliente'),
-      valor: formData.get('valor'),
-      urlCloud: formData.get('urlCloud')
+      descricao: formData.get('descricao') || '',
+      urlNuvem: formData.get('urlCloud'),
+      isEmitida: formData.get('emitida') === 'true' ? 1 : 0 // Converte para numérico
     };
 
     try {
-      const response = await updateNotaFiscal(editingNota.id, updatedData);
+      const response = await updateNotaFiscal(editingNota.id_nota_fiscal, updatedData);
       // Atualizar a nota na lista
       setNotasFiscaisData(prev => 
         prev.map(nota => 
-          nota.id === editingNota.id ? response.data : nota
+          nota.id_nota_fiscal === editingNota.id_nota_fiscal ? response.data : nota
         )
       );
       closeEditModal();
@@ -186,19 +192,36 @@ const NotasFiscais = () => {
     }
   };
 
-  // Função para alternar status de emitida
+  // Função para alternar status de emitida (1 = verde, 0 = vermelho)
   const handleToggleEmitida = async (notaId, currentStatus) => {
     try {
-      const response = await toggleEmitidaNotaFiscal(notaId, !currentStatus);
-      // Atualizar o status na lista
+      // Converte boolean para numérico e alterna: true(1) -> false(0), false(0) -> true(1)
+      const newNumericStatus = currentStatus ? 0 : 1;
+      
+      console.log(`Toggle - ID: ${notaId}, Status atual: ${currentStatus}, Novo: ${newNumericStatus}`);
+      
+      // Optimistic update - atualiza a UI imediatamente
       setNotasFiscaisData(prev => 
         prev.map(nota => 
-          nota.id === notaId ? { ...nota, emitida: !currentStatus } : nota
+          nota.id_nota_fiscal === notaId ? { ...nota, is_emitida: newNumericStatus } : nota
         )
       );
+      
+      // Chama a API com valor numérico direto
+      await toggleEmitidaNotaFiscal(notaId, newNumericStatus);
+      
+      console.log('Toggle bem-sucedido!');
+      
     } catch (err) {
+      // Se der erro, reverte a mudança
+      const originalNumericStatus = currentStatus ? 1 : 0;
+      setNotasFiscaisData(prev => 
+        prev.map(nota => 
+          nota.id_nota_fiscal === notaId ? { ...nota, is_emitida: originalNumericStatus } : nota
+        )
+      );
       console.error('Erro ao alternar status da nota fiscal:', err);
-      alert('Erro ao alterar status da nota fiscal');
+      alert('Erro ao alterar status da nota fiscal: ' + (err.response?.data?.message || err.message));
     }
   };
 
@@ -237,16 +260,16 @@ const NotasFiscais = () => {
                 <p className="col-info">Informações</p>
               </div>
               <div className="list-items-container nf-list-items-container">
-                {notasFiscaisData.map((nota, index) => (
-                  <div key={index} className="nf-list-item">
+                {notasFiscaisData.map((nota) => (
+                  <div key={nota.id_nota_fiscal || nota.numero} className="nf-list-item">
                     <p>{nota.numero}</p>
                     <p>{nota.etiqueta}</p>
-                    <p>{nota.dataVencimento}</p>
+                    <p>{nota.data_vencimento}</p>
                     <div className="toggle-switch">
                       <input 
                         type="checkbox" 
-                        checked={nota.emitida} 
-                        onChange={() => handleToggleEmitida(nota.id, nota.emitida)} 
+                        checked={nota.is_emitida === 1} // 1 = true (verde), 0 = false (vermelho)
+                        onChange={() => handleToggleEmitida(nota.id_nota_fiscal, nota.is_emitida === 1)} 
                       />
                       <span className="slider"></span>
                     </div>
@@ -292,19 +315,19 @@ const NotasFiscais = () => {
                     <div className="form-group-notas">
                       <label htmlFor="emitida">Emitida</label>
                       <select id="emitida" name="emitida" required>
-                        <option value="true">Sim</option>
-                        <option value="false">Não</option>
+                        <option value="true">Sim (Verde)</option>
+                        <option value="false">Não (Vermelho)</option>
                       </select>
                     </div>
                     <div className="form-group-notas">
-                      <label htmlFor="cliente">Cliente</label>
-                      <input type="text" id="cliente" name="cliente" required />
+                      <label htmlFor="cliente">ID do Cliente</label>
+                      <input type="number" id="cliente" name="cliente" required placeholder="Ex: 1, 2, 3..." />
                     </div>
                   </div>
                   <div className="form-column">
                     <div className="form-group-notas">
                       <label htmlFor="valor">Valor</label>
-                      <input type="text" id="valor" name="valor" required />
+                      <input type="number" step="0.01" id="valor" name="valor" required placeholder="Ex: 1250.50" />
                     </div>
                     <div className="form-group-notas">
                       <label htmlFor="etiqueta">Etiqueta</label>
@@ -313,6 +336,10 @@ const NotasFiscais = () => {
                     <div className="form-group-notas">
                       <label htmlFor="urlCloud">URL Cloud</label>
                       <input type="text" id="urlCloud" name="urlCloud" />
+                    </div>
+                    <div className="form-group-notas">
+                      <label htmlFor="descricao">Descrição</label>
+                      <textarea id="descricao" name="descricao" rows="3"></textarea>
                     </div>
                   </div>
                 </div>
@@ -353,7 +380,7 @@ const NotasFiscais = () => {
                         type="date" 
                         id="dataVencimentoEdit" 
                         name="dataVencimento" 
-                        defaultValue={editingNota.dataVencimento?.split('/').reverse().join('-')}
+                        defaultValue={editingNota.data_vencimento?.split('/').reverse().join('-')}
                         required 
                       />
                     </div>
@@ -362,21 +389,22 @@ const NotasFiscais = () => {
                       <select 
                         id="emitidaEdit" 
                         name="emitida" 
-                        defaultValue={editingNota.emitida ? 'true' : 'false'}
+                        defaultValue={editingNota.is_emitida === 1 ? 'true' : 'false'}
                         required
                       >
-                        <option value="true">Sim</option>
-                        <option value="false">Não</option>
+                        <option value="true">Sim (Verde)</option>
+                        <option value="false">Não (Vermelho)</option>
                       </select>
                     </div>
                     <div className="form-group-notas">
-                      <label htmlFor="clienteEdit">Cliente</label>
+                      <label htmlFor="clienteEdit">ID do Cliente</label>
                       <input 
-                        type="text" 
+                        type="number" 
                         id="clienteEdit" 
                         name="cliente" 
-                        defaultValue={editingNota.cliente}
+                        defaultValue={editingNota.fk_cliente}
                         required 
+                        placeholder="Ex: 1, 2, 3..."
                       />
                     </div>
                   </div>
@@ -384,11 +412,13 @@ const NotasFiscais = () => {
                     <div className="form-group-notas">
                       <label htmlFor="valorEdit">Valor</label>
                       <input 
-                        type="text" 
+                        type="number" 
+                        step="0.01"
                         id="valorEdit" 
                         name="valor" 
                         defaultValue={editingNota.valor}
                         required 
+                        placeholder="Ex: 1250.50"
                       />
                     </div>
                     <div className="form-group-notas">
@@ -406,8 +436,17 @@ const NotasFiscais = () => {
                         type="text" 
                         id="urlCloudEdit" 
                         name="urlCloud" 
-                        defaultValue={editingNota.urlCloud}
+                        defaultValue={editingNota.url_nuvem}
                       />
+                    </div>
+                    <div className="form-group-notas">
+                      <label htmlFor="descricaoEdit">Descrição</label>
+                      <textarea 
+                        id="descricaoEdit" 
+                        name="descricao" 
+                        rows="3"
+                        defaultValue={editingNota.descricao}
+                      ></textarea>
                     </div>
                   </div>
                 </div>
