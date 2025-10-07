@@ -37,6 +37,7 @@
     flex-direction: column;
     align-items: flex-start;
     justify-content: center;
+    margin-left: -20px;
 }
 
 .div_topo h1 {
@@ -44,13 +45,14 @@
     font-size: 32px;
     font-weight: 700;
     margin: 0;
+    transform: translate(-3%, 0%);
 }
 
 .head-description .description {
     font-size: 18px;
     font-weight: 400;
     color: var(--dark-black);
-    margin: 8px 0 0 0;
+    margin: 8px 0 0 50px;
     max-width: 500px;
 }
 
@@ -177,6 +179,7 @@
 
 .nf-list-item a:hover {
     text-decoration: underline;
+    color: var(--primary-color-dark);
 }
 
 /* Toggle Switch para status "Emitida" */
@@ -313,16 +316,16 @@
     z-index: 9999;
     left: 0;
     top: 0;
-    width: 100%;
-    height: 100%;
     background: rgba(0, 0, 0, 0.4);
     display: flex;
     align-items: center;
     justify-content: center;
+    width: 100%;
+    height: 100%;
 }
 
 .modal-content {
-    background: var(--white-normal);
+    background: var(--darkness-black);
     border-radius: 12px;
     padding: 0;
     width: 90%;
@@ -337,7 +340,7 @@
     justify-content: space-between;
     align-items: center;
     padding: 20px 24px;
-    border-bottom: 1px solid #eee;
+    border-bottom: 1px solid #333;
     background-color: var(--darkness-black);
     border-radius: 12px 12px 0 0;
 }
@@ -374,47 +377,10 @@
     filter: invert(1); /* Torna o ícone branco */
 }
 
-/* Alternativa: Botão X textual */
-.modal-close-btn-text {
-    background: none;
-    border: none;
-    cursor: pointer;
-    padding: 8px;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: all 0.3s ease;
-    width: 40px;
-    height: 40px;
-    font-size: 24px;
-    font-weight: bold;
-    color: #666;
-}
-
-.modal-close-btn-text:hover {
-    background-color: #f5f5f5;
-    color: #333;
-    transform: scale(1.1);
-}
-
-/* Overlay do modal para fechar ao clicar fora */
-.modal-overlay {
-    position: fixed;
-    z-index: 9999;
-    left: 0;
-    top: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0, 0, 0, 0.4);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-/* Formulário */
+/* Formulário do Modal */
 .appointment-form {
     padding: 24px;
+    background: var(--darkness-black);
 }
 
 .form-row {
@@ -439,7 +405,7 @@
 .form-group-notas label {
     font-size: 14px;
     font-weight: 600;
-    color: var(--dark-black);
+    color: var(--white-normal);
 }
 
 .form-group-notas input,
@@ -449,25 +415,96 @@
     border-radius: 6px;
     font-size: 14px;
     transition: border-color 0.3s ease;
+    background-color: var(--white-normal);
+    color: var(--dark-black);
 }
 
 .form-group-notas input:focus,
 .form-group-notas select:focus {
     outline: none;
-    border-color: var(--primary-color);
+    border-color: var(--darkness-black);
+    box-shadow: 0 0 0 2px rgba(12, 12, 12, 0.1);
+}
+
+/* Placeholders para inputs com fundo branco */
+.form-group-notas input::placeholder {
+    color: #999;
+}
+
+.form-group-notas input::-webkit-input-placeholder {
+    color: #999;
+}
+
+.form-group-notas input::-moz-placeholder {
+    color: #999;
+}
+
+.form-group-notas input:-ms-input-placeholder {
+    color: #999;
 }
 
 .form-footer-notas {
     display: flex;
     justify-content: flex-end;
     padding-top: 20px;
-    border-top: 1px solid #eee;
+    border-top: 1px solid #333;
+    margin-top: 20px;
+    background: var(--darkness-black);
 }
 
 .form-footer-notas .btn-new-appointment {
     background-color: var(--darkness-black);
+    color: var(--white-normal);
+    border: none;
+    padding: 12px 24px;
+    border-radius: 8px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    gap: 8px;
 }
 
 .form-footer-notas .btn-new-appointment:hover {
     background-color: var(--dark-black);
+    transform: translateY(-2px);
+}
+
+.form-footer-notas .btn-new-appointment:hover {
+    background-color: var(--dark-black);
+    transform: translateY(-2px);
+}
+
+/* Responsividade do Modal */
+@media (max-width: 768px) {
+    .modal-content {
+        width: 95%;
+        max-height: 95vh;
+        margin: 20px;
+    }
+    
+    .form-row {
+        grid-template-columns: 1fr;
+        gap: 16px;
+    }
+    
+    .modal-header {
+        padding: 16px 20px;
+    }
+    
+    .modal-header h2 {
+        font-size: 20px;
+    }
+    
+    .appointment-form {
+        padding: 20px;
+    }
+    
+    .form-group-notas input,
+    .form-group-notas select {
+        padding: 10px;
+        font-size: 16px; /* Previne zoom no iOS */
+    }
 }
