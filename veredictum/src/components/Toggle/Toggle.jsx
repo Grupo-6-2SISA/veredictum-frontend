@@ -2,7 +2,7 @@ import PropTypes from 'prop-types';
 import '../Css/Main.css';
 import './Toggle.css';
 
-const Toggle = ({ checked, onChange, label, id, name }) => {
+const Toggle = ({ checked, onChange, label, id, name, disabled }) => {
   return (
     <label className="toggle-switch">
       {label}
@@ -12,6 +12,7 @@ const Toggle = ({ checked, onChange, label, id, name }) => {
         onChange={onChange}
         id={id}
         name={name}
+        disabled={disabled}
       />
       <span className="slider"></span>
     </label>
@@ -24,6 +25,7 @@ Toggle.propTypes = {
   onChange: PropTypes.func.isRequired,
   id: PropTypes.string,
   name: PropTypes.string,
+  disabled: PropTypes.bool,
 };
 
 export default Toggle;

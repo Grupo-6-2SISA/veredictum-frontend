@@ -33,7 +33,9 @@
 
 /* Wrapper para controlar a altura e a barra de rolagem (scroll) */
 .card-content-wrapper {
-    max-height: 250px; /* Limite a altura como no design */
+    max-height: 100%; /* Limite a altura como no design */
     overflow-y: auto; /* Adiciona a barra de rolagem */
-    padding-right: 10px; /* Espaço para a barra de rolagem não colidir com o conteúdo */
+   scrollbar-width: thin;
+   scrollbar-color: var(--light-black) var(--white-normal);
 }
+

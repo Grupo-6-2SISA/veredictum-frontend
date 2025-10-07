@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import './Clientes.css';
 import Sidebar from '../../components/Sidebar/Sidebar';
 import btnIcon from '../../assets/svg/btn.svg';
@@ -11,8 +11,10 @@ import Card from '../../components/Card/Card';
 import '../../components/Css/Main.css';
 import { getClientes, createCliente, updateCliente, activateCliente, deactivateCliente } from './Clientes.js';
 
+const DEACTIVATION_ANIMATION_MS = 1000;
 
-const CLIENT_FORM_COLUMNS = (clientList = [], mode = 'add') => {
+
+const CLIENT_FORM_COLUMNS = (clientList = []) => {
     const columns = [
         [
             { name: 'nome', label: 'Nome', type: 'text', required: true },
@@ -45,6 +47,16 @@ const CLIENT_FORM_COLUMNS = (clientList = [], mode = 'add') => {
             },
         ],
         [
+            {
+                name: 'isAtivo',
+                label: 'Status',
+                type: 'select',
+                defaultValue: 'true',
+                options: [
+                    { value: 'true', label: 'Ativo' },
+                    { value: 'false', label: 'Inativo' },
+                ],
+            },
             { name: 'dataInicio', label: 'Data Início', type: 'date', required: true },
             {
                 name: 'fkIndicador',
@@ -64,20 +76,6 @@ const CLIENT_FORM_COLUMNS = (clientList = [], mode = 'add') => {
             },
         ],
     ];
-
- 
-    if (mode === 'edit' || mode === 'view') {
-        columns[3].unshift({ 
-            name: 'isAtivo',
-            label: 'Status',
-            type: 'select',
-            defaultValue: 'true',
-            options: [
-                { value: 'true', label: 'Ativo' },
-                { value: 'false', label: 'Inativo' },
-            ]
-        });
-    }
 
     return columns;
 };
@@ -100,7 +98,7 @@ const getFieldValue = (clientData, field) => {
 };
 
 const renderFormColumns = (mode, clientData, clientList) => (
-    CLIENT_FORM_COLUMNS(clientList, mode).map((column, columnIndex) => (
+    CLIENT_FORM_COLUMNS(clientList).map((column, columnIndex) => (
         <div className="form-column" key={`column-${columnIndex}`}>
             {column.map((field) => {
                 const baseProps = {
@@ -156,6 +154,8 @@ function Clientes() {
     const [isEditOpen, setIsEditOpen] = useState(false);
     const [isViewOpen, setIsViewOpen] = useState(false);
     const [isDeleteOpen, setIsDeleteOpen] = useState(false);
+    const [deactivatingClients, setDeactivatingClients] = useState([]);
+    const deactivationTimersRef = useRef(new Map());
 
     const fetchClients = async () => {
         try {
@@ -171,26 +171,44 @@ function Clientes() {
         fetchClients();
     }, []);
 
-    const tableData = clients.map((client) => ({
-        nome: (<div className="client-list-name"><p>{client.nome}</p></div>),
-        editar: (
-            <Button className="btn-icon-only" type="button" onClick={() => handleOpenEdit(client)} aria-label={`Editar ${client.nome}`}>
-                <img src={editIcon} alt="Editar" />
-            </Button>
-        ),
-        informacoes: (
-            <Button className="btn-link" type="button" onClick={() => handleOpenView(client)}>Ver mais</Button>
-        ),
-        status: (
-            <Toggle
-                label=""
-                checked={client.isAtivo}
-                onChange={() => handleToggleStatus(client)}
-                id={`toggle-status-${client.idCliente}`}
-                name={`toggle-status-${client.idCliente}`}
-            />
-        ),
-    }));
+    useEffect(() => () => {
+        deactivationTimersRef.current.forEach((timeoutId) => clearTimeout(timeoutId));
+        deactivationTimersRef.current.clear();
+    }, []);
+
+    const tableData = clients.map((client) => {
+    const isDeactivating = deactivatingClients.includes(client.idCliente);
+
+        return ({
+            nome: (
+                <div
+                    className={`client-list-name ${isDeactivating ? 'client-list-name--deactivating' : ''}`.trim()}
+                    data-client-id={client.idCliente}
+                    data-row-state={isDeactivating ? 'deactivating' : 'stable'}
+                >
+                    <p>{client.nome}</p>
+                </div>
+            ),
+            editar: (
+                <Button className="btn-icon-only" type="button" onClick={() => handleOpenEdit(client)} aria-label={`Editar ${client.nome}`}>
+                    <img src={editIcon} alt="Editar" />
+                </Button>
+            ),
+            informacoes: (
+                <Button className="btn-link" type="button" onClick={() => handleOpenView(client)}>Ver mais</Button>
+            ),
+            status: (
+                <Toggle
+                    label=""
+                    checked={isDeactivating ? false : client.isAtivo}
+                    onChange={() => handleToggleStatus(client)}
+                    id={`toggle-status-${client.idCliente}`}
+                    name={`toggle-status-${client.idCliente}`}
+                    disabled={isDeactivating}
+                />
+            ),
+        });
+    });
 
     function handleOpenAdd() { setIsAddOpen(true); }
     function handleCloseAdd() { setIsAddOpen(false); }
@@ -204,8 +222,14 @@ function Clientes() {
     async function handleToggleStatus(client) {
         try {
             if (!client.isAtivo) {
+                const pendingTimer = deactivationTimersRef.current.get(client.idCliente);
+                if (pendingTimer) {
+                    clearTimeout(pendingTimer);
+                    deactivationTimersRef.current.delete(client.idCliente);
+                }
                 await activateCliente(client.idCliente);
-                fetchClients();
+                await fetchClients();
+                setDeactivatingClients((prev) => prev.filter((id) => id !== client.idCliente));
             } else {
                 handleOpenDelete(client);
             }
@@ -216,12 +240,31 @@ function Clientes() {
 
     async function handleConfirmDelete() {
         if (selectedClient) {
-            try {
-                await deactivateCliente(selectedClient.idCliente);
-                fetchClients();
-            } catch (error) {
-                console.error("Erro ao desativar cliente:", error);
+            const clientId = selectedClient.idCliente;
+            setDeactivatingClients((prev) => (
+                prev.includes(clientId) ? prev : [...prev, clientId]
+            ));
+
+            const existingTimer = deactivationTimersRef.current.get(clientId);
+            if (existingTimer) {
+                clearTimeout(existingTimer);
+                deactivationTimersRef.current.delete(clientId);
             }
+
+            const timeoutId = setTimeout(async () => {
+                try {
+                    await deactivateCliente(clientId);
+                    await fetchClients();
+                } catch (error) {
+                    console.error("Erro ao desativar cliente:", error);
+                    window.alert?.("Não foi possível desativar o cliente. Tente novamente.");
+                } finally {
+                    setDeactivatingClients((prev) => prev.filter((id) => id !== clientId));
+                    deactivationTimersRef.current.delete(clientId);
+                }
+            }, DEACTIVATION_ANIMATION_MS);
+
+            deactivationTimersRef.current.set(clientId, timeoutId);
         }
         handleCloseDelete();
     }
@@ -265,8 +308,11 @@ function Clientes() {
         };
 
         
-        if (formData.has('isAtivo')) {
-            data.isAtivo = formData.get('isAtivo') === 'true';
+        const isAtivoValue = formData.get('isAtivo');
+        if (isAtivoValue !== null) {
+            data.isAtivo = isAtivoValue === 'true';
+        } else if (typeof data.isAtivo === 'undefined') {
+            data.isAtivo = true;
         }
 
         return data;
@@ -367,7 +413,7 @@ function Clientes() {
                     formProps={{ id: 'formEditarCliente', onSubmit: handleSubmitEdit, className: 'appointment-form' }}
                     footer={(
                         <div className="form-footer-client">
-                            <Button className="btn-new-appointment" type="submit">Editar</Button>
+                            <Button className="btn-new-appointment" type="submit">Salvar Alterações</Button>
                         </div>
                     )}>
                     <div className="form-row form-grid">{selectedClient && renderFormColumns('edit', selectedClient, clients)}</div>
@@ -380,7 +426,9 @@ function Clientes() {
                     title="Informações sobre o Cliente"
                     onClose={handleCloseView}
                     modalId="new-appointment-modal-view-client">
-                    <div className="form-row form-grid">{selectedClient && renderFormColumns('view', selectedClient, clients)}</div>
+                    <form action="" className="appointment-form">
+                        <div className="form-row form-grid">{selectedClient && renderFormColumns('view', selectedClient, clients)}</div>
+                    </form>
                 </Modal>
                 
                 <Modal

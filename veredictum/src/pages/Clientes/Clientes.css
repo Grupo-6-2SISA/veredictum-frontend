@@ -36,10 +36,7 @@
     margin-left: -20px;
 }
 
-.head-description h1 {
-    font-size: 48px;
-    color: var(--dark-black);
-}
+
 
 .head-description p {
     margin: 0;
@@ -53,11 +50,6 @@
     display: flex;
     align-items: center;
     gap: 0.75rem;
-}
-
-.btn-new-appointment img {
-    width: 1.2rem;
-    height: 1.2rem;
 }
 
 .client-management-section {

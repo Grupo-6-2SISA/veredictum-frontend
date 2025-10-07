@@ -64,7 +64,7 @@
 
 .clientes-listagem-row {
     display: grid;
-    grid-template-columns: 3fr 1fr 1.5fr 1fr;
+    grid-template-columns: 3fr 1.2fr 1.6fr 1.3fr;
     gap: 1rem;
     align-items: center;
     padding: 0.3rem 1.2rem;
@@ -89,4 +89,27 @@
 .clientes-listagem-row .col-edit {
     display: flex;
     justify-content: center;
+}
+
+.client-list-name[data-row-state="deactivating"] {
+    pointer-events: none;
+}
+
+.clientes-listagem-row:has(.client-list-name[data-row-state="deactivating"]) {
+    animation: clienteDesativadoSlide 1s ease;
+}
+
+@keyframes clienteDesativadoSlide {
+    0% {
+        transform: translateY(0);
+        opacity: 1;
+    }
+    50% {
+        transform: translateY(16px);
+        opacity: 0.7;
+    }
+    100% {
+        transform: translateY(0);
+        opacity: 1;
+    }
 }
