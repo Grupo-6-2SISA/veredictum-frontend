@@ -1,8 +1,15 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import './NotasFiscais.css';
 import '../../index.css';
 import Sidebar from '../../components/Sidebar/Sidebar';
 import Card from '../../components/Card/Card';
+import { 
+  getNotasFiscais, 
+  createNotaFiscal, 
+  updateNotaFiscal, 
+  deleteNotaFiscal, 
+  toggleEmitidaNotaFiscal 
+} from './NotasFiscais';
 
 const NotasFiscais = () => {
   // Estado para controlar os modais
@@ -10,54 +17,10 @@ const NotasFiscais = () => {
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [editingNota, setEditingNota] = useState(null);
   
-  // Dados de exemplo para notas fiscais
-  const notasFiscaisData = [
-    { 
-      numero: 'NF-001', 
-      etiqueta: 'Vendas', 
-      dataVencimento: '15/10/2025', 
-      emitida: true,
-      cliente: 'João Silva',
-      valor: 'R$ 2.500,00',
-      urlCloud: 'https://cloud.exemplo.com/nf001'
-    },
-    { 
-      numero: 'NF-002', 
-      etiqueta: 'Serviços', 
-      dataVencimento: '20/10/2025', 
-      emitida: false,
-      cliente: 'Maria Santos',
-      valor: 'R$ 1.800,00',
-      urlCloud: 'https://cloud.exemplo.com/nf002'
-    },
-    { 
-      numero: 'NF-003', 
-      etiqueta: 'Consultoria', 
-      dataVencimento: '25/10/2025', 
-      emitida: true,
-      cliente: 'Pedro Costa',
-      valor: 'R$ 3.200,00',
-      urlCloud: 'https://cloud.exemplo.com/nf003'
-    },
-    { 
-      numero: 'NF-004', 
-      etiqueta: 'Produtos', 
-      dataVencimento: '30/10/2025', 
-      emitida: false,
-      cliente: 'Ana Oliveira',
-      valor: 'R$ 950,00',
-      urlCloud: 'https://cloud.exemplo.com/nf004'
-    },
-    { 
-      numero: 'NF-005', 
-      etiqueta: 'Manutenção', 
-      dataVencimento: '05/11/2025', 
-      emitida: true,
-      cliente: 'Carlos Ferreira',
-      valor: 'R$ 4.100,00',
-      urlCloud: 'https://cloud.exemplo.com/nf005'
-    },
-  ];
+  // Estado para dados da API
+  const [notasFiscaisData, setNotasFiscaisData] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
   // Definição das colunas para a listagem com todos os campos
   const colunas = [
@@ -69,6 +32,49 @@ const NotasFiscais = () => {
     { key: 'excluir', titulo: 'Excluir' },
     { key: 'informacoes', titulo: 'Informações' }
   ];
+
+  // Carregar dados da API ao montar o componente
+  useEffect(() => {
+    loadNotasFiscais();
+  }, []);
+
+  // Função para carregar notas fiscais da API
+  const loadNotasFiscais = async () => {
+    try {
+      setLoading(true);
+      const response = await getNotasFiscais();
+      setNotasFiscaisData(response.data);
+      setError(null);
+    } catch (err) {
+      console.error('Erro ao carregar notas fiscais:', err);
+      setError('Erro ao carregar notas fiscais');
+      // Manter dados de exemplo em caso de erro
+      setNotasFiscaisData([
+        { 
+          id: 1,
+          numero: 'NF-001', 
+          etiqueta: 'Vendas', 
+          dataVencimento: '15/10/2025', 
+          emitida: true,
+          cliente: 'João Silva',
+          valor: 'R$ 2.500,00',
+          urlCloud: 'https://cloud.exemplo.com/nf001'
+        },
+        { 
+          id: 2,
+          numero: 'NF-002', 
+          etiqueta: 'Serviços', 
+          dataVencimento: '20/10/2025', 
+          emitida: false,
+          cliente: 'Maria Santos',
+          valor: 'R$ 1.800,00',
+          urlCloud: 'https://cloud.exemplo.com/nf002'
+        }
+      ]);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   // Funções para controlar os modais
   const openModal = () => setIsModalOpen(true);
@@ -103,9 +109,17 @@ const NotasFiscais = () => {
   };
 
   // Função para excluir nota fiscal
-  const handleDelete = (nota) => {
-    console.log('Excluir nota:', nota);
-    // Aqui você implementaria a lógica de exclusão
+  const handleDelete = async (nota) => {
+    if (window.confirm(`Deseja excluir a nota fiscal ${nota.numero}?`)) {
+      try {
+        await deleteNotaFiscal(nota.id);
+        // Atualizar a lista removendo a nota excluída
+        setNotasFiscaisData(prev => prev.filter(item => item.id !== nota.id));
+      } catch (err) {
+        console.error('Erro ao excluir nota fiscal:', err);
+        alert('Erro ao excluir nota fiscal');
+      }
+    }
   };
 
   // Função para ver informações da nota fiscal
@@ -115,17 +129,77 @@ const NotasFiscais = () => {
   };
 
   // Função para salvar nova nota fiscal
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    // Aqui você adicionaria a lógica para salvar
-    closeModal();
+    const formData = new FormData(e.target);
+    
+    const notaFiscalData = {
+      numero: formData.get('numeroNota'),
+      etiqueta: formData.get('etiqueta'),
+      dataVencimento: formData.get('dataVencimento'),
+      emitida: formData.get('emitida') === 'true',
+      cliente: formData.get('cliente'),
+      valor: formData.get('valor'),
+      urlCloud: formData.get('urlCloud')
+    };
+
+    try {
+      const response = await createNotaFiscal(notaFiscalData);
+      // Adicionar a nova nota à lista
+      setNotasFiscaisData(prev => [...prev, response.data]);
+      closeModal();
+      // Limpar formulário
+      e.target.reset();
+    } catch (err) {
+      console.error('Erro ao criar nota fiscal:', err);
+      alert('Erro ao criar nota fiscal');
+    }
   };
 
   // Função para salvar edições da nota fiscal
-  const handleEditSubmit = (e) => {
+  const handleEditSubmit = async (e) => {
     e.preventDefault();
-    // Aqui você adicionaria a lógica para salvar edições
-    closeEditModal();
+    const formData = new FormData(e.target);
+    
+    const updatedData = {
+      numero: formData.get('numeroNota'),
+      etiqueta: formData.get('etiqueta'),
+      dataVencimento: formData.get('dataVencimento'),
+      emitida: formData.get('emitida') === 'true',
+      cliente: formData.get('cliente'),
+      valor: formData.get('valor'),
+      urlCloud: formData.get('urlCloud')
+    };
+
+    try {
+      const response = await updateNotaFiscal(editingNota.id, updatedData);
+      // Atualizar a nota na lista
+      setNotasFiscaisData(prev => 
+        prev.map(nota => 
+          nota.id === editingNota.id ? response.data : nota
+        )
+      );
+      closeEditModal();
+    } catch (err) {
+      console.error('Erro ao atualizar nota fiscal:', err);
+      alert('Erro ao atualizar nota fiscal');
+    }
+  };
+
+  // Função para alternar status de emitida
+  const handleToggleEmitida = async (notaId, currentStatus) => {
+    try {
+      const response = await toggleEmitidaNotaFiscal(notaId, !currentStatus);
+      // Atualizar o status na lista
+      setNotasFiscaisData(prev => 
+        prev.map(nota => 
+          nota.id === notaId ? { ...nota, emitida: !currentStatus } : nota
+        )
+      );
+    } catch (err) {
+      console.error('Erro ao alternar status da nota fiscal:', err);
+      alert('Erro ao alterar status da nota fiscal');
+    }
   };
 
   return (
@@ -172,7 +246,7 @@ const NotasFiscais = () => {
                       <input 
                         type="checkbox" 
                         checked={nota.emitida} 
-                        onChange={() => {}} 
+                        onChange={() => handleToggleEmitida(nota.id, nota.emitida)} 
                       />
                       <span className="slider"></span>
                     </div>
