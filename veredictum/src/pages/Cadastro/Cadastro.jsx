@@ -1,16 +1,9 @@
-import { Link, useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import "./Cadastro.css";
 import logo from './../../assets/svg/logo_veredictum.svg';
 import voltarIcon from './../../assets/img/voltar-icon.png';
 
 function Cadastro() {
-  const navigate = useNavigate();
-
-  const handleSubmit = (event) => {
-    event.preventDefault();
-    navigate('/VisaoGeral');
-  };
-
   return (
     <div className="cadastro-container">
       <div className="left-side">
@@ -34,7 +27,7 @@ function Cadastro() {
           <p>Gestão do Escritório de Advocacia</p>
         </div>
 
-  <form className="register-form" onSubmit={handleSubmit}>
+        <form className="register-form">
           <div className="form-field">
             <label>Nome</label>
             <input type="text" placeholder="Nome" />
@@ -47,7 +40,7 @@ function Cadastro() {
             <label>Senha</label>
             <input type="password" placeholder="Senha" />
           </div>
-          <button type="submit" className="register-button">Cadastrar</button>
+          <button type="submit" className="register-button"  onClick={() =>navigate ('/VisaoGeral')}>Cadastrar</button>
         </form>
       </div>
     </div>
