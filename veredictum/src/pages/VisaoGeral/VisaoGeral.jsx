@@ -66,39 +66,39 @@ const VisaoGeral = () => {
                 <h1>Visão Geral</h1>
                 <div className="cards-grid">
                     {/* Caminho ajustado para o ícone do Card: calendar.svg */}
-                    <Card titulo="Próximos atendimentos" iconePath="/src/assets/svg/calendar.svg" id="card-appointments">
+                    <Card titulo="Próximos atendimentos" iconePath="/src/assets/svg/calendar.svg" className="card-appointments">
                         <Listagem
                             dados={proximosAtendimentos}
                             colunas={colunasAtendimento}
-                            id="appointments-list"
+                            className="appointments-list"
                         />
                     </Card>
 
                     {/* Caminho ajustado para o ícone do Card: notas.svg */}
-                    <Card titulo="Prazos de Notas Fiscais" iconePath="/src/assets/svg/notas.svg" id="card-invoices">
+                    <Card titulo="Prazos de Notas Fiscais" iconePath="/src/assets/svg/notas.svg" className="card-invoices">
                         <Listagem
                             dados={prazosNotasFiscais}
                             colunas={colunasNotas}
-                            id="invoices-list"
+                            className="invoices-list"
                         />
                     </Card>
                 </div>
                 <div className="cards-grid">
                     {/* Caminho ajustado para o ícone do Card: aniversario.svg */}
-                    <Card titulo="Aniversariantes do mês" iconePath="/src/assets/svg/aniversario.svg" id="card-birthdays">
+                    <Card titulo="Aniversariantes do mês" iconePath="/src/assets/svg/aniversario.svg" className="card-birthdays">
                         <Listagem
                             dados={aniversariantesDoMes}
                             colunas={colunasAniversario}
-                            id="birthdays-list"
+                            className="birthdays-list"
                         />
                     </Card>
 
                     {/* Caminho ajustado para o ícone do Card: contas.svg */}
-                    <Card titulo="Contas a pagar" iconePath="/src/assets/svg/contas.svg" id="card-bills" >
+                    <Card titulo="Contas a pagar" iconePath="/src/assets/svg/contas.svg" className="card-bills" >
                         <Listagem
                             dados={contasAPagar}
                             colunas={colunasContas}
-                            id="bills-list"
+                            className="bills-list"
                         />
                     </Card>
                 </div>
