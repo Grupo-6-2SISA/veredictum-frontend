@@ -3,7 +3,7 @@ import React from "react";
 import FecharIcon from "../../assets/svg/fechar.svg";
 
 export default function ModalAdicionarDespesa({ show, onClose, onSubmit }) {
-  if (!show) return null; 
+  if (!show) return null;
   return (
     <>
       <div id="ModalAdicionarDespesa" className="modal">
@@ -18,29 +18,52 @@ export default function ModalAdicionarDespesa({ show, onClose, onSubmit }) {
           </div>
 
           <form id="expenseForm" onSubmit={onSubmit}>
+
             <div className="form-row">
+
               <div className="form-group">
+
                 <label htmlFor="etiqueta">Etiqueta</label>
                 <input type="text" id="etiqueta" name="etiqueta" required />
+
               </div>
+
               <div className="form-group">
+
                 <label htmlFor="url">URL</label>
                 <input type="text" id="url" name="url" />
+
               </div>
+
+
+
             </div>
 
             <div className="form-row">
+
               <div className="form-group">
                 <label htmlFor="vencimento">Data de Vencimento</label>
                 <input type="date" id="vencimento" name="vencimento" required />
               </div>
+
               <div className="form-group">
                 <label htmlFor="comentario">Comentário</label>
                 <input type="text" id="comentario" name="comentario" />
               </div>
+
             </div>
 
+            <div id="form-row-vencimento" className="form-row">
+              <div className="form-group" id="form-group-vencimento">
+                <label htmlFor="vencimento">Valor</label>
+                <input type="text" id="input-vencimento" name="vencimento" required />
+              </div>
+            </div>
+
+
+
             <div className="form-footer-despesas">
+
               <div id="div_para_checkbox">
                 <label className="pagamento-label">Pago?</label>
                 <div className="switch-row">

@@ -9,12 +9,16 @@ export default function ModalInfoDespesa({ show, onClose, infoItem }) {
     <div className="modal-backdrop">
       <div id="infoExpenseModal" className="modal-content-despesas">
 
+        {/* Botão de fechar */}
         <button className="close" onClick={onClose}>
-          <img  style={{transform: "translateY(-43%)"}} src={FecharIcon} alt="Fechar" />
+          <img style={{ transform: "translateY(-43%)" }} src={FecharIcon} alt="Fechar" />
         </button>
+
         <h2>Informação sobre a Despesa</h2>
         <br />
+
         <form>
+          {/* Primeira linha de inputs */}
           <div className="form-row">
             <div className="form-group">
               <label>Etiqueta</label>
@@ -26,6 +30,7 @@ export default function ModalInfoDespesa({ show, onClose, infoItem }) {
             </div>
           </div>
 
+          {/* Segunda linha de inputs */}
           <div className="form-row">
             <div className="form-group">
               <label>Data de Vencimento</label>
@@ -37,14 +42,22 @@ export default function ModalInfoDespesa({ show, onClose, infoItem }) {
             </div>
           </div>
 
-          <div className="form-row">
-            <label>Pago?</label>
-            <label>
-              <input type="checkbox" checked={infoItem.pago} disabled /> SIM
-            </label>
-            <label>
-              <input type="checkbox" checked={!infoItem.pago} disabled /> NÃO
-            </label>
+          {/* Switch "Pago?" */}
+          <div className="form-row" id="div_para_checkbox_info">
+            <label className="pagamento-label">Pago?</label>
+            <div className="switch-row">
+              <span className="switch-text off">Não</span>
+              <label className="switch">
+                <input
+                  type="checkbox"
+                  id="info-pago-switch"
+                  checked={infoItem.pago}
+                  disabled
+                />
+                <span className="slider"></span>
+              </label>
+              <span className="switch-text on">Sim</span>
+            </div>
           </div>
         </form>
       </div>

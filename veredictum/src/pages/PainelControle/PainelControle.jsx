@@ -1,8 +1,6 @@
 import React, { useState } from 'react';
 
 import "./PainelControle.css";
-import "./Modals.css";
-import '../../index.css';
 
 import ModalCriarFuncionario from '../../components/Modals/ModalCriarFunc';
 import ModalEditarFuncionario from '../../components/Modals/ModalEditarFuncionario';
@@ -26,7 +24,6 @@ const funcionariosMock = [
 ];
 
 const rotinasMock = [
-
     { id: 201, nome: 'Aniversário', executado: 'Sim', arquivo: 'Aniversario.py', horaInicio: '10:00', dataInicio: '2025-11-09', dataFim: '2025-11-10', status: 'Ativo', ativo: true },
 ];
 
@@ -37,16 +34,13 @@ export default function PainelControle() {
     const [rotinas, setRotinas] = useState(rotinasMock);
 
     const [isModalCriarOpen, setIsModalCriarOpen] = useState(false);
-
     const [isModalEditarOpen, setIsModalEditarOpen] = useState(false);
     const [funcionarioEditando, setFuncionarioEditando] = useState(null);
-
     const [isModalConfirmarOpen, setIsModalConfirmarOpen] = useState(false);
     const [funcionarioConfirmar, setFuncionarioConfirmar] = useState(null);
 
     const [isModalEditarRotinaOpen, setIsModalEditarRotinaOpen] = useState(false);
     const [rotinaEditando, setRotinaEditando] = useState(null);
-
     const [isModalVerMaisRotinaOpen, setIsModalVerMaisRotinaOpen] = useState(false);
     const [rotinaVerMais, setRotinaVerMais] = useState(null);
     const [isModalConfirmarRotinaOpen, setIsModalConfirmarRotinaOpen] = useState(false);
@@ -57,7 +51,7 @@ export default function PainelControle() {
     const handleCadastroFuncionario = () => {
         console.log("Cadastrando funcionário...");
         closeModalCriar();
-    }
+    };
 
     const closeModalEditar = () => {
         setIsModalEditarOpen(false);
@@ -75,7 +69,7 @@ export default function PainelControle() {
     const handleSalvarEdicao = () => {
         console.log("Salvando edição do funcionário:", funcionarioEditando.id);
         closeModalEditar();
-    }
+    };
 
     const closeModalConfirmar = () => {
         setIsModalConfirmarOpen(false);
@@ -84,7 +78,6 @@ export default function PainelControle() {
 
     const confirmarDesativacao = () => {
         if (!funcionarioConfirmar) return;
-
         setFuncionarios(prevFuncionarios =>
             prevFuncionarios.map(func =>
                 func.id === funcionarioConfirmar.id ? { ...func, ativo: false } : func
@@ -96,7 +89,6 @@ export default function PainelControle() {
 
     const alternarStatusFuncionario = (id) => {
         const func = funcionarios.find(f => f.id === id);
-
         if (func.ativo) {
             setFuncionarioConfirmar(func);
             setIsModalConfirmarOpen(true);
@@ -125,7 +117,7 @@ export default function PainelControle() {
     const handleSalvarEdicaoRotina = () => {
         console.log("Salvando edição da rotina:", rotinaEditando.id);
         closeModalEditarRotina();
-    }
+    };
 
     const closeModalVerMaisRotina = () => {
         setIsModalVerMaisRotinaOpen(false);
@@ -147,7 +139,6 @@ export default function PainelControle() {
 
     const confirmarDesativacaoRotina = () => {
         if (!rotinaConfirmar) return;
-
         setRotinas(prevRotinas =>
             prevRotinas.map(rot =>
                 rot.id === rotinaConfirmar.id ? { ...rot, ativo: false, status: 'Inativo' } : rot
@@ -157,10 +148,8 @@ export default function PainelControle() {
         closeModalConfirmarRotina();
     };
 
-
     const alternarStatusRotina = (id) => {
         const rotina = rotinas.find(r => r.id === id);
-
         if (rotina.ativo) {
             setRotinaConfirmar(rotina);
             setIsModalConfirmarRotinaOpen(true);
@@ -176,7 +165,6 @@ export default function PainelControle() {
 
     return (
         <div className="container">
-
             <Sidebar />
 
             <main className="main-content">
@@ -196,12 +184,6 @@ export default function PainelControle() {
                                 </span>
                             </div>
 
-                            <div>
-                                <button className="edit-btn" style={{ transform: "translateX(80px)" }} onClick={() => openModalEditar(100)}>
-                                    <img src={EditIcon} alt="Editar" />
-                                </button>
-                            </div>
-
                             <div className="panel-actions">
                                 <button className="action-btn" onClick={openModalCriar}>
                                     <img src={SinalMais} alt="Adicionar Funcionário" />
@@ -215,18 +197,23 @@ export default function PainelControle() {
                                     <tr>
                                         <th>ID</th>
                                         <th>Nome</th>
+                                        <th>Editar</th>
                                         <th>Acesso</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     {funcionarios.map(func => (
-                                        <tr style={{ backgroundColor: '#f6f6f6' }}
-
-                                            key={func.id} className="pill-row">
+                                        <tr key={func.id} style={{ backgroundColor: '#f6f6f6' }} className="pill-row">
                                             <td>{func.id}</td>
                                             <td>{func.nome}</td>
                                             <td>
-                                                <div style={{ transform: "translateX(45px)" }}
+                                                <button style={{ transform: "translateX(70%)" }}
+                                                    className="edit-btn" onClick={() => openModalEditar(func.id)}>
+                                                    <img src={EditIcon} alt="Editar" />
+                                                </button>
+                                            </td>
+                                            <td>
+                                                <div style={{ transform: "translateX(20px)" }}
                                                     className={`toggle-switch ${func.ativo ? 'active' : ''}`}
                                                     onClick={() => alternarStatusFuncionario(func.id)}
                                                 ></div>
@@ -249,12 +236,6 @@ export default function PainelControle() {
                                     Gestão de Rotinas
                                 </span>
                             </div>
-
-                            <div>
-                                <button className="edit-btn" onClick={() => openModalEditarRotina(201)}>
-                                    <img src={EditIcon} alt="Editar" />
-                                </button>
-                            </div>
                         </div>
 
                         <div className="panel-content">
@@ -263,21 +244,27 @@ export default function PainelControle() {
                                     <tr>
                                         <th>Nome de Rotina</th>
                                         <th>Executado</th>
-                                        <th>Ações</th>
+                                        <th>Ver Mais</th>
+                                        <th>Editar</th>
                                         <th>Acesso</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     {rotinas.map(rotina => (
-                                        <tr style={{ backgroundColor: '#f6f6f6' }}
-                                        key={rotina.id} className="pill-row">
+                                        <tr key={rotina.id} style={{ backgroundColor: '#f6f6f6' }} className="pill-row">
                                             <td>{rotina.nome}</td>
                                             <td>{rotina.executado}</td>
                                             <td>
                                                 <a href="#" className="link" onClick={(e) => { e.preventDefault(); openModalVerMaisRotina(rotina.id); }}>Ver Mais</a>
                                             </td>
                                             <td>
-                                                <div style={{ transform: "translateX(15px)" }}
+                                                <button style={{ transform: "translateX(20%)" }}
+                                                 className="edit-btn" onClick={() => openModalEditarRotina(rotina.id)}>
+                                                    <img src={EditIcon} alt="Editar" />
+                                                </button>
+                                            </td>
+                                            <td>
+                                                <div style={{ transform: "translateX(10px)" }}
                                                     className={`toggle-switch ${rotina.ativo ? 'active' : ''}`}
                                                     onClick={() => alternarStatusRotina(rotina.id)}
                                                 ></div>
@@ -292,7 +279,6 @@ export default function PainelControle() {
 
                 {/* MODALS GERAIS */}
 
-                {/* MODAL DE CRIAÇÃO FUNCIONÁRIO */}
                 <ModalCriarFuncionario
                     isModalOpen={isModalCriarOpen}
                     closeModalCriar={closeModalCriar}
@@ -300,7 +286,6 @@ export default function PainelControle() {
                     FecharIcone={FecharIcone}
                 />
 
-                {/* MODAL DE EDIÇÃO FUNCIONÁRIO */}
                 <ModalEditarFuncionario
                     isModalOpen={isModalEditarOpen}
                     closeModalEditar={closeModalEditar}
@@ -309,7 +294,6 @@ export default function PainelControle() {
                     FecharIcone={FecharIcone}
                 />
 
-                {/* MODAL DE CONFIRMAÇÃO DE DESATIVAÇÃO FUNCIONÁRIO */}
                 <ModalConfirmarDesativacao
                     isModalOpen={isModalConfirmarOpen}
                     closeModalConfirmar={closeModalConfirmar}
@@ -318,7 +302,6 @@ export default function PainelControle() {
                     CloseBlackIcon={CloseBlackIcon}
                 />
 
-                {/* MODAL DE EDIÇÃO DE ROTINA (DO HEADER/LINHA) */}
                 <ModalEditarRotina
                     isModalOpen={isModalEditarRotinaOpen}
                     closeModalEditarRotina={closeModalEditarRotina}
@@ -327,7 +310,6 @@ export default function PainelControle() {
                     FecharIcone={FecharIcone}
                 />
 
-                {/* NOVO MODAL DE VER MAIS ROTINA */}
                 <ModalVerMaisRotina
                     isModalOpen={isModalVerMaisRotinaOpen}
                     closeModalVerMaisRotina={closeModalVerMaisRotina}
@@ -335,7 +317,6 @@ export default function PainelControle() {
                     FecharIcone={FecharIcone}
                 />
 
-                {/* NOVO MODAL DE CONFIRMAÇÃO DE DESATIVAÇÃO ROTINA */}
                 <ModalConfirmarRotina
                     isModalOpen={isModalConfirmarRotinaOpen}
                     closeModalConfirmarRotina={closeModalConfirmarRotina}

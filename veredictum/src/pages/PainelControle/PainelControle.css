@@ -50,7 +50,6 @@
 
 .panel-header {
     padding: 20px;
-    /* border-bottom: 1px solid #e2e8f0; */
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -271,10 +270,10 @@
 .save-btn-rotina {
     margin-top: 20px;
     padding: 12px 24px;
-    border: 2px solid black;
     border-radius: 6px;
-    background-color: rgb(56, 55, 56);
+    background-color: var(--normal-black);
     color: #fff;
+    border: solid 3px var(--darkness-black);
     font-size: 1.1em;
     cursor: pointer;
     align-self: flex-end;
@@ -340,9 +339,9 @@
     width: 25%;
     height: 50px;
     padding: 10px 0;
-    background: #2c2c2c;
+    background-color: var(--normal-black);
     color: #fff;
-    border: 1px solid black;
+    border: solid 3px var(--darkness-black);
     border-radius: 6px;
     font-size: 1.1em;
     cursor: pointer;
@@ -449,8 +448,7 @@ table {
 .panel-content table th {
     font-weight: 600;
     background: transparent;
-    
-    border-bottom: 2px solid #e5e7eb;
+
 }
 
 .pill-row td {
@@ -521,15 +519,7 @@ table {
     display: block;
     background: transparent !important;
     width: 20px;
-    /* ajuste conforme necessário */
     height: 20px;
-    /* ajuste conforme necessário */
     object-fit: contain;
     pointer-events: none;
-    /* evita que img capture o clique do botão */
-}
-
-.edit-btn {
-    border: none;
-    background: none;
 }

@@ -12,7 +12,6 @@ import ModalEditarDespesa from "../../components/Modals/ModalEditarDespesa";
 import ModalInfoDespesa from "../../components/Modals/ModalInfoDespesa";
 
 import "./GestaoDespesas.css";
-import "./Modals.css";
 
 
 const mockExpenses = [

@@ -8,9 +8,8 @@ export default function ModalEditarDespesa({ show, onClose, onSubmit, editingIte
     return (
         <div id="editExpenseModal" className="modal">
             <div className="modal-content-despesas">
-                
-                {/* Cabeçalho do Modal */}
 
+                {/* Cabeçalho do Modal */}
                 <div id="modal-header-top" className="modal-header">
                     <h2>Editar Despesa</h2>
                     <button className="modal-close-btn" onClick={onClose}>
@@ -19,6 +18,7 @@ export default function ModalEditarDespesa({ show, onClose, onSubmit, editingIte
                 </div>
 
                 <form id="editExpenseForm" onSubmit={onSubmit}>
+                    {/* Primeira linha de inputs */}
                     <div className="form-row">
                         <div className="form-group">
                             <label htmlFor="edit-etiqueta">Etiqueta</label>
@@ -42,6 +42,7 @@ export default function ModalEditarDespesa({ show, onClose, onSubmit, editingIte
                         </div>
                     </div>
 
+                    {/* Segunda linha de inputs */}
                     <div className="form-row">
                         <div className="form-group">
                             <label htmlFor="edit-vencimento">Data de Vencimento</label>
@@ -65,28 +66,25 @@ export default function ModalEditarDespesa({ show, onClose, onSubmit, editingIte
                         </div>
                     </div>
 
-                    <div className="form-row">
-                        <label>Pago?</label>
-                        <label>
-                            <input
-                                type="radio"
-                                name="edit-pago"
-                                value="sim"
-                                defaultChecked={editingItem.pago === true}
-                            />{" "}
-                            SIM
-                        </label>
-                        <label>
-                            <input
-                                type="radio"
-                                name="edit-pago"
-                                value="nao"
-                                defaultChecked={editingItem.pago === false}
-                            />{" "}
-                            NÃO
-                        </label>
+                    {/* Linha do switch "Pago?" */}
+                    <div className="form-row" id="div_para_checkbox_edit">
+                        <label className="pagamento-label">Pago?</label>
+                        <div className="switch-row">
+                            <span className="switch-text off">Não</span>
+                            <label className="switch">
+                                <input
+                                    type="checkbox"
+                                    id="edit-pago-switch"
+                                    name="edit-pago"
+                                    defaultChecked={editingItem.pago === true}
+                                />
+                                <span className="slider"></span>
+                            </label>
+                            <span className="switch-text on">Sim</span>
+                        </div>
                     </div>
 
+                    {/* Botão de salvar */}
                     <div id="div_para_botao">
                         <button type="submit" className="modal-add-btn_save">
                             Salvar
