@@ -1,6 +1,6 @@
 import React from 'react';
 import './Listagem.css'; 
-import '../Css/Main.css'; 
+
 
 const variantConfigs = {
     clientes: {
