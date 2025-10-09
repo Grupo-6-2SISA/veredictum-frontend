@@ -17,16 +17,16 @@ const DEACTIVATION_ANIMATION_MS = 1000;
 const CLIENT_FORM_COLUMNS = (clientList = []) => {
     const columns = [
         [
-            { name: 'nome', label: 'Nome', type: 'text', required: true },
-            { name: 'dataNascimento', label: 'Data de Nascimento', type: 'date' },
-            { name: 'email', label: 'E-mail', type: 'email', required: true },
-            { name: 'rg', label: 'RG', type: 'text', max: 12, min: 5 },
-            { name: 'cpf', label: 'CPF', type: 'text', max: 11, min: 11 },
+            { name: 'nome', label: 'Nome', type: 'text', required: true, minLength: 2, maxLength: 255 },
+            { name: 'dataNascimento', label: 'Data de Nascimento', type: 'date', required: true },
+            { name: 'email', label: 'E-mail', type: 'email', required: true, maxLength: 255 },
+            { name: 'rg', label: 'RG', type: 'text', maxLength: 10 },
+            { name: 'cpf', label: 'CPF', type: 'text', maxLength: 11, minLength: 11, pattern: "\\d{11}" },
         ],
         [
-            { name: 'cnpj', label: 'CNPJ', type: 'text', max: 14, min: 14 },
-            { name: 'telefone', label: 'Telefone', type: 'text', placeholder: '+5511999999999'},
-            { name: 'cep', label: 'CEP', type: 'text', max: 8, min: 8 },
+            { name: 'cnpj', label: 'CNPJ', type: 'text', maxLength: 14, minLength: 14, pattern: "\\d{14}" },
+            { name: 'telefone', label: 'Telefone', type: 'text', placeholder: '+5511999999999', pattern: "^\\+55\\d{10,11}$"},
+            { name: 'cep', label: 'CEP', type: 'text', maxLength: 8, minLength: 8, pattern: "\\d{8}" },
             { name: 'logradouro', label: 'Logradouro', type: 'text' },
             { name: 'bairro', label: 'Bairro', type: 'text' },
         ],
@@ -34,7 +34,7 @@ const CLIENT_FORM_COLUMNS = (clientList = []) => {
             { name: 'complemento', label: 'Complemento', type: 'text' },
             { name: 'localidade', label: 'Localidade', type: 'text' },
             { name: 'numero', label: 'Número', type: 'text' },
-            { name: 'inscricaoEstadual', label: 'Inscrição Estadual', type: 'text', max: 9, min: 9 },
+            { name: 'inscricaoEstadual', label: 'Inscrição Estadual', type: 'text', maxLength: 9, minLength: 9, pattern: "\\d{9}" },
             {
                 name: 'isProBono',
                 label: 'Pro-Bono?',
@@ -82,6 +82,110 @@ const CLIENT_FORM_COLUMNS = (clientList = []) => {
 
 
 
+const validateClientData = (clientData) => {
+    const errors = [];
+    const pushError = (message) => errors.push(message);
+
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+    if (!clientData.nome) {
+        pushError('Nome é obrigatório.');
+    } else {
+        if (clientData.nome.length < 2) pushError('Nome deve ter pelo menos 2 caracteres.');
+        if (clientData.nome.length > 255) pushError('Nome deve ter no máximo 255 caracteres.');
+    }
+    
+    if (!clientData.email) {
+        pushError('E-mail é obrigatório.');
+    } else {
+        if (clientData.email.length > 255) pushError('E-mail deve ter no máximo 255 caracteres.');
+        if (!emailRegex.test(clientData.email)) pushError('Formato de e-mail inválido.');
+    }
+
+    if (clientData.rg && clientData.rg.length > 10) {
+        pushError('RG deve ter no máximo 10 caracteres.');
+    }
+
+    if (clientData.cpf) {
+        if (!/^\d{11}$/.test(clientData.cpf)) pushError('CPF deve conter exatamente 11 dígitos numéricos.');
+    }
+
+    if (clientData.cnpj) {
+        if (!/^\d{14}$/.test(clientData.cnpj)) pushError('CNPJ deve conter exatamente 14 dígitos numéricos.');
+    }
+
+    if (clientData.telefone) {
+        if (!/^\+55\d{10,11}$/.test(clientData.telefone)) pushError('Telefone deve estar no formato +55 seguido de DDD e número (ex: +5511999999999).');
+    }
+
+    if (!clientData.dataNascimento) {
+        pushError('Data de Nascimento é obrigatória.');
+    } else {
+        const dataNascimento = new Date(clientData.dataNascimento);
+        const hoje = new Date();
+        hoje.setHours(0, 0, 0, 0);
+        if (Number.isNaN(dataNascimento.getTime())) {
+            pushError('Data de Nascimento inválida.');
+        } else if (dataNascimento >= hoje) {
+            pushError('Data de Nascimento deve estar no passado.');
+        }
+    }
+
+    if (!clientData.dataInicio) {
+        pushError('Data de Início é obrigatória.');
+    } else {
+        const dataInicio = new Date(clientData.dataInicio);
+        if (Number.isNaN(dataInicio.getTime())) {
+            pushError('Data de Início inválida.');
+        }
+    }
+
+    if (clientData.cep) {
+        if (!/^\d{8}$/.test(clientData.cep)) pushError('CEP deve conter exatamente 8 dígitos numéricos.');
+    }
+
+    if (clientData.inscricaoEstadual) {
+        if (!/^\d{9}$/.test(clientData.inscricaoEstadual)) pushError('Inscrição Estadual deve conter exatamente 9 dígitos numéricos.');
+    }
+
+    return errors;
+};
+
+
+const extractBackendErrorMessage = (error, fallbackMessage) => {
+    const data = error?.response?.data;
+    if (!data) return fallbackMessage;
+
+    const messages = [];
+
+    if (Array.isArray(data)) {
+        messages.push(...data);
+    } else if (typeof data === 'string') {
+        messages.push(data);
+    } else if (typeof data === 'object') {
+        if (Array.isArray(data.errors)) {
+            messages.push(...data.errors);
+        }
+        if (Array.isArray(data.violations)) {
+            messages.push(...data.violations.map((violation) => (
+                typeof violation === 'string'
+                    ? violation
+                    : `${violation.field ? `${violation.field}: ` : ''}${violation.message ?? ''}`.trim()
+            )));
+        }
+        if (data.message) messages.push(data.message);
+        if (data.details && data.details !== data.message) messages.push(data.details);
+    }
+
+    const filteredMessages = messages
+        .map((msg) => (typeof msg === 'string' ? msg.trim() : ''))
+        .filter(Boolean);
+
+    return filteredMessages.length ? filteredMessages.join('\n') : fallbackMessage;
+};
+
+
+
 const getFieldValue = (clientData, field) => {
     if (!clientData) return field.defaultValue ?? '';
     if (field.name === 'isProBono') return String(clientData.isProBono);
@@ -108,6 +212,10 @@ const renderFormColumns = (mode, clientData, clientList) => (
                     disabled: mode === 'view',
                     placeholder: field.placeholder || '',
                 };
+
+                if (field.maxLength) baseProps.maxLength = field.maxLength;
+                if (field.minLength) baseProps.minLength = field.minLength;
+                if (field.pattern) baseProps.pattern = field.pattern;
                 const defaultValue = getFieldValue(clientData, field);
                 if (field.type === 'select') {
                     return (
@@ -278,69 +386,35 @@ function Clientes() {
             return trimmed.length ? trimmed : null;
         };
 
-        const ensureRequiredText = (fieldName, label) => {
-            const rawValue = formData.get(fieldName);
-            if (typeof rawValue !== 'string') {
-                if (rawValue === null || rawValue === undefined) {
-                    throw new Error(`${label} é obrigatório.`);
-                }
-                return rawValue;
-            }
-
-            const trimmed = rawValue.trim();
-            if (!trimmed) {
-                throw new Error(`${label} é obrigatório.`);
-            }
-            return trimmed;
-        };
-
         const fkIndicadorValue = formData.get('fkIndicador');
         const dataInicioValue = formData.get('dataInicio');
         const dataNascimentoValue = formData.get('dataNascimento');
-        const rgValue = getOptionalText('rg');
-        const cpfValue = getOptionalText('cpf');
         const cnpjValue = getOptionalText('cnpj');
-        const telefoneValue = getOptionalText('telefone');
-        const cepValue = getOptionalText('cep');
-        const logradouroValue = getOptionalText('logradouro');
-        const bairroValue = getOptionalText('bairro');
-        const localidadeValue = getOptionalText('localidade');
-        const numeroValue = getOptionalText('numero');
-        const complementoValue = getOptionalText('complemento');
-        const descricaoValue = getOptionalText('descricao');
-        const inscricaoEstadualValue = getOptionalText('inscricaoEstadual');
-
-        if (!dataInicioValue) {
-            throw new Error('Data Início é obrigatória.');
-        }
 
         const data = {
-            nome: ensureRequiredText('nome', 'Nome'),
-            email: ensureRequiredText('email', 'E-mail'),
-            rg: rgValue,
-            cpf: cpfValue,
+            nome: getOptionalText('nome'),
+            email: getOptionalText('email'),
+            rg: getOptionalText('rg'),
+            cpf: getOptionalText('cpf'),
             cnpj: cnpjValue,
-            telefone: telefoneValue,
+            telefone: getOptionalText('telefone'),
             dataNascimento: dataNascimentoValue || null,
-            dataInicio: dataInicioValue,
-            cep: cepValue,
-            logradouro: logradouroValue,
-            bairro: bairroValue,
-            localidade: localidadeValue,
-            numero: numeroValue,
-            complemento: complementoValue,
-            descricao: descricaoValue,
-            inscricaoEstadual: inscricaoEstadualValue,
+            dataInicio: dataInicioValue || null,
+            cep: getOptionalText('cep'),
+            logradouro: getOptionalText('logradouro'),
+            bairro: getOptionalText('bairro'),
+            localidade: getOptionalText('localidade'),
+            numero: getOptionalText('numero'),
+            complemento: getOptionalText('complemento'),
+            descricao: getOptionalText('descricao'),
+            inscricaoEstadual: getOptionalText('inscricaoEstadual'),
             isProBono: formData.get('isProBono') === 'true',
             isJuridico: Boolean(cnpjValue),
             fkIndicador: fkIndicadorValue ? parseInt(fkIndicadorValue, 10) : null,
         };
 
         const isAtivoValue = formData.get('isAtivo');
-        if (isAtivoValue === null) {
-            throw new Error('Status é obrigatório.');
-        }
-        data.isAtivo = isAtivoValue === 'true';
+        data.isAtivo = isAtivoValue === 'false' ? false : true;
 
         return data;
     };
@@ -349,12 +423,10 @@ function Clientes() {
     async function handleSubmitAdd(event) {
         event.preventDefault();
         const formData = new FormData(event.currentTarget);
-        let newClient;
-
-        try {
-            newClient = getClientDataFromForm(formData);
-        } catch (validationError) {
-            window.alert(validationError.message);
+        const newClient = getClientDataFromForm(formData);
+        const validationErrors = validateClientData(newClient);
+        if (validationErrors.length) {
+            window.alert(validationErrors.join('\n'));
             return;
         }
         
@@ -364,22 +436,24 @@ function Clientes() {
             handleCloseAdd();
         } catch (error) {
             console.error("Erro ao cadastrar cliente:", error.response?.data || error);
+            const backendMessage = extractBackendErrorMessage(error, 'Não foi possível cadastrar o cliente.');
+            window.alert(backendMessage);
         }
     }
 
     async function handleSubmitEdit(event) {
         event.preventDefault();
         const formData = new FormData(event.currentTarget);
-        const updatedData = {
-            ...selectedClient,
-        };
-        
-        try {
-            Object.assign(updatedData, getClientDataFromForm(formData));
-        } catch (validationError) {
-            window.alert(validationError.message);
+        const sanitizedData = getClientDataFromForm(formData);
+        const validationErrors = validateClientData({ ...selectedClient, ...sanitizedData });
+        if (validationErrors.length) {
+            window.alert(validationErrors.join('\n'));
             return;
         }
+        const updatedData = {
+            ...selectedClient,
+            ...sanitizedData,
+        };
         
         try {
             await updateCliente(selectedClient.idCliente, updatedData);
@@ -387,6 +461,8 @@ function Clientes() {
             handleCloseEdit();
         } catch (error) {
             console.error("Erro ao editar cliente:", error.response?.data || error);
+            const backendMessage = extractBackendErrorMessage(error, 'Não foi possível editar o cliente.');
+            window.alert(backendMessage);
         }
     }
 
