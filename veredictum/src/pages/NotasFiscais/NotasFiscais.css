@@ -1,8 +1,7 @@
-/* Container principal da página Notas Fiscais */
+/* Layout Principal */
 .notas-fiscais-container {
     display: flex;
     min-height: 100vh;
-    height: 100vh;
     background-color: #f0f0f0;
     width: 100vw;
     overflow: hidden;
@@ -11,10 +10,9 @@
     left: 0;
 }
 
-/* Conteúdo principal (à direita do sidebar) */
 .notas-fiscais-content {
     flex: 1;
-    margin-left: 6%; /* Compensa a largura fixa do sidebar */
+    margin-left: 6%;
     padding: 20px;
     transition: margin-left 0.2s ease-out;
     width: calc(100vw - 6%);
@@ -23,7 +21,7 @@
     box-sizing: border-box;
 }
 
-/* Cabeçalho da página */
+/* Header */
 .header-top {
     display: flex;
     justify-content: space-between;
@@ -35,8 +33,6 @@
 .head-description {
     display: flex;
     flex-direction: column;
-    align-items: flex-start;
-    justify-content: center;
     margin-left: -20px;
 }
 
@@ -56,7 +52,7 @@
     max-width: 500px;
 }
 
-/* Botão de adicionar */
+/* Botões */
 .btn-new-appointment {
     display: flex;
     align-items: center;
@@ -83,17 +79,7 @@
     height: 20px;
 }
 
-/* Container para os cards */
-.cards-container {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 20px;
-    justify-content: center;
-    width: 100%;
-    height: calc(100vh - 120px); /* Altura total menos header e padding */
-}
-
-/* Seção de Gestão de Notas Fiscais */
+/* Seção de Gestão */
 .nf-management-section {
     margin-top: 3%;
     display: flex;
@@ -103,28 +89,24 @@
 
 .nf-table-card {
     width: 85vw;
-    height: 400px;
-    max-height: 100vh;
+    height: 500px;
     border-radius: 10px;
-    background-color: var(--white-normal);
-    box-shadow: 0 1px 3px #4242425e;
+    background: var(--white-normal);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
 }
 
 .card-header {
     padding: 20px;
+    border-bottom: 1px solid #eee;
 }
 
 .card-content {
-    padding: 0 20px 20px 20px;
+    height: calc(500px - 80px);
+    overflow: hidden;
+    position: relative;
 }
 
-.nf-list-items-container {
-    display: flex;
-    flex-direction: column;
-    overflow-y: auto;
-    padding-right: 1rem;
-}
-
+/* Lista */
 .list-header-nf {
     display: grid;
     grid-template-columns: 2fr 2fr 2fr 1fr 1fr 1fr 1.5fr;
@@ -133,6 +115,11 @@
     font-weight: 700;
     color: var(--normal-black-strong);
     width: 92%;
+    background: var(--white-normal);
+    position: sticky;
+    top: 0;
+    z-index: 2;
+    margin: 0;
 }
 
 .list-header-nf p {
@@ -148,9 +135,8 @@
     padding: 0.3rem 1.2rem;
     box-shadow: 0 4px 10px 1px rgba(0, 0, 0, 0.151);
     border-radius: 10px;
-    margin-bottom: 0.7rem;
+    margin: 0.7rem 0 0.7rem 1%;
     background: var(--white-darknes);
-    margin-left: 1%;
 }
 
 .nf-list-item p {
@@ -172,142 +158,34 @@
 }
 
 .nf-list-item a {
-    color: var(--primary-color);
-    text-decoration: none;
+    color: black;
+    text-decoration: underline;
     font-weight: 500;
 }
 
-.nf-list-item a:hover {
-    text-decoration: underline;
-    color: var(--primary-color-dark);
+.nf-list-items-container {
+    height: calc(100% - 60px);
+    overflow-y: auto;
+    padding: 0 1rem 0 1.2rem;
 }
 
-/* Toggle Switch para status "Emitida" */
-.toggle-switch {
-    position: relative;
-    display: inline-block;
-    width: 50px;
-    height: 28px;
+/* Scrollbar */
+.nf-list-items-container::-webkit-scrollbar {
+    width: 6px;
 }
 
-.toggle-switch input {
-    opacity: 0;
-    width: 0;
-    height: 0;
+.nf-list-items-container::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 3px;
 }
 
-.toggle-switch .slider {
-    position: absolute;
-    cursor: pointer;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background-color: var(--green-normal);
-    transition: 0.4s;
-    border-radius: 28px;
+.nf-list-items-container::-webkit-scrollbar-thumb {
+    background: #c1c1c1;
+    border-radius: 3px;
 }
 
-.toggle-switch .slider:before {
-    position: absolute;
-    content: "";
-    height: 20px;
-    width: 20px;
-    left: 4px;
-    bottom: 4px;
-    background-color: white;
-    transition: 0.4s;
-    border-radius: 50%;
-}
-
-.toggle-switch input:checked + .slider {
-    background-color: var(--red-normal);
-}
-
-.toggle-switch input:focus + .slider {
-    box-shadow: 0 0 1px #007bff;
-}
-
-.toggle-switch input:checked + .slider:before {
-    transform: translateX(22px);
-}
-
-/* Responsividade */
-@media (max-width: 1200px) {
-    .nf-table-card {
-        width: 90vw;
-    }
-    
-    .div_topo h1 {
-        font-size: 28px;
-    }
-}
-
-@media (max-width: 768px) {
-    .notas-fiscais-container {
-        position: relative;
-        height: auto;
-        min-height: 100vh;
-    }
-    
-    .notas-fiscais-content {
-        margin-left: 0;
-        padding: 15px;
-        width: 100vw;
-        height: auto;
-        position: relative;
-    }
-    
-    .nf-management-section {
-        height: auto;
-        margin-top: 20px;
-    }
-    
-    .nf-table-card {
-        width: 95vw;
-        height: auto;
-        min-height: 400px;
-    }
-    
-    .list-header-nf,
-    .nf-list-item {
-        grid-template-columns: 1fr 1fr 1fr 0.8fr 0.8fr 0.8fr 1fr;
-        gap: 0.5rem;
-        padding: 0.5rem;
-        font-size: 0.8rem;
-    }
-    
-    .nf-list-item img {
-        width: 24px;
-        height: 24px;
-    }
-    
-    .toggle-switch {
-        width: 40px;
-        height: 22px;
-    }
-    
-    .toggle-switch .slider:before {
-        height: 16px;
-        width: 16px;
-        left: 3px;
-        bottom: 3px;
-    }
-    
-    .toggle-switch input:checked + .slider:before {
-        transform: translateX(18px);
-    }
-    
-    .div_topo h1 {
-        font-size: 24px;
-    }
-    
-    .header-top {
-        flex-direction: column;
-        align-items: flex-start;
-        gap: 20px;
-        padding: 0;
-    }
+.nf-list-items-container::-webkit-scrollbar-thumb:hover {
+    background: #a8a8a8;
 }
 
 /* Modal */
@@ -327,7 +205,6 @@
 .modal-content {
     background: var(--darkness-black);
     border-radius: 12px;
-    padding: 0;
     width: 90%;
     max-width: 800px;
     max-height: 90vh;
@@ -374,11 +251,11 @@
 .modal-close-btn img {
     width: 24px;
     height: 24px;
-    filter: invert(1); /* Torna o ícone branco */
+    filter: invert(1);
 }
 
-/* Formulário do Modal */
-.appointment-form {
+/* Formulário */
+.modal-form {
     padding: 24px;
     background: var(--darkness-black);
 }
@@ -388,12 +265,6 @@
     grid-template-columns: repeat(2, 1fr);
     gap: 20px;
     margin-bottom: 20px;
-}
-
-.form-column {
-    display: flex;
-    flex-direction: column;
-    gap: 16px;
 }
 
 .form-group-notas {
@@ -426,20 +297,7 @@
     box-shadow: 0 0 0 2px rgba(12, 12, 12, 0.1);
 }
 
-/* Placeholders para inputs com fundo branco */
 .form-group-notas input::placeholder {
-    color: #999;
-}
-
-.form-group-notas input::-webkit-input-placeholder {
-    color: #999;
-}
-
-.form-group-notas input::-moz-placeholder {
-    color: #999;
-}
-
-.form-group-notas input:-ms-input-placeholder {
     color: #999;
 }
 
@@ -452,33 +310,90 @@
     background: var(--darkness-black);
 }
 
-.form-footer-notas .btn-new-appointment {
-    background-color: var(--darkness-black);
-    color: var(--white-normal);
-    border: none;
-    padding: 12px 24px;
-    border-radius: 8px;
-    font-size: 16px;
-    font-weight: 600;
-    cursor: pointer;
-    transition: all 0.3s ease;
+/* Info Display */
+.info-display {
+    padding: 12px;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    font-size: 14px;
+    background-color: var(--white-normal);
+    color: var(--dark-black);
+    min-height: 20px;
     display: flex;
     align-items: center;
-    gap: 8px;
 }
 
-.form-footer-notas .btn-new-appointment:hover {
-    background-color: var(--dark-black);
-    transform: translateY(-2px);
+.info-display a {
+    color: #2196F3;
+    text-decoration: none;
+    transition: all 0.3s ease;
 }
 
-.form-footer-notas .btn-new-appointment:hover {
-    background-color: var(--dark-black);
-    transform: translateY(-2px);
+.info-display a:hover {
+    color: #1976D2;
+    text-decoration: underline;
 }
 
-/* Responsividade do Modal */
+/* Responsividade */
+@media (max-width: 1200px) {
+    .nf-table-card {
+        width: 90vw;
+    }
+    
+    .div_topo h1 {
+        font-size: 28px;
+    }
+}
+
 @media (max-width: 768px) {
+    .notas-fiscais-container {
+        position: relative;
+        height: auto;
+        min-height: 100vh;
+    }
+    
+    .notas-fiscais-content {
+        margin-left: 0;
+        width: 100vw;
+        height: auto;
+        padding: 15px;
+    }
+    
+    .nf-management-section {
+        height: auto;
+        margin-top: 20px;
+    }
+    
+    .nf-table-card {
+        width: 95vw;
+        height: auto;
+        min-height: 400px;
+    }
+    
+    .list-header-nf,
+    .nf-list-item {
+        grid-template-columns: 1fr 1fr 1fr 0.8fr 0.8fr 0.8fr 1fr;
+        gap: 0.5rem;
+        padding: 0.5rem;
+        font-size: 0.8rem;
+    }
+    
+    .nf-list-item img {
+        width: 24px;
+        height: 24px;
+    }
+    
+    .div_topo h1 {
+        font-size: 24px;
+    }
+    
+    .header-top {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 20px;
+        padding: 0;
+    }
+    
     .modal-content {
         width: 95%;
         max-height: 95vh;
@@ -498,13 +413,13 @@
         font-size: 20px;
     }
     
-    .appointment-form {
+    .modal-form {
         padding: 20px;
     }
     
     .form-group-notas input,
     .form-group-notas select {
         padding: 10px;
-        font-size: 16px; /* Previne zoom no iOS */
+        font-size: 16px;
     }
 }
