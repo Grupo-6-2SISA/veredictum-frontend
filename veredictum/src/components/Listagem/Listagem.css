@@ -39,15 +39,21 @@
     flex-direction: column;
     gap: 0.75rem;
 }
-
 .clientes-listagem-header {
-    grid-template-columns: 3fr 1fr 1.5fr 1.5fr;
+  grid-template-columns: 3fr 1fr 1.5fr 1.5fr;
     gap: 1rem;
     padding: 0.75rem 1.2rem;
     font-weight: bold;
     color: var(--normal-black-strong);
+    position: sticky;
+    z-index: 2;
+    padding-top: 0;
+    padding-bottom: 8px;
+    display: grid;
+    /* margin-left: 1px; */
+    top: 0;
+    background-color: white;
 }
-
 .clientes-listagem-header .header-item {
     margin: 0;
     font-size: 19px;

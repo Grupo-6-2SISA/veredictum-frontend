@@ -20,21 +20,21 @@ const CLIENT_FORM_COLUMNS = (clientList = []) => {
             { name: 'nome', label: 'Nome', type: 'text', required: true },
             { name: 'dataNascimento', label: 'Data de Nascimento', type: 'date' },
             { name: 'email', label: 'E-mail', type: 'email', required: true },
-            { name: 'rg', label: 'RG', type: 'text', required: true },
-            { name: 'cpf', label: 'CPF', type: 'text' },
+            { name: 'rg', label: 'RG', type: 'text', max: 12, min: 5 },
+            { name: 'cpf', label: 'CPF', type: 'text', max: 11, min: 11 },
         ],
         [
-            { name: 'cnpj', label: 'CNPJ', type: 'text' },
-            { name: 'telefone', label: 'Telefone', type: 'text', required: true, placeholder: '+5511999999999' },
-            { name: 'cep', label: 'CEP', type: 'text', required: true },
-            { name: 'logradouro', label: 'Logradouro', type: 'text', required: true },
-            { name: 'bairro', label: 'Bairro', type: 'text', required: true },
+            { name: 'cnpj', label: 'CNPJ', type: 'text', max: 14, min: 14 },
+            { name: 'telefone', label: 'Telefone', type: 'text', placeholder: '+5511999999999'},
+            { name: 'cep', label: 'CEP', type: 'text', max: 8, min: 8 },
+            { name: 'logradouro', label: 'Logradouro', type: 'text' },
+            { name: 'bairro', label: 'Bairro', type: 'text' },
         ],
         [
             { name: 'complemento', label: 'Complemento', type: 'text' },
             { name: 'localidade', label: 'Localidade', type: 'text' },
-            { name: 'numero', label: 'Número', type: 'text', required: true },
-            { name: 'inscricaoEstadual', label: 'Inscrição Estadual', type: 'text' },
+            { name: 'numero', label: 'Número', type: 'text' },
+            { name: 'inscricaoEstadual', label: 'Inscrição Estadual', type: 'text', max: 9, min: 9 },
             {
                 name: 'isProBono',
                 label: 'Pro-Bono?',
@@ -271,49 +271,76 @@ function Clientes() {
 
     
     const getClientDataFromForm = (formData) => {
+        const getOptionalText = (fieldName) => {
+            const rawValue = formData.get(fieldName);
+            if (typeof rawValue !== 'string') return rawValue ?? null;
+            const trimmed = rawValue.trim();
+            return trimmed.length ? trimmed : null;
+        };
+
+        const ensureRequiredText = (fieldName, label) => {
+            const rawValue = formData.get(fieldName);
+            if (typeof rawValue !== 'string') {
+                if (rawValue === null || rawValue === undefined) {
+                    throw new Error(`${label} é obrigatório.`);
+                }
+                return rawValue;
+            }
+
+            const trimmed = rawValue.trim();
+            if (!trimmed) {
+                throw new Error(`${label} é obrigatório.`);
+            }
+            return trimmed;
+        };
+
         const fkIndicadorValue = formData.get('fkIndicador');
+        const dataInicioValue = formData.get('dataInicio');
+        const dataNascimentoValue = formData.get('dataNascimento');
+        const rgValue = getOptionalText('rg');
+        const cpfValue = getOptionalText('cpf');
+        const cnpjValue = getOptionalText('cnpj');
+        const telefoneValue = getOptionalText('telefone');
+        const cepValue = getOptionalText('cep');
+        const logradouroValue = getOptionalText('logradouro');
+        const bairroValue = getOptionalText('bairro');
+        const localidadeValue = getOptionalText('localidade');
+        const numeroValue = getOptionalText('numero');
+        const complementoValue = getOptionalText('complemento');
+        const descricaoValue = getOptionalText('descricao');
+        const inscricaoEstadualValue = getOptionalText('inscricaoEstadual');
 
-        const rawCpf = formData.get('cpf') || '';
-        const sanitizedCpf = rawCpf.replace(/\D/g, '');
-        if (sanitizedCpf.length > 11) {
-            throw new Error('O CPF deve ter no máximo 11 dígitos.');
-        }
-
-        const rawInscricao = formData.get('inscricaoEstadual') || '';
-        const sanitizedInscricao = rawInscricao.replace(/\D/g, '');
-        if (sanitizedInscricao.length > 0 && sanitizedInscricao.length !== 9) {
-            throw new Error('A inscrição estadual deve ter exatamente 9 dígitos.');
+        if (!dataInicioValue) {
+            throw new Error('Data Início é obrigatória.');
         }
 
         const data = {
-            nome: formData.get('nome'),
-            email: formData.get('email'),
-            rg: formData.get('rg'),
-            cpf: sanitizedCpf || null,
-            cnpj: formData.get('cnpj') || null,
-            telefone: formData.get('telefone'),
-            dataNascimento: formData.get('dataNascimento') || null,
-            dataInicio: formData.get('dataInicio') || null,
-            cep: formData.get('cep'),
-            logradouro: formData.get('logradouro'),
-            bairro: formData.get('bairro'),
-            localidade: formData.get('localidade'),
-            numero: formData.get('numero'),
-            complemento: formData.get('complemento'),
-            descricao: formData.get('descricao'),
-            inscricaoEstadual: sanitizedInscricao || null,
+            nome: ensureRequiredText('nome', 'Nome'),
+            email: ensureRequiredText('email', 'E-mail'),
+            rg: rgValue,
+            cpf: cpfValue,
+            cnpj: cnpjValue,
+            telefone: telefoneValue,
+            dataNascimento: dataNascimentoValue || null,
+            dataInicio: dataInicioValue,
+            cep: cepValue,
+            logradouro: logradouroValue,
+            bairro: bairroValue,
+            localidade: localidadeValue,
+            numero: numeroValue,
+            complemento: complementoValue,
+            descricao: descricaoValue,
+            inscricaoEstadual: inscricaoEstadualValue,
             isProBono: formData.get('isProBono') === 'true',
-            isJuridico: !!formData.get('cnpj'),
+            isJuridico: Boolean(cnpjValue),
             fkIndicador: fkIndicadorValue ? parseInt(fkIndicadorValue, 10) : null,
         };
 
-        
         const isAtivoValue = formData.get('isAtivo');
-        if (isAtivoValue !== null) {
-            data.isAtivo = isAtivoValue === 'true';
-        } else if (typeof data.isAtivo === 'undefined') {
-            data.isAtivo = true;
+        if (isAtivoValue === null) {
+            throw new Error('Status é obrigatório.');
         }
+        data.isAtivo = isAtivoValue === 'true';
 
         return data;
     };
