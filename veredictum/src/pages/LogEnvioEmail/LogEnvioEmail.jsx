@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import Sidebar from '../../components/Sidebar/Sidebar';
 import Listagem from '../../components/Listagem/Listagem';
+import Card from '../../components/Card/Card';
 import './LogEnvioEmail.css';
 import '../../index.css';
 
@@ -57,9 +58,12 @@ const LogEnvioEmail = () => {
                             <input type="text" id="filtroCliente" placeholder='Nome do Cliente' />
                         </div>
                     </div>
-                    <div className="log-email-listagem">
+                    <Card className="card-box-logs">
                         <Listagem colunas={colunasLogEmail} dados={dadosLogEmail} />
-                    </div>
+                    </Card>
+                    {/* <div className="log-email-listagem">
+                        <Listagem colunas={colunasLogEmail} dados={dadosLogEmail} />
+                    </div> */}
                 </div>
             </main>
         </div>
