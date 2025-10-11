@@ -1,6 +1,8 @@
 /* Estilo da Listagem */
 .listagem-container {
     width: 100%;
+    box-sizing: border-box;
+    padding: 0 8px; /* espaço lateral controlado pelo container, facilita ajustes externos */
 }
 
 .listagem-header {
@@ -61,3 +63,49 @@
 .cards-grid > div:nth-child(4) .listagem-row {
     grid-template-columns: 3fr 2fr; /* 2 colunas (tamanho longo, tamanho curto) */
 }
+
+/* ...existing code... */
+
+/* Ajuste do tamanho e alinhamento dos ícones dentro da listagem */
+.listagem-icon {
+    width: 40px;
+    height: 40px;
+    display: inline-block;
+    object-fit: contain;
+    vertical-align: middle;
+}
+
+/* Botões que envolvem os ícones (editar / excluir) */
+.listagem-data-icon .listagem-btn,
+.listagem-btn-editar,
+.listagem-btn-excluir {
+    width: 36px;
+    height: 36px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+    border: none;
+    background: transparent;
+    border-radius: 8px;
+    cursor: pointer;
+}
+
+/* Imagens internas dos botões */
+.listagem-data-icon .listagem-btn img,
+.listagem-btn-editar img,
+.listagem-btn-excluir img {
+    width: 28px;
+    height: 28px;
+    object-fit: contain;
+    display: block;
+}
+
+/* Pequeno hover para feedback */
+.listagem-data-icon .listagem-btn:hover,
+.listagem-btn-editar:hover,
+.listagem-btn-excluir:hover {
+    background: rgba(0,0,0,0.04);
+}
+
+/* ...existing code... */

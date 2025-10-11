@@ -45,6 +45,7 @@
     align-items: center;
 }
 
+
 .menu-text-logo {
     display: none;
     margin-left: 5px;
@@ -59,10 +60,8 @@
     width: auto;
     object-fit: contain;
     margin-bottom: 10px;
-    margin-right: 30px;
-    /* Removido 'margin-right: 30px' que estava desalinhando o logo na versão minimizada */
+    margin-right: 50px;
 }
-
 .sidebar-header .user-name {
     display: block;
     font-weight: 600;
@@ -208,17 +207,24 @@
     margin-left: 10px; /* Espaçamento entre o ícone (agora em 'a') e o texto */
 }
 
-.sidebar:hover .logo{
-    justify-content: flex-start;
-    /* margin-left: 50px; Espaçamento consistente com os itens do menu */
+/* -------------------------------------------------------------------------- */
+/* ESTILOS AO EXPANDIR (.sidebar:hover) - GARANTE ALINHAMENTO DO CABEÇALHO */
+/* -------------------------------------------------------------------------- */
+
+.sidebar:hover .logo {
+    /* Alinha o conteúdo da div 'logo' à esquerda */
+    justify-content: center;
+    padding-left: 42%; /* Espaçamento igual ao dos itens de navegação */
 }
 
-.sidebar-header:hover .logo  {
-    height: 40px;
-    width: auto;
-    
-    object-fit: contain;
-    margin-bottom: 10px;
+.sidebar:hover .sidebar-header .logo img {
+    /* Ajusta o espaçamento entre o ÍCONE do logo e o TEXTO do logo */
     margin-right: 10px;
-    /* Removido 'margin-right: 30px' que estava desalinhando o logo na versão minimizada */
+    text-align: center;  
+}
+
+.sidebar:hover .sidebar-header .user-name {
+    /* Garante que o nome do usuário também se alinhe à esquerda */
+    text-align: center; 
+    padding-left: 18px; /* Espaçamento igual ao dos itens de navegação */
 }

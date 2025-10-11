@@ -2,8 +2,8 @@ import React from 'react';
 import './Card.css';
 import '../../index.css';
 
-const Card = ({ titulo, iconePath, children, alt }) => (
-  <div className="card-box">
+const Card = ({ titulo, iconePath, children, className='card', alt , props}) => (
+  <div className={`card-box ${className}`} {...props}>
     <div className="card-header">
       {iconePath && (
         <img
