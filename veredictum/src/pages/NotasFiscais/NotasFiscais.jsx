@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import Sidebar from '../../components/Sidebar/Sidebar';
+import Modal from '../../components/Modal/Modal';
 import './NotasFiscais.css';
 import { 
   getNotasFiscais, 
@@ -13,8 +14,10 @@ const NotasFiscais = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [isInfoModalOpen, setIsInfoModalOpen] = useState(false);
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [editingNota, setEditingNota] = useState(null);
   const [viewingNota, setViewingNota] = useState(null);
+  const [deletingNota, setDeletingNota] = useState(null);
   const [notasFiscaisData, setNotasFiscaisData] = useState([]);
   const [clientesData, setClientesData] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -76,6 +79,7 @@ const NotasFiscais = () => {
   const closeModal = () => setIsModalOpen(false);
   const closeEditModal = () => { setIsEditModalOpen(false); setEditingNota(null); };
   const closeInfoModal = () => { setIsInfoModalOpen(false); setViewingNota(null); };
+  const closeDeleteModal = () => { setIsDeleteModalOpen(false); setDeletingNota(null); };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -166,14 +170,25 @@ const NotasFiscais = () => {
     }
   };
 
-  const handleDelete = async (nota) => {
+  const handleDelete = (nota) => {
     const notaId = getNormalizedId(nota);
-    if (!notaId || !window.confirm(`Deseja excluir a nota fiscal ${nota.numero}?`)) return;
+    if (!notaId) {
+      alert('Erro: ID da nota fiscal não encontrado');
+      return;
+    }
+    
+    setDeletingNota({ ...nota, id_nota_fiscal: notaId });
+    setIsDeleteModalOpen(true);
+  };
+
+  const confirmDelete = async () => {
+    if (!deletingNota) return;
     
     try {
-      await deleteNotaFiscal(notaId);
-      setNotasFiscaisData(prev => prev.filter(item => getNormalizedId(item) != notaId));
+      await deleteNotaFiscal(deletingNota.id_nota_fiscal);
+      setNotasFiscaisData(prev => prev.filter(item => getNormalizedId(item) != deletingNota.id_nota_fiscal));
       alert('Nota fiscal excluída com sucesso!');
+      closeDeleteModal();
     } catch (err) {
       const message = err.response?.status === 409 
         ? 'Não é possível excluir esta nota fiscal pois existem registros dependentes.'
@@ -313,204 +328,216 @@ const NotasFiscais = () => {
         </div>
 
         {/* Modal Adicionar */}
-        {isModalOpen && (
-          <div className="modal">
-            <div className="modal-content">
-              <div className="modal-header">
-                <h2>Nova Nota Fiscal</h2>
-                <button className="modal-close-btn" onClick={closeModal}>
-                  <img src="src/assets/svg/close.svg" alt="Fechar" />
-                </button>
-              </div>
-              
-              <form className="modal-form" onSubmit={handleSubmit}>
-                <div className="form-row">
-                  <FormField label="Número da Nota" htmlFor="numeroNota">
-                    <input type="text" id="numeroNota" name="numeroNota" placeholder="Ex: NF-001" required />
-                  </FormField>
-                  <FormField label="Cliente" htmlFor="cliente">
-                    <select id="cliente" name="cliente" required>
-                      <option value="">Selecione um cliente</option>
-                      {renderClienteOptions()}
-                    </select>
-                  </FormField>
-                </div>
-                
-                <div className="form-row">
-                  <FormField label="Etiqueta" htmlFor="etiqueta">
-                    <input type="text" id="etiqueta" name="etiqueta" placeholder="Ex: Vendas" required />
-                  </FormField>
-                  <FormField label="Valor" htmlFor="valor">
-                    <input type="number" step="0.01" id="valor" name="valor" placeholder="0.00" required />
-                  </FormField>
-                </div>
-                
-                <div className="form-row">
-                  <FormField label="Data de Vencimento" htmlFor="dataVencimento">
-                    <input type="date" id="dataVencimento" name="dataVencimento" required />
-                  </FormField>
-                  <FormField label="Emitida" htmlFor="emitida">
-                    <select id="emitida" name="emitida" required>
-                      <option value="">Selecione</option>
-                      <option value="true">Sim</option>
-                      <option value="false">Não</option>
-                    </select>
-                  </FormField>
-                </div>
-                
-                <div className="form-row">
-                  <FormField label="URL na Nuvem" htmlFor="urlCloud">
-                    <input type="url" id="urlCloud" name="urlCloud" placeholder="https://..." />
-                  </FormField>
-                  <FormField label="Descrição" htmlFor="descricao">
-                    <input type="text" id="descricao" name="descricao" placeholder="Descrição da nota" />
-                  </FormField>
-                </div>
-                
-                <div className="form-footer-notas">
-                  <button type="button" className="btn-new-appointment" onClick={closeModal} style={{background: '#666'}}>
-                    Cancelar
-                  </button>
-                  <button type="submit" className="btn-new-appointment">
-                    Salvar Nota Fiscal
-                  </button>
-                </div>
-              </form>
+        <Modal
+          isOpen={isModalOpen}
+          variant="add"
+          title="Nova Nota Fiscal"
+          onClose={closeModal}
+          modalId="new-appointment-modal-add-note"
+          formProps={{
+            onSubmit: handleSubmit,
+            className: "appointment-form"
+          }}
+          footer={
+            <div className="form-footer-notas">
+              <button type="submit" className="btn-new-appointment">
+                Salvar Nota Fiscal
+              </button>
             </div>
+          }
+        >
+          <div className="form-row">
+            <FormField label="Número da Nota" htmlFor="numeroNota">
+              <input type="text" id="numeroNota" name="numeroNota" placeholder="Ex: NF-001" required />
+            </FormField>
+            <FormField label="Cliente" htmlFor="cliente">
+              <select id="cliente" name="cliente" required>
+                <option value="">Selecione um cliente</option>
+                {renderClienteOptions()}
+              </select>
+            </FormField>
           </div>
-        )}
+          
+          <div className="form-row">
+            <FormField label="Etiqueta" htmlFor="etiqueta">
+              <input type="text" id="etiqueta" name="etiqueta" placeholder="Ex: Vendas" required />
+            </FormField>
+            <FormField label="Valor" htmlFor="valor">
+              <input type="number" step="0.01" id="valor" name="valor" placeholder="0.00" required />
+            </FormField>
+          </div>
+          
+          <div className="form-row">
+            <FormField label="Data de Vencimento" htmlFor="dataVencimento">
+              <input type="date" id="dataVencimento" name="dataVencimento" required />
+            </FormField>
+            <FormField label="Emitida" htmlFor="emitida">
+              <select id="emitida" name="emitida" required>
+                <option value="">Selecione</option>
+                <option value="true">Sim</option>
+                <option value="false">Não</option>
+              </select>
+            </FormField>
+          </div>
+          
+          <div className="form-row">
+            <FormField label="URL na Nuvem" htmlFor="urlCloud">
+              <input type="url" id="urlCloud" name="urlCloud" placeholder="https://..." />
+            </FormField>
+            <FormField label="Descrição" htmlFor="descricao">
+              <input type="text" id="descricao" name="descricao" placeholder="Descrição da nota" />
+            </FormField>
+          </div>
+        </Modal>
 
         {/* Modal Editar */}
-        {isEditModalOpen && editingNota && (
-          <div className="modal">
-            <div className="modal-content">
-              <div className="modal-header">
-                <h2>Editar Nota Fiscal</h2>
-                <button className="modal-close-btn" onClick={closeEditModal}>
-                  <img src="src/assets/svg/close.svg" alt="Fechar" />
-                </button>
+        <Modal
+          isOpen={isEditModalOpen}
+          variant="edit"
+          title="Editar Nota Fiscal"
+          onClose={closeEditModal}
+          modalId="new-appointment-modal-edit-note"
+          formProps={{
+            onSubmit: handleEditSubmit,
+            className: "appointment-form"
+          }}
+          footer={
+            <div className="form-footer-notas">
+              <button type="submit" className="btn-new-appointment">
+                Salvar Alterações
+              </button>
+            </div>
+          }
+        >
+          {editingNota && (
+            <>
+              <div className="form-row">
+                <FormField label="Número da Nota" htmlFor="numeroNotaEdit">
+                  <input type="text" id="numeroNotaEdit" name="numeroNota" defaultValue={editingNota.numero || ''} required />
+                </FormField>
+                <FormField label="Cliente" htmlFor="clienteEdit">
+                  <select id="clienteEdit" name="cliente" defaultValue={editingNota.fk_cliente || ''} required>
+                    <option value="">Selecione um cliente</option>
+                    {renderClienteOptions()}
+                  </select>
+                </FormField>
               </div>
               
-              <form className="modal-form" onSubmit={handleEditSubmit}>
-                <div className="form-row">
-                  <FormField label="Número da Nota" htmlFor="numeroNotaEdit">
-                    <input type="text" id="numeroNotaEdit" name="numeroNota" defaultValue={editingNota.numero || ''} required />
-                  </FormField>
-                  <FormField label="Cliente" htmlFor="clienteEdit">
-                    <select id="clienteEdit" name="cliente" defaultValue={editingNota.fk_cliente || ''} required>
-                      <option value="">Selecione um cliente</option>
-                      {renderClienteOptions()}
-                    </select>
-                  </FormField>
-                </div>
-                
-                <div className="form-row">
-                  <FormField label="Etiqueta" htmlFor="etiquetaEdit">
-                    <input type="text" id="etiquetaEdit" name="etiqueta" defaultValue={editingNota.etiqueta || ''} required />
-                  </FormField>
-                  <FormField label="Valor" htmlFor="valorEdit">
-                    <input type="number" step="0.01" id="valorEdit" name="valor" defaultValue={editingNota.valor || ''} required />
-                  </FormField>
-                </div>
-                
-                <div className="form-row">
-                  <FormField label="Data de Vencimento" htmlFor="dataVencimentoEdit">
-                    <input type="date" id="dataVencimentoEdit" name="dataVencimento" defaultValue={formatDateForInput(editingNota.dataVencimento)} required />
-                  </FormField>
-                  <FormField label="Emitida" htmlFor="emitidaEdit">
-                    <select id="emitidaEdit" name="emitida" defaultValue={getEmitidaValue(editingNota.is_emitida)} required>
-                      <option value="">Selecione</option>
-                      <option value="true">Sim</option>
-                      <option value="false">Não</option>
-                    </select>
-                  </FormField>
-                </div>
-                
-                <div className="form-row">
-                  <FormField label="URL na Nuvem" htmlFor="urlCloudEdit">
-                    <input type="url" id="urlCloudEdit" name="urlCloud" defaultValue={editingNota.url_nuvem || ''} />
-                  </FormField>
-                  <FormField label="Descrição" htmlFor="descricaoEdit">
-                    <input type="text" id="descricaoEdit" name="descricao" defaultValue={editingNota.descricao || ''} />
-                  </FormField>
-                </div>
-                
-                <div className="form-footer-notas">
-                  <button type="button" className="btn-new-appointment" onClick={closeEditModal} style={{background: '#666'}}>
-                    Cancelar
-                  </button>
-                  <button type="submit" className="btn-new-appointment">
-                    Salvar Alterações
-                  </button>
-                </div>
-              </form>
-            </div>
-          </div>
-        )}
+              <div className="form-row">
+                <FormField label="Etiqueta" htmlFor="etiquetaEdit">
+                  <input type="text" id="etiquetaEdit" name="etiqueta" defaultValue={editingNota.etiqueta || ''} required />
+                </FormField>
+                <FormField label="Valor" htmlFor="valorEdit">
+                  <input type="number" step="0.01" id="valorEdit" name="valor" defaultValue={editingNota.valor || ''} required />
+                </FormField>
+              </div>
+              
+              <div className="form-row">
+                <FormField label="Data de Vencimento" htmlFor="dataVencimentoEdit">
+                  <input type="date" id="dataVencimentoEdit" name="dataVencimento" defaultValue={formatDateForInput(editingNota.dataVencimento)} required />
+                </FormField>
+                <FormField label="Emitida" htmlFor="emitidaEdit">
+                  <select id="emitidaEdit" name="emitida" defaultValue={getEmitidaValue(editingNota.is_emitida)} required>
+                    <option value="">Selecione</option>
+                    <option value="true">Sim</option>
+                    <option value="false">Não</option>
+                  </select>
+                </FormField>
+              </div>
+              
+              <div className="form-row">
+                <FormField label="URL na Nuvem" htmlFor="urlCloudEdit">
+                  <input type="url" id="urlCloudEdit" name="urlCloud" defaultValue={editingNota.url_nuvem || ''} />
+                </FormField>
+                <FormField label="Descrição" htmlFor="descricaoEdit">
+                  <input type="text" id="descricaoEdit" name="descricao" defaultValue={editingNota.descricao || ''} />
+                </FormField>
+              </div>
+            </>
+          )}
+        </Modal>
 
         {/* Modal Ver Mais */}
-        {isInfoModalOpen && viewingNota && (
-          <div className="modal">
-            <div className="modal-content">
-              <div className="modal-header">
-                <h2>Informações da Nota Fiscal</h2>
-                <button className="modal-close-btn" onClick={closeInfoModal}>
-                  <img src="src/assets/svg/close.svg" alt="Fechar" />
-                </button>
+        <Modal
+          isOpen={isInfoModalOpen}
+          variant="view"
+          title="Informações da Nota Fiscal"
+          onClose={closeInfoModal}
+          modalId="new-appointment-modal-view-note"
+          footer={
+            <div className="form-footer-notas">
+              <button type="button" className="btn-new-appointment" onClick={closeInfoModal}>
+                Fechar
+              </button>
+            </div>
+          }
+        >
+          {viewingNota && (
+            <>
+              <div className="form-row">
+                <FormField label="Número da Nota">
+                  <div className="info-display">{viewingNota.numero}</div>
+                </FormField>
+                <FormField label="Cliente">
+                  <div className="info-display">{getClienteNome(viewingNota.fk_cliente)}</div>
+                </FormField>
               </div>
               
-              <div className="modal-form">
-                <div className="form-row">
-                  <FormField label="Número da Nota">
-                    <div className="info-display">{viewingNota.numero}</div>
-                  </FormField>
-                  <FormField label="Cliente">
-                    <div className="info-display">{getClienteNome(viewingNota.fk_cliente)}</div>
-                  </FormField>
-                </div>
-                
-                <div className="form-row">
-                  <FormField label="Etiqueta">
-                    <div className="info-display">{viewingNota.etiqueta}</div>
-                  </FormField>
-                  <FormField label="Valor">
-                    <div className="info-display">R$ {viewingNota.valor}</div>
-                  </FormField>
-                </div>
-                
-                <div className="form-row">
-                  <FormField label="Data de Vencimento">
-                    <div className="info-display">{formatDateForDisplay(viewingNota.dataVencimento)}</div>
-                  </FormField>
-                  <FormField label="Emitida">
-                    <div className="info-display">{getEmitidaText(viewingNota.is_emitida)}</div>
-                  </FormField>
-                </div>
-                
-                <div className="form-row">
-                  <FormField label="URL na Nuvem">
-                    <div className="info-display">
-                      {viewingNota.url_nuvem ? (
-                        <a href={viewingNota.url_nuvem} target="_blank" rel="noopener noreferrer">
-                          {viewingNota.url_nuvem}
-                        </a>
-                      ) : 'Não informado'}
-                    </div>
-                  </FormField>
-                  <FormField label="Descrição">
-                    <div className="info-display">{viewingNota.descricao || 'Não informado'}</div>
-                  </FormField>
-                </div>
-                
-                <div className="form-footer-notas">
-                  <button type="button" className="btn-new-appointment" onClick={closeInfoModal}>
-                    Fechar
-                  </button>
-                </div>
+              <div className="form-row">
+                <FormField label="Etiqueta">
+                  <div className="info-display">{viewingNota.etiqueta}</div>
+                </FormField>
+                <FormField label="Valor">
+                  <div className="info-display">R$ {viewingNota.valor}</div>
+                </FormField>
               </div>
+              
+              <div className="form-row">
+                <FormField label="Data de Vencimento">
+                  <div className="info-display">{formatDateForDisplay(viewingNota.dataVencimento)}</div>
+                </FormField>
+                <FormField label="Emitida">
+                  <div className="info-display">{getEmitidaText(viewingNota.is_emitida)}</div>
+                </FormField>
+              </div>
+              
+              <div className="form-row">
+                <FormField label="URL na Nuvem">
+                  <div className="info-display">
+                    {viewingNota.url_nuvem ? (
+                      <a href={viewingNota.url_nuvem} target="_blank" rel="noopener noreferrer">
+                        {viewingNota.url_nuvem}
+                      </a>
+                    ) : 'Não informado'}
+                  </div>
+                </FormField>
+                <FormField label="Descrição">
+                  <div className="info-display">{viewingNota.descricao || 'Não informado'}</div>
+                </FormField>
+              </div>
+            </>
+          )}
+        </Modal>
+
+        {/* Modal Delete */}
+        <Modal
+          isOpen={isDeleteModalOpen}
+          variant="delete"
+          title="Confirmar Exclusão"
+          onClose={closeDeleteModal}
+          modalId="modal-delete-note"
+          footer={
+            <div className="modal-footer">
+              <button className="btn-confirm-delete" onClick={confirmDelete}>
+                Excluir
+              </button>
             </div>
-          </div>
-        )}
+          }
+        >
+          {deletingNota && (
+            <p>Tem certeza que deseja excluir a nota fiscal "{deletingNota.numero}"?</p>
+          )}
+        </Modal>
       </div>
     </div>
   );
