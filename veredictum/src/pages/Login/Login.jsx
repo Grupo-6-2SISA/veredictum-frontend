@@ -40,7 +40,7 @@ function Login() {
         alert("Login realizado com sucesso!");
         navigate("/VisaoGeral");
       } else if (response.status === 404) {
-        alert("Usuário não encontrado. Cadastre-se primeiro.");
+        alert("E-mail não encontrado. Certifique-se de que esteja cadastrado no nosso sistema.");
       } else if (response.status === 400) {
         alert("E-mail ou senha incorretos.");
       } else if (response.status === 401) {

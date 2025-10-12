@@ -17,7 +17,7 @@ function Cadastro() {
 
   async function handleCadastro(formData) {
     try {
-      const response = await fetch("http://localhost:8080/usuarios/cadastrar", {
+      const response = await fetch("http://localhost:8080/usuarios/cadastrar-inativo", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -33,8 +33,6 @@ function Cadastro() {
       if (response.ok) {
         alert("Cadastro realizado com sucesso!");
         navigate("/login");
-      } else if (response.status === 409) {
-        alert("E-mail já cadastrado.");
       } 
     } catch (error) {
       console.error("Erro na requisição:", error);

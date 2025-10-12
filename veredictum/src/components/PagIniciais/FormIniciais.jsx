@@ -14,7 +14,7 @@ function FormIniciais({ fields, buttonText, onSubmit, showForgotPassword = false
   function handleSubmit(e) {
     e.preventDefault();
     if (formData.senha.length < 6) {
-      alert("A senha deve ter pelo menos 6 caracteres. Por favor, refaça a senha.");
+      alert("Senha insuficiente. Certifique-se de que haja ao menos 6 caracteres");
       return;
     }
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -22,6 +22,12 @@ function FormIniciais({ fields, buttonText, onSubmit, showForgotPassword = false
       alert("Por favor, insira um e-mail válido.");
       return;
     }
+    if (formData.nome && formData.nome.length < 2) {
+      alert("O nome deve ter pelo menos 2 caracteres. Por favor, revise o campo.");
+      return;
+    }
+
+
 
 
     onSubmit(formData); // manda os dados para o Cadastro.jsx
