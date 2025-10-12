@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { atualizarFuncionario } from "../../pages/PainelControle/Painel";
+import { atualizarFuncionario } from "../Painel";
 
 function ModalEditarFuncionario({
     isModalOpen,
@@ -21,9 +21,9 @@ function ModalEditarFuncionario({
     // Preenche o modal com os dados do funcionário ao abrir
     useEffect(() => {
         if (funcionarioData) {
-            console.log("🟣 Dados recebidos no modal:", funcionarioData);
+            console.log("Dados recebidos no modal:", funcionarioData);
             setFormData({
-                idUsuario: funcionarioData.id || null, // <-- aqui
+                idUsuario: funcionarioData.id || null,
                 nome: funcionarioData.nome || "",
                 email: funcionarioData.email || "",
                 senha: "",
@@ -34,11 +34,36 @@ function ModalEditarFuncionario({
         }
     }, [funcionarioData]);
 
-
-
     const handleChange = (e) => {
         const { name, value } = e.target;
         setFormData((prev) => ({ ...prev, [name]: value }));
+    };
+
+    // Função de validação dos campos
+    const validarCampos = () => {
+        const { nome, email, senha } = formData;
+
+        // Nome: apenas letras e espaços
+        const nomeRegex = /^[A-Za-zÀ-ÖØ-öø-ÿ\s]+$/;
+        if (!nomeRegex.test(nome.trim())) {
+            alert("❌ O nome deve conter apenas letras e espaços.");
+            return false;
+        }
+
+        // E-mail: formato válido
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!emailRegex.test(email.trim())) {
+            alert("❌ E-mail inválido. Use o formato: exemplo@dominio.com");
+            return false;
+        }
+
+        // Senha: só valida se o campo for preenchido
+        if (senha.trim() !== "" && senha.length < 6) {
+            alert("❌ A senha deve ter pelo menos 6 caracteres.");
+            return false;
+        }
+
+        return true;
     };
 
     const handleSalvar = async () => {
@@ -48,11 +73,13 @@ function ModalEditarFuncionario({
                 return;
             }
 
+            if (!validarCampos()) return;
+
             const funcionarioAtualizado = {
                 idUsuario: formData.idUsuario,
                 nome: formData.nome.trim(),
                 email: formData.email.trim(),
-                isAtivo: formData.ativo ?? true,
+                isAtivo: formData.isAtivo ?? true,
                 fkAdm: formData.fkAdm,
                 isAdm: formData.tipoUsuario === "Administrador",
             };
@@ -66,13 +93,13 @@ function ModalEditarFuncionario({
             const response = await atualizarFuncionario(formData.idUsuario, funcionarioAtualizado);
             console.log("Resposta do backend:", response.data);
 
-            alert("Funcionário atualizado com sucesso!");
+            alert("✅ Funcionário atualizado com sucesso!");
             atualizarLista?.();
             closeModalEditar();
             window.location.reload();
 
         } catch (error) {
-            console.error("Erro ao atualizar funcionário:", error);
+            console.error("❌ Erro ao atualizar funcionário:", error);
             alert("Falha ao atualizar funcionário. Verifique os dados e tente novamente.");
         }
     };

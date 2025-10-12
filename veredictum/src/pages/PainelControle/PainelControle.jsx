@@ -3,14 +3,18 @@ import React, { useState, useEffect } from 'react';
 import "./PainelControle.css";
 import '../../index.css';
 
+
 import { listarFuncionarios, ListarRotinas, ativarFuncionario, ativarRotina } from './Painel';
 
-import ModalCriarFuncionario from '../../components/Modals/ModalCriarFunc';
-import ModalEditarFuncionario from '../../components/Modals/ModalEditarFuncionario';
-import ModalConfirmarDesativacao from '../../components/Modals/ModalDesativarFunc';
-import ModalEditarRotina from '../../components/Modals/ModalEditarRotina';
-import ModalVerMaisRotina from '../../components/Modals/ModalVerMaisRotina';
-import ModalConfirmarRotina from '../../components/Modals/ModalDesativarRotina';
+// Funcionários
+import ModalCriarFuncionario from './Support/ModalCriarFunc';
+import ModalConfirmarDesativacao from './Support/ModalDesativarFunc';
+import ModalEditarFuncionario from './Support/ModalEditarFuncionario';
+
+// Rotina
+import ModalConfirmarRotina from '../PainelControle/Support/ModalDesativarRotina';
+import ModalEditarRotina from '../PainelControle/Support/ModalEditarRotina';
+import ModalVerMaisRotina from '../PainelControle/Support/ModalVerMaisRotina';
 
 import Sidebar from '../../components/Sidebar/Sidebar';
 import EquipeImg from '../../assets/img/equipe.png';

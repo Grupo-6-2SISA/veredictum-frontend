@@ -29,6 +29,9 @@ function ModalVerMaisRotina({ isModalOpen, closeModalVerMaisRotina, rotinaData, 
                         <label>Status</label>
                         <select disabled defaultValue={status || 'Ativo'}><option>Ativo</option><option>Inativo</option></select>
                     </div>
+
+                    <div className="form-group">
+                    </div>
                 </div>
             </div>
         </div>

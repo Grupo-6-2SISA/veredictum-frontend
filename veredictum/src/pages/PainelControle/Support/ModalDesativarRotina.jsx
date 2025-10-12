@@ -1,12 +1,12 @@
 import React from 'react';
-import { desativarRotina } from "../../pages/PainelControle/Painel";
+import { desativarRotina } from "../Painel";
 
 
 function ModalConfirmarRotina({
     isModalOpen,
     closeModalConfirmarRotina,
     rotinaData,
-    onRotinaDesativada, // callback para atualizar a lista no frontend
+    onRotinaDesativada,
     CloseBlackIcon
 }) {
     if (!isModalOpen || !rotinaData) return null;

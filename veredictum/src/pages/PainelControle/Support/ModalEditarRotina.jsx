@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { AtualizarRotinas } from "../../pages/PainelControle/Painel";
+import { AtualizarRotinas } from "../Painel";
 
 function ModalEditarRotina({ isModalOpen, closeModalEditarRotina, rotinaData, FecharIcone, onAtualizarRotina }) {
     if (!isModalOpen || !rotinaData) return null;
@@ -15,8 +15,6 @@ function ModalEditarRotina({ isModalOpen, closeModalEditarRotina, rotinaData, Fe
 
     useEffect(() => {
         if (rotinaData) {
-            console.log("🟣 Dados recebidos do backend:", rotinaData);
-
             setFormData({
                 nome: rotinaData.nomeRotina || rotinaData.nome || '',
                 arquivo: rotinaData.rotinaChamada || rotinaData.arquivo || '',
@@ -30,31 +28,53 @@ function ModalEditarRotina({ isModalOpen, closeModalEditarRotina, rotinaData, Fe
 
     const handleChange = (e) => {
         const { name, value } = e.target;
-        console.log(`✏️ Alterando campo ${name}: ${value}`);
         setFormData(prev => ({ ...prev, [name]: value }));
     };
 
     const handleSalvar = async () => {
+        // 🧩 Validações
+        const somenteLetrasEspacos = /^[A-Za-zÀ-ÿ\s]+$/;
+
+        // Validação 1: Nome só com letras e espaços
+        if (!somenteLetrasEspacos.test(formData.nome)) {
+            alert("O nome da rotina deve conter apenas letras e espaços.");
+            return;
+        }
+
+        // Validação 2: Campo 'Rotina' só com letras e espaços
+        if (!somenteLetrasEspacos.test(formData.arquivo)) {
+            alert("O campo 'Rotina' deve conter apenas letras e espaços.");
+            return;
+        }
+
+        // Validação 3: Data Fim não pode ser menor que Data Início
+        if (formData.dataInicio && formData.dataFim && formData.dataFim < formData.dataInicio) {
+            alert("A data de fim não pode ser anterior à data de início.");
+            return;
+        }
+
+        // Validação 4: Data Início não pode ser maior que Data Fim (redundante mas deixa claro)
+        if (formData.dataInicio && formData.dataFim && formData.dataInicio > formData.dataFim) {
+            alert("A data de início não pode ser posterior à data de fim.");
+            return;
+        }
+
         try {
             const horaFormatada = formData.horaInicio.length === 5 ? formData.horaInicio + ":00" : formData.horaInicio;
-            const dataInicioFormatada = formData.dataInicio;
-            const dataFimFormatada = formData.dataFim;
 
             const payload = {
-                nomeRotina: formData.nome,
-                rotinaChamada: formData.arquivo,
+                nomeRotina: formData.nome.trim(),
+                rotinaChamada: formData.arquivo.trim(),
                 horaInicio: horaFormatada,
-                dataInicio: dataInicioFormatada,
-                dataFim: dataFimFormatada,
+                dataInicio: formData.dataInicio,
+                dataFim: formData.dataFim,
                 isAtivo: formData.status === 'Ativo',
             };
-
-            console.log("🟢 Payload formatado que será enviado:", payload);
 
             const idParaEnvio = rotinaData.idRotina ?? rotinaData.id;
             await AtualizarRotinas(idParaEnvio, payload);
 
-            console.log("✅ Rotina atualizada com sucesso!");
+            alert("Rotina atualizada com sucesso!");
             onAtualizarRotina && onAtualizarRotina(idParaEnvio, payload);
             closeModalEditarRotina();
             window.location.reload();
@@ -78,38 +98,61 @@ function ModalEditarRotina({ isModalOpen, closeModalEditarRotina, rotinaData, Fe
                 <div className="modal-column">
                     <div className="form-group">
                         <label>Nome Rotina</label>
-                        <input name="nome" type="text" value={formData.nome} onChange={handleChange} />
+                        <input
+                            name="nome"
+                            type="text"
+                            value={formData.nome}
+                            onChange={handleChange}
+                            placeholder="Digite o nome da rotina"
+                        />
                     </div>
                     <div className="form-group">
                         <label>Hora de Início</label>
-                        <input name="horaInicio" type="time" value={formData.horaInicio} onChange={handleChange} />
+                        <input
+                            name="horaInicio"
+                            type="time"
+                            value={formData.horaInicio}
+                            onChange={handleChange}
+                        />
                     </div>
                     <div className="form-group">
                         <label>Data de Início</label>
-                        <input name="dataInicio" type="date" value={formData.dataInicio} onChange={handleChange} />
-                    </div>
-                    <div className="form-group">
-                        <label>Data de Fim</label>
-                        <input name="dataFim" type="date" value={formData.dataFim} onChange={handleChange} />
+                        <input
+                            name="dataInicio"
+                            type="date"
+                            value={formData.dataInicio}
+                            onChange={handleChange}
+                        />
                     </div>
                 </div>
 
                 <div className="modal-column">
                     <div className="form-group">
                         <label>Rotina</label>
-                        <input name="arquivo" type="text" value={formData.arquivo} onChange={handleChange} />
+                        <input
+                            name="arquivo"
+                            type="text"
+                            value={formData.arquivo}
+                            onChange={handleChange}
+                            placeholder="Digite o nome da rotina chamada"
+                        />
                     </div>
+
+                    <div className="form-group">
+                        <label>Data de Fim</label>
+                        <input
+                            name="dataFim"
+                            type="date"
+                            value={formData.dataFim}
+                            onChange={handleChange}
+                        />
+                    </div>
+
                     <div className="form-group">
                         <label>Rodou Hoje?</label>
                         <select value={rotinaData.executado || "Lista de Clientes"} disabled>
                             <option>Sim</option>
-                        </select>
-                    </div>
-                    <div className="form-group">
-                        <label>Status</label>
-                        <select name="status" value={formData.status} onChange={handleChange}>
-                            <option>Ativo</option>
-                            <option>Inativo</option>
+                            <option>Não</option>
                         </select>
                     </div>
                 </div>

@@ -1,5 +1,5 @@
 import React from "react";
-import { desativarFuncionario } from "../../pages/PainelControle/Painel";
+import { desativarFuncionario } from "../Painel";
 
 function ModalConfirmarDesativacao({
   isModalOpen,

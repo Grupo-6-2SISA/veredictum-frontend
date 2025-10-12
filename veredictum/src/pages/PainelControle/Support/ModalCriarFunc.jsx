@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { criarFuncionario } from "../../pages/PainelControle/Painel";
+import { criarFuncionario } from "../Painel";
 
 function ModalCriarFuncionario({ isModalOpen, closeModalCriar, atualizarLista, FecharIcone }) {
     const [formData, setFormData] = useState({
@@ -14,11 +14,41 @@ function ModalCriarFuncionario({ isModalOpen, closeModalCriar, atualizarLista, F
         setFormData({ ...formData, [name]: value });
     };
 
+    // Função para validar os campos
+    const validarCampos = () => {
+        const { nome, email, senha } = formData;
+
+        // Nome: apenas letras e espaços
+        const nomeRegex = /^[A-Za-zÀ-ÖØ-öø-ÿ\s]+$/;
+        if (!nomeRegex.test(nome.trim())) {
+            alert("❌ O nome deve conter apenas letras e espaços.");
+            return false;
+        }
+
+        // E-mail: formato básico com @ e domínio
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!emailRegex.test(email.trim())) {
+            alert("❌ E-mail inválido. Use o formato: exemplo@dominio.com");
+            return false;
+        }
+
+        // Senha: mínimo de 6 caracteres
+        if (senha.length < 6) {
+            alert("❌ A senha deve ter pelo menos 6 caracteres.");
+            return false;
+        }
+
+        return true; // Tudo certo
+    };
+
     const handleCadastro = async () => {
+        // Valida antes de enviar
+        if (!validarCampos()) return;
+
         try {
             const novoFuncionario = {
-                nome: formData.nome,
-                email: formData.email,
+                nome: formData.nome.trim(),
+                email: formData.email.trim(),
                 senha: formData.senha,
                 isAdm: formData.tipoUsuario === "Administrador",
                 isAtivo: true,
@@ -26,7 +56,7 @@ function ModalCriarFuncionario({ isModalOpen, closeModalCriar, atualizarLista, F
             };
 
             await criarFuncionario(novoFuncionario);
-            alert("Funcionário cadastrado com sucesso!");
+            alert("✅ Funcionário cadastrado com sucesso!");
 
             atualizarLista();
             closeModalCriar();
@@ -35,7 +65,7 @@ function ModalCriarFuncionario({ isModalOpen, closeModalCriar, atualizarLista, F
             setFormData({ nome: "", email: "", senha: "", tipoUsuario: "Usuário" });
         } catch (error) {
             console.error("Erro ao cadastrar funcionário:", error);
-            alert("Falha ao cadastrar funcionário. Verifique os dados.");
+            alert("❌ Falha ao cadastrar funcionário. Verifique os dados.");
             window.location.reload();
 
         }
