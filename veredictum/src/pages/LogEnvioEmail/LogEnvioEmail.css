@@ -1,9 +1,14 @@
+.page-description{
+    color: #000;
+    font-size: 17px;
+    font-weight: 500;
+    margin-top: 5px;
+    margin-bottom: 3%;
+}
+
 .log-email-content {
     font-size: 14px;
-    /* background-color: #555; */
-    height: 12.5vh;
     width: 100%;
-    height: 78vh;
     margin-top: 5px;
 }
 
@@ -11,30 +16,85 @@
     font-size: 14px;
     border-radius: 12px;
     padding: 20px;
-    margin-bottom: 20px;
+   margin-bottom: 3%;
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
     display: flex;
     flex-direction: row;
     gap: 70px;
     align-items: center;
-    width: 50%;
+    width: 45vw;
     height: 15vh;
-    border: 1px solid black;
+    border: 1PX solid black;
     display: flex;
     justify-content: space-around;
 }
 
+/* Cada grupo ocupa metade do painel, ajustável */
 .log-email-filtro-group {
-     display: flex;
-     flex-direction: column;
-     gap: 15px;
- }
+    flex: 1 1 48%;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
 
- .filter-label {
-     font-size: 14px;
-     font-weight: 700;
-     color: #000000;
- }
+/* Label */
+.log-email-filtro-group label {
+    font-weight: 700;
+    color: var(--text-primary, #111);
+    font-size: 14px;
+}
+
+/* Select e input - estilo unificado */
+.log-email-filtro-group select,
+.log-email-filtro-group input[type="text"] {
+    width: 100%;
+    max-width: 380px; /* controla largura como na imagem */
+    background: #ffffff;
+    border: 1px solid rgba(0,0,0,0.06);
+    border-radius: 8px;
+    padding: 12px 14px;
+    font-size: 14px;
+    color: var(--text-primary, #222);
+    box-shadow: 0 6px 18px rgba(0,0,0,0.04);
+    transition: box-shadow .12s ease, transform .08s ease, border-color .12s ease;
+    appearance: none; /* remove estilo nativo do select (para customizar) */
+}
+
+/* Placeholder */
+.log-email-filtro-group input::placeholder {
+    color: #bdbdbd;
+    font-weight: 500;
+}
+
+/* Focus */
+.log-email-filtro-group select:focus,
+.log-email-filtro-group input[type="text"]:focus {
+    outline: none;
+    border-color: rgba(0,123,255,0.22);
+    box-shadow: 0 8px 24px rgba(0,123,255,0.06);
+    transform: translateY(-1px);
+}
+
+/* Ajuste do ícone caret do select (mantém seta à direita) */
+.log-email-filtro-group select {
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'><polyline points='6 9 12 15 18 9'/></svg>");
+    background-repeat: no-repeat;
+    background-position: right 12px center;
+    background-size: 14px;
+    padding-right: 36px;
+}
+
+/* Responsivo: empilha em telas pequenas */
+@media (max-width: 760px) {
+    .log-email-filtro {
+        flex-direction: column;
+        gap: 16px;
+    }
+    .log-email-filtro-group select,
+    .log-email-filtro-group input[type="text"] {
+        max-width: 100%;
+    }
+}
 
 .log-email-listagem {
     font-size: 14px;
@@ -50,14 +110,75 @@
     padding: 10px;      /* opcional, para dar espaço interno */
 }
 
-/* DÚVIDA */
+/*
+=========================================
+ESTILO DO CARD FIXO E ROLÁVEL (LOGS/PAINEL)
+=========================================
+*/
 
- /* .page-description {
-     color: #000;
-     font-size: 16px;
-     font-weight: 500;
-     padding-top: 5px;
-     padding-bottom: 5px;
-     line-height: 1.5;
-     max-width: 580px;
- } */
+/* 1. Estilo Básico do Container (Card) */
+.card-box-logs {
+    width: 88vw;
+    
+    height: 90vh; /* Altura fixa do card */height: calc(60vh + 300px); 
+    background: var(--white-normal, #fff);
+    border-radius: 12px;
+    box-shadow: 0 6px 20px rgba(0,0,0,0.06);
+    padding: 20px;
+    margin-top: 18px;
+    margin-bottom: 18px;
+
+    /* Configuração Flexbox para Scroll Interno */
+    display: flex;
+    flex-direction: column;
+    overflow: auto; /* Evita que o card inteiro role */
+}
+
+.card-box-logs .listagem-body {
+    /* ESTAS TRÊS LINHAS GARANTEM A ROLAGEM DENTRO DO FLEX CONTAINER */
+    /* flex: 1 1 auto;    Ocupa todo o espaço vertical restante */
+    min-height: 0;     /* Permite que o flex item 'listagem-body' ative o scroll */
+    overflow-y: auto;  /* ATIVA A ROLAGEM VERTICAL */
+    /* ------------------------------------------------------------- */
+    
+    overflow-x: auto;
+    padding-right: 6px; 
+}
+
+
+/* 4. Estilos de Colunas para a Listagem de Logs */
+.card-box-logs .listagem-header,
+.card-box-logs .listagem-row {
+    /* colunas: Tipo | Data | Mensagem (maior) | Cliente | Ações */
+    grid-template-columns: 1.2fr 0.9fr 4.2fr 1.2fr 0.6fr !important;
+    gap: 24px;
+    align-items: center;
+}
+
+
+/*
+=========================================
+ESTILOS PERSONALIZADOS DA SCROLLBAR
+=========================================
+*/
+
+/* WebKit (Chrome, Safari) */
+.card-box-logs .listagem-body::-webkit-scrollbar {
+    width: 3px;
+}
+
+.card-box-logs .listagem-body::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.card-box-logs .listagem-body::-webkit-scrollbar-thumb {
+    background: rgb(0, 0, 0);
+    border-radius: 8px;
+    border: 2px solid rgba(0, 0, 0, 0.85); /* Cria a borda branca */
+}
+
+/* Firefox */
+.card-box-logs .listagem-body {
+    scrollbar-width: thin;
+    scrollbar-color: rgb(0, 0, 0) transparent;
+}

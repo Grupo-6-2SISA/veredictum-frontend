@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import Sidebar from '../../components/Sidebar/Sidebar';
 import Listagem from '../../components/Listagem/Listagem';
-import Card from '../../components/Card/Card';
 import './LogEnvioEmail.css';
 import '../../index.css';
 
@@ -58,9 +57,12 @@ const LogEnvioEmail = () => {
                             <input type="text" id="filtroCliente" placeholder='Nome do Cliente' />
                         </div>
                     </div>
-                    <Card className="card-box-logs">
+
+                    {/* substitui Card por div que imita o card e permite manipular tamanho */}
+                    <div className="card-box-logs" role="region" aria-label="Logs de Email">
                         <Listagem colunas={colunasLogEmail} dados={dadosLogEmail} />
-                    </Card>
+                    </div>
+
                     {/* <div className="log-email-listagem">
                         <Listagem colunas={colunasLogEmail} dados={dadosLogEmail} />
                     </div> */}

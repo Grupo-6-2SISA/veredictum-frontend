@@ -8,16 +8,29 @@
     font-weight: 600;
     color: var(--dark-black);
     font-size: 1.08em;
+    
+    /* FIXANDO NO TOPO */
     position: sticky;
-    top: 0;
-    background: var(--white-normal);
-    z-index: 2;
-    padding-top: 0;
-    padding-bottom: 8px;
+    top: 0; /* Alinha o header no topo do scrollable container */
+    
+    /* FUNDO OPACO: ESSENCIAL para esconder as linhas que rolam por baixo */
+    background: var(--white-normal); 
+    
+    /* SOBREPOSIÇÃO: Garante que fique acima das linhas de dados */
+    z-index: 10; 
+    
+    /* REMOÇÃO DE ALTURA FIXA E AJUSTE DE PADDING PARA ALTURA FLEXÍVEL */
+    height: auto; /* Deixa a altura ser definida pelo conteúdo */
+    padding: 8px 0; /* Adicionado padding vertical para definir uma altura confortável */
+    
+    /* REMOVE A SOMBRA QUE VOCÊ NÃO QUER QUE APAREÇA */
+    box-shadow: none; 
+    
+    /* Estilos de espaçamento */
     margin-left: 15px;
-    box-shadow: 0 2px 6px -4px #0002;
 }
 
+/* O restante dos estilos de listagem permanecem os mesmos */
 .listagem-row {
     display: grid;
     align-items: center;
