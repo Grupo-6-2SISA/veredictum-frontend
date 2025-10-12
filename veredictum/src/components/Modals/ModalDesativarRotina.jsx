@@ -1,12 +1,36 @@
+import React from 'react';
+import { desativarRotina } from "../../pages/PainelControle/Painel";
 
-function ModalConfirmarRotina({ isModalOpen, closeModalConfirmarRotina, confirmarDesativacaoRotina, rotinaData, CloseBlackIcon }) {
+
+function ModalConfirmarRotina({
+    isModalOpen,
+    closeModalConfirmarRotina,
+    rotinaData,
+    onRotinaDesativada, // callback para atualizar a lista no frontend
+    CloseBlackIcon
+}) {
     if (!isModalOpen || !rotinaData) return null;
 
+    const confirmarDesativacao = async () => {
+        try {
+            const idParaEnvio = rotinaData.idRotina ?? rotinaData.id;
+            await desativarRotina(idParaEnvio);
+
+            console.log(`✅ Rotina ${rotinaData.nome ?? rotinaData.nomeRotina} desativada com sucesso!`);
+
+            onRotinaDesativada && onRotinaDesativada(idParaEnvio);
+
+            closeModalConfirmarRotina();
+            window.location.reload();
+
+        } catch (error) {
+            console.error("❌ Erro ao desativar rotina:", error);
+            alert("Erro ao desativar rotina. Tente novamente.");
+        }
+    };
+
     return (
-        // Usando as classes de estilo do seu HTML
         <div id="modal-delete-rotina" className="modal-delete" style={{ display: 'flex' }}>
-            {/* O backdrop precisaria de um elemento separado ou ser tratado pelo CSS */}
-            {/* <div class="modal-backdrop-delete"></div> */}
             <div className="modal-content-rotinas">
                 <div className="modal-header">
                     <h2>Desativar Rotina</h2>
@@ -15,11 +39,15 @@ function ModalConfirmarRotina({ isModalOpen, closeModalConfirmarRotina, confirma
                     </button>
                 </div>
                 <div className="modal-body">
-                    <p>Deseja desativar <span className="rotina-name" style={{ fontWeight: 'bold' }}>{rotinaData.nome}</span>?</p>
+                    <p>
+                        Deseja desativar <span className="rotina-name" style={{ fontWeight: 'bold' }}>
+                            {rotinaData.nome ?? rotinaData.nomeRotina}
+                        </span>?
+                    </p>
                 </div>
                 <div className="modal-footer">
                     <button className="btn-cancel-delete" onClick={closeModalConfirmarRotina}>Não</button>
-                    <button className="btn-confirm-delete" onClick={confirmarDesativacaoRotina}>Sim</button>
+                    <button className="btn-confirm-delete" onClick={confirmarDesativacao}>Sim</button>
                 </div>
             </div>
         </div>

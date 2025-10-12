@@ -23,7 +23,7 @@ function ModalVerMaisRotina({ isModalOpen, closeModalVerMaisRotina, rotinaData, 
                     <div className="form-group"><label>Rotina</label><input type="text" readOnly defaultValue={arquivo || ''} /></div>
                     <div className="form-group">
                         <label>Rodou Hoje?</label>
-                        <select disabled><option>Lista de Clientes</option><option>Não Rodou</option></select>
+                        <select disabled><option>Sim</option></select>
                     </div>
                     <div className="form-group">
                         <label>Status</label>
