@@ -95,7 +95,7 @@
     box-shadow: 0 10px 24px 0 rgba(44, 44, 44, 0.18);
 }
 
-
+/* ====== TABELA DE DESPESAS ====== */
 .bills-table {
     width: 100%;
     border-collapse: separate;
@@ -104,16 +104,50 @@
     overflow: hidden;
 }
 
-/* Cabeçalho */
+/* ====== CABEÇALHO FIXO ====== */
+.bills-table thead {
+    position: sticky;
+    top: 0;
+    z-index: 2;
+    background-color: var(--white-normal);
+    box-shadow: 0px 2px 6px rgba(0, 0, 0, 0.15);
+}
+
 .bills-table thead th {
     color: black;
     text-align: left;
     padding: 12px 10px;
     font-weight: bold;
     font-size: 15px;
+    background-color: var(--white-normal);
 }
 
-/* Linhas de conteúdo */
+/* ====== CONTAINER COM SCROLL ====== */
+.table-container {
+    max-height: 400px; /* define o tamanho da área visível */
+    overflow-y: auto;
+    overflow-x: hidden;
+    border-radius: 12px;
+    scrollbar-width: thin;
+    scrollbar-color: #6c6767 #eaeaea;
+}
+
+/* Estilo da barra de rolagem (webkit) */
+.table-container::-webkit-scrollbar {
+    width: 8px;
+}
+
+.table-container::-webkit-scrollbar-thumb {
+    background-color: #4b474f;
+    border-radius: 10px;
+}
+
+.table-container::-webkit-scrollbar-track {
+    background-color: #eaeaea;
+    border-radius: 10px;
+}
+
+/* ====== LINHAS ====== */
 .bills-table tbody tr {
     background-color: var(--white-darknes);
     border-radius: 12px;
@@ -126,7 +160,7 @@
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.25);
 }
 
-/* Células */
+/* ====== CÉLULAS ====== */
 .bills-table tbody tr td {
     border: none;
     padding: 10px 14px;
@@ -152,6 +186,7 @@
     border-left: none;
     border-right: none;
 }
+
 
 .section-header {
     display: flex;

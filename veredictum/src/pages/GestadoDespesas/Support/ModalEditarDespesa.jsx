@@ -1,13 +1,47 @@
 import React from "react";
-import FecharIcon from "../../assets/svg/fechar.svg";
-import "../../pages/GestadoDespesas/GestaoDespesas.css";
+import FecharIcon from "../../../assets/svg/fechar.svg";
+import "../GestaoDespesas.css";
+import { atualizarDespesa } from "../GestaoDespesas";
 
-export default function ModalEditarDespesa({ show, onClose, onSubmit, editingItem }) {
+export default function ModalEditarDespesa({ show, onClose, editingItem, atualizarLista }) {
     if (!show || !editingItem) return null;
+
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+
+        // Mantemos a data de criação original
+        const dataCriacao = editingItem.dataCriacao;
+
+        const updatedData = {
+            idConta: editingItem.idConta,         // ⚠️ importante para PUT
+            dataCriacao: dataCriacao,             // ⚠️ backend exige
+            etiqueta: e.target.etiqueta.value,
+            valor: parseFloat(e.target.valor.value),
+            dataVencimento: e.target.dataVencimento.value,
+            urlNuvem: e.target.urlNuvem.value || null,
+            descricao: e.target.descricao.value || null,
+            isPago: e.target.isPago.checked,
+        };
+
+        console.log("🟡 [DEBUG] Dados atualizados:", updatedData);
+
+        try {
+            console.log("📤 Enviando requisição PUT para backend...");
+            const response = await atualizarDespesa(editingItem.idConta, updatedData);
+            console.log("✅ [SUCESSO] Despesa atualizada:", response.data);
+            alert("✅ Conta atualizada com sucesso")
+            onClose();    
+            window.location.reload();
+            atualizarLista();   
+
+        } catch (error) {
+            console.error("❌ [ERRO] Falha ao atualizar despesa:", error);
+        }
+    };
 
     return (
         <div id="editExpenseModal" className="modal">
-            <div className="modal-content-despesas">
+            <div className="modal-content-despesas"   style={{maxHeight: "580px"}}>
 
                 {/* Cabeçalho do Modal */}
                 <div id="modal-header-top" className="modal-header">
@@ -17,7 +51,7 @@ export default function ModalEditarDespesa({ show, onClose, onSubmit, editingIte
                     </button>
                 </div>
 
-                <form id="editExpenseForm" onSubmit={onSubmit}>
+                <form id="editExpenseForm" onSubmit={handleSubmit}>
                     {/* Primeira linha de inputs */}
                     <div className="form-row">
                         <div className="form-group">
@@ -36,10 +70,12 @@ export default function ModalEditarDespesa({ show, onClose, onSubmit, editingIte
                             <input
                                 type="text"
                                 id="edit-url"
-                                name="url"
-                                defaultValue={editingItem.url}
+                                name="urlNuvem"
+                                defaultValue={editingItem.urlNuvem || ""}
                             />
                         </div>
+
+                        
                     </div>
 
                     {/* Segunda linha de inputs */}
@@ -49,22 +85,40 @@ export default function ModalEditarDespesa({ show, onClose, onSubmit, editingIte
                             <input
                                 type="date"
                                 id="edit-vencimento"
-                                name="vencimento"
-                                defaultValue={editingItem.vencimento}
+                                name="dataVencimento"
+                                defaultValue={editingItem.dataVencimento}
                                 required
                             />
                         </div>
 
                         <div className="form-group">
-                            <label htmlFor="edit-comentario">Comentário</label>
+                            <label htmlFor="edit-comentario">Descrição</label>
                             <input
                                 type="text"
                                 id="edit-comentario"
-                                name="comentario"
-                                defaultValue={editingItem.comentario}
+                                name="descricao"
+                                defaultValue={editingItem.descricao || ""}
                             />
                         </div>
+
                     </div>
+
+                    <div className="form-row">
+                        
+                        <div className="form-group">
+                            <label htmlFor="edit-valor">Valor</label>
+                            <input
+                                type="number"
+                                step="0.01"
+                                id="edit-valor"
+                                name="valor"
+                                defaultValue={editingItem.valor || 0}
+                                required
+                            />
+                        </div>
+
+                    </div>
+
 
                     {/* Linha do switch "Pago?" */}
                     <div className="form-row" id="div_para_checkbox_edit">
@@ -75,8 +129,8 @@ export default function ModalEditarDespesa({ show, onClose, onSubmit, editingIte
                                 <input
                                     type="checkbox"
                                     id="edit-pago-switch"
-                                    name="edit-pago"
-                                    defaultChecked={editingItem.pago === true}
+                                    name="isPago"
+                                    defaultChecked={editingItem.isPago === true}
                                 />
                                 <span className="slider"></span>
                             </label>

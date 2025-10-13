@@ -150,9 +150,8 @@ function ModalEditarRotina({ isModalOpen, closeModalEditarRotina, rotinaData, Fe
 
                     <div className="form-group">
                         <label>Rodou Hoje?</label>
-                        <select value={rotinaData.executado || "Lista de Clientes"} disabled>
+                        <select value={rotinaData.executado || "Sim"}>
                             <option>Sim</option>
-                            <option>Não</option>
                         </select>
                     </div>
                 </div>

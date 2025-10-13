@@ -1,6 +1,6 @@
 import React from "react";
-import FecharIcon from "../../assets/svg/fechar.svg";
-import "./Modals.css";
+import FecharIcon from "../../../assets/svg/fechar.svg";
+import "../../../components/Modals/Modals.css";
 
 export default function ModalInfoDespesa({ show, onClose, infoItem }) {
   if (!show || !infoItem) return null;
@@ -26,7 +26,7 @@ export default function ModalInfoDespesa({ show, onClose, infoItem }) {
             </div>
             <div className="form-group">
               <label>URL</label>
-              <input type="text" value={infoItem.url} readOnly />
+              <input type="text" value={infoItem.urlNuvem || ""} readOnly />
             </div>
           </div>
 
@@ -34,11 +34,20 @@ export default function ModalInfoDespesa({ show, onClose, infoItem }) {
           <div className="form-row">
             <div className="form-group">
               <label>Data de Vencimento</label>
-              <input type="date" value={infoItem.vencimento} readOnly />
+              <input type="date" value={infoItem.dataVencimento} readOnly />
             </div>
             <div className="form-group">
-              <label>Comentário</label>
-              <input type="text" value={infoItem.comentario} readOnly />
+              <label>Descrição</label>
+              <input type="text" value={infoItem.descricao || ""} readOnly />
+            </div>
+          </div>
+
+          {/* Terceira linha de inputs */}
+          <div className="form-row">
+
+            <div className="form-group">
+              <label>Valor</label>
+              <input type="number" value={infoItem.valor} readOnly />
             </div>
           </div>
 
@@ -50,8 +59,7 @@ export default function ModalInfoDespesa({ show, onClose, infoItem }) {
               <label className="switch">
                 <input
                   type="checkbox"
-                  id="info-pago-switch"
-                  checked={infoItem.pago}
+                  checked={infoItem.isPago}
                   disabled
                 />
                 <span className="slider"></span>

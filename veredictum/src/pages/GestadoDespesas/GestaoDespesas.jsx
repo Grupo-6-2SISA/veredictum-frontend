@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import { Chart } from "chart.js/auto";
+import { listarDespesas, getTotalPorMesEAno } from "../GestadoDespesas/GestaoDespesas"; 
 
 import BtnIcon from "../../assets/svg/btn.svg";
 import CalendarIcon from "../../assets/svg/calendar.svg";
@@ -7,36 +8,17 @@ import SetaIcon from "../../assets/svg/seta.svg";
 import EditIcon from "../../assets/svg/edit.svg";
 
 import Sidebar from "../../components/Sidebar/Sidebar";
-import ModalAdicionarDespesa from "../../components/Modals/ModalAdicionarDespesa";
-import ModalEditarDespesa from "../../components/Modals/ModalEditarDespesa";
-import ModalInfoDespesa from "../../components/Modals/ModalInfoDespesa";
+import ModalAdicionarDespesa from "../GestadoDespesas/Support/ModalAdicionarDespesa";
+import ModalEditarDespesa from "../GestadoDespesas/Support/ModalEditarDespesa";
+import ModalInfoDespesa from "../GestadoDespesas/Support/ModalInfoDespesa";
 
 import "./GestaoDespesas.css";
 
-
-const mockExpenses = [
-  {
-    id: 1,
-    etiqueta: "Luz",
-    vencimento: "2025-06-09",
-    pago: true,
-    url: "",
-    comentario: "Conta de energia elétrica.",
-  },
-  {
-    id: 2,
-    etiqueta: "Água",
-    vencimento: "2025-06-11",
-    pago: false,
-    url: "http://faturaagua.com",
-    comentario: "Conta de água e saneamento.",
-  },
-];
-
 export default function GestaoDespesas() {
+  const [expenses, setExpenses] = useState([]);
   const [showMonthPicker, setShowMonthPicker] = useState(false);
   const [selectedMonth, setSelectedMonth] = useState("Junho");
-  const [monthTotal, setMonthTotal] = useState("124,33");
+  const [monthTotal, setMonthTotal] = useState("0,00");
 
   const [showAddModal, setShowAddModal] = useState(false);
   const [showEditModal, setShowEditModal] = useState(false);
@@ -53,27 +35,59 @@ export default function GestaoDespesas() {
     "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro",
   ];
 
-  // === MODAL ADICIONAR ===
+  useEffect(() => {
+    async function fetchDespesas() {
+      try {
+        const response = await listarDespesas();
+        const despesasOrdenadas = response.data.sort((a, b) => {
+          const dataA = new Date(a.dataVencimento);
+          const dataB = new Date(b.dataVencimento);
+          if (a.isPago !== b.isPago) {
+            return a.isPago ? 1 : -1;
+          }
+          return dataA - dataB;
+        });
+        setExpenses(despesasOrdenadas);
+      } catch (error) {
+        console.error("Erro ao buscar despesas:", error);
+      }
+    }
+    fetchDespesas();
+  }, []);
+
+  // === TOTAL DO MÊS ===
+  useEffect(() => {
+    const mesNumerico = months.indexOf(selectedMonth) + 1;
+
+    async function fetchMonthTotal() {
+      try {
+        const response = await getTotalPorMesEAno(mesNumerico, 2025);
+        if (response.status === 200 && response.data != null) {
+          const totalFormatado = response.data.toFixed(2).replace('.', ',');
+          setMonthTotal(totalFormatado);
+        } else {
+          setMonthTotal("0,00");
+        }
+      } catch (error) {
+        console.error("Erro ao buscar total do mês:", error);
+        setMonthTotal("0,00");
+      }
+    }
+
+    fetchMonthTotal();
+  }, [selectedMonth]);
+
+  // === MODAIS ===
   const openModal = () => setShowAddModal(true);
   const closeModal = () => setShowAddModal(false);
 
-  const handleAddExpense = (e) => {
-    e.preventDefault();
-    const formData = new FormData(e.target);
-    const newExpense = {
-      etiqueta: formData.get("etiqueta"),
-      url: formData.get("url"),
-      vencimento: formData.get("vencimento"),
-      comentario: formData.get("comentario"),
-      pago: formData.get("pago_sim") === "sim",
-    };
-    console.log("Nova despesa adicionada:", newExpense);
+  const handleAddExpense = (formData) => {
+    console.log("Nova despesa adicionada:", formData);
     closeModal();
   };
 
-  // === MODAL EDITAR ===
   const openModalEdit = (etiqueta) => {
-    const itemToEdit = mockExpenses.find((item) => item.etiqueta === etiqueta);
+    const itemToEdit = expenses.find((item) => item.etiqueta === etiqueta);
     if (itemToEdit) {
       setEditingItem(itemToEdit);
       setShowEditModal(true);
@@ -85,24 +99,13 @@ export default function GestaoDespesas() {
     setEditingItem(null);
   };
 
-  const handleEditSubmit = (e) => {
-    e.preventDefault();
-    const formData = new FormData(e.target);
-    const updatedItem = {
-      id: editingItem.id,
-      etiqueta: formData.get("etiqueta"),
-      url: formData.get("url"),
-      vencimento: formData.get("vencimento"),
-      comentario: formData.get("comentario"),
-      pago: formData.get("edit-pago") === "sim",
-    };
-    console.log("Despesa atualizada:", updatedItem);
+  const handleEditSubmit = (formData) => {
+    console.log("Despesa atualizada:", formData);
     closeModalEdit();
   };
 
-  // === MODAL VER MAIS ===
   const modalVerMais = (etiqueta) => {
-    const itemInfo = mockExpenses.find((item) => item.etiqueta === etiqueta);
+    const itemInfo = expenses.find((item) => item.etiqueta === etiqueta);
     if (itemInfo) {
       setInfoItem(itemInfo);
       setShowInfoModal(true);
@@ -116,9 +119,7 @@ export default function GestaoDespesas() {
 
   // === GRÁFICO ===
   useEffect(() => {
-    if (chartInstance.current) {
-      chartInstance.current.destroy();
-    }
+    if (chartInstance.current) chartInstance.current.destroy();
 
     if (chartRef.current && typeof Chart !== "undefined") {
       const ctx = chartRef.current.getContext("2d");
@@ -147,15 +148,8 @@ export default function GestaoDespesas() {
           maintainAspectRatio: false,
           plugins: { legend: { display: false } },
           scales: {
-            y: {
-              beginAtZero: true,
-              grid: { display: false },
-              ticks: { color: "#666", font: { size: 12 } },
-            },
-            x: {
-              grid: { display: false },
-              ticks: { color: "#666", font: { size: 12 } },
-            },
+            y: { beginAtZero: true, grid: { display: false }, ticks: { color: "#666", font: { size: 12 } } },
+            x: { grid: { display: false }, ticks: { color: "#666", font: { size: 12 } } },
           },
         },
       });
@@ -163,16 +157,6 @@ export default function GestaoDespesas() {
 
     return () => chartInstance.current?.destroy();
   }, []);
-
-  // === TOTAL DO MÊS ===
-  useEffect(() => {
-    const fakeTotals = {
-      Janeiro: "87,50", Fevereiro: "102,40", Março: "198,90", Abril: "156,00",
-      Maio: "205,12", Junho: "124,33", Julho: "178,44", Agosto: "143,20",
-      Setembro: "199,60", Outubro: "220,90", Novembro: "180,10", Dezembro: "250,75",
-    };
-    setMonthTotal(fakeTotals[selectedMonth] || "0,00");
-  }, [selectedMonth]);
 
   return (
     <div className="container">
@@ -190,10 +174,7 @@ export default function GestaoDespesas() {
         {/* 🔹 SELETOR DE MÊS */}
         <div className="month-selector">
           <div className="month-selector-container">
-            <button
-              className="month-selector-btn"
-              onClick={() => setShowMonthPicker(!showMonthPicker)}
-            >
+            <button className="month-selector-btn" onClick={() => setShowMonthPicker(!showMonthPicker)}>
               <img src={CalendarIcon} alt="Calendário" />
               <span>{selectedMonth}</span>
               <img src={SetaIcon} alt="Seta" />
@@ -205,7 +186,6 @@ export default function GestaoDespesas() {
               <div className="month-header">
                 <div id="current-month-display">Selecione um mês</div>
               </div>
-
               <div className="month-buttons">
                 {months.map((month) => (
                   <button
@@ -220,31 +200,24 @@ export default function GestaoDespesas() {
                   </button>
                 ))}
               </div>
-
               <div className="calendar-actions">
-                <button id="cancel-btn" onClick={() => setShowMonthPicker(false)}>
-                  Cancelar
-                </button>
+                <button id="cancel-btn" onClick={() => setShowMonthPicker(false)}>Cancelar</button>
               </div>
             </div>
           )}
 
           <div className="total-month">
-            <span>
-              Total do mês: <strong id="monthTotal">R$ {monthTotal}</strong>
-            </span>
+            <span>Total do mês: <strong id="monthTotal">R$ {monthTotal}</strong></span>
           </div>
         </div>
 
         {/* 🔹 CONTEÚDO PRINCIPAL */}
         <div className="content-grid">
           <div className="bills-section">
-            <div className="section-header">
-              <h2>Contas a Pagar</h2>
-            </div>
+            <div className="section-header"><h2>Contas a Pagar</h2></div>
 
             <div className="table-container">
-              <table  style={{ border: 'none' }} className="bills-table">
+              <table style={{ border: "none" }} className="bills-table">
                 <thead>
                   <tr>
                     <th>Etiqueta</th>
@@ -255,30 +228,22 @@ export default function GestaoDespesas() {
                   </tr>
                 </thead>
                 <tbody>
-                  {mockExpenses.map((expense) => (
-                    <tr key={expense.id}>
+                  {expenses.map((expense) => (
+                    <tr key={expense.idConta}>
                       <td>{expense.etiqueta}</td>
-                      <td>{expense.vencimento}</td>
+                      <td>{expense.dataVencimento}</td>
                       <td>
-                        <span className={`status ${expense.pago ? "paid" : "unpaid"}`}>
-                          {expense.pago ? "Sim" : "Não"}
+                        <span className={`status ${expense.isPago ? "paid" : "unpaid"}`}>
+                          {expense.isPago ? "Sim" : "Não"}
                         </span>
                       </td>
                       <td>
-                        <button
-                          className="edit-btn"
-                          onClick={() => openModalEdit(expense.etiqueta)}
-                        >
+                        <button className="edit-btn" onClick={() => openModalEdit(expense.etiqueta)}>
                           <img src={EditIcon} alt="Editar" />
                         </button>
                       </td>
                       <td>
-                        <button
-                          className="info-link"
-                          onClick={() => modalVerMais(expense.etiqueta)}
-                        >
-                          Ver mais
-                        </button>
+                        <button className="info-link" onClick={() => modalVerMais(expense.etiqueta)}>Ver mais</button>
                       </td>
                     </tr>
                   ))}
@@ -298,24 +263,9 @@ export default function GestaoDespesas() {
       </main>
 
       {/* === MODAIS === */}
-      <ModalAdicionarDespesa
-        show={showAddModal}
-        onClose={closeModal}
-        onSubmit={handleAddExpense}
-      />
-
-      <ModalEditarDespesa
-        show={showEditModal}
-        onClose={closeModalEdit}
-        onSubmit={handleEditSubmit}
-        editingItem={editingItem}
-      />
-
-      <ModalInfoDespesa
-        show={showInfoModal}
-        onClose={closeModalVerMais}
-        infoItem={infoItem}
-      />
+      <ModalAdicionarDespesa show={showAddModal} onClose={closeModal} onSubmit={handleAddExpense} />
+      <ModalEditarDespesa show={showEditModal} onClose={closeModalEdit} onSubmit={handleEditSubmit} editingItem={editingItem} />
+      <ModalInfoDespesa show={showInfoModal} onClose={closeModalVerMais} infoItem={infoItem} />
     </div>
   );
 }

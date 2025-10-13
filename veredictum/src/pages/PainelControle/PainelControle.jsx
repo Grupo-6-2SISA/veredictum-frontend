@@ -17,6 +17,7 @@ import ModalEditarRotina from '../PainelControle/Support/ModalEditarRotina';
 import ModalVerMaisRotina from '../PainelControle/Support/ModalVerMaisRotina';
 
 import Sidebar from '../../components/Sidebar/Sidebar';
+import Listagem from '../../components/Listagem/Listagem'
 import EquipeImg from '../../assets/img/equipe.png';
 import SinalMais from '../../assets/svg/Add_Plus_Square.svg';
 import IconCarrier from '../../assets/svg/SVGRepo_iconCarrier.svg';
