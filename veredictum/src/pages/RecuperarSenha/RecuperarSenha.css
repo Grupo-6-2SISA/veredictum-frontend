@@ -41,14 +41,7 @@ html {
 }
 
 
-.logo-row {
-  position: relative;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  margin-top: 20px;
-  justify-content: center;
-}
+
 
 .group-logo-title {
   display: flex;

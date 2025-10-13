@@ -4,7 +4,7 @@
 
 
 
-/* body {
+ /* body {
     min-height: 100vh;
     background: #222;
     display: flex;
@@ -13,9 +13,9 @@
     margin: 0;
     padding: 0;
     font-family: 'Segoe UI', Arial, sans-serif;
-}
+} */
 
-.home-card {
+/* .home-card {
     width: 100%;
     display: flex;
     justify-content: center;
@@ -28,7 +28,7 @@
     height: 600px;
     max-width: 1400px;
     width: 100%;
-}
+} */
 
 .home-info {
     width: 50%;
@@ -40,27 +40,31 @@
 .home-boas-vindas{
     display: flex;
     flex-direction: column;
-    margin-left: 60px;
+    margin-left: 70px;
+    margin-top: 40px;
+    gap: 30px;
 }
 
 .logo-row {
     display: flex;
-    align-items: center;
+    justify-content: start;
+    flex-direction: row;
+    gap: 12px;
+    align-items: start;
     margin-top: 20px;
+    /* border: 2px solid #222; */
 }
-
 .logo-row img {
-    width: 20%;
-    height: 20%;
-    margin-right: -40px;
-
+    margin-left: 70px;
 }
 
-.logo-title {
+.logo-row span {
     font-size: 1.5rem;
     font-weight: bold;
     color: #222;
+
 }
+
 
 
 .boas-vindas {
@@ -170,7 +174,7 @@
         height: auto;
         margin-right: -20px;
     }
-} */
+} 
 
 
  
