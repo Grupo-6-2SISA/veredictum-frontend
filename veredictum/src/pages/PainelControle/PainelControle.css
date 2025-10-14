@@ -374,17 +374,13 @@ table {
     cursor: pointer;
     transition: background 0.3s;
 
-
 }
 
-/* Estado DESLIGADO (se não for 'active') */
 .toggle-switch:not(.active) {
     background: #ff3b30;
-    /* Cor vermelha */
 }
 
 
-/* Estilo do Círculo (a "chave" que desliza) */
 .toggle-switch::after {
     content: "";
     width: 20px;
@@ -400,12 +396,9 @@ table {
 
 .toggle-switch.active {
     background: #4cd964;
-    /* Cor verde */
 }
 
-/* Posição do Círculo no estado LIGADO (Active) */
 .toggle-switch.active::after {
-
     left: 22px;
 }
 
@@ -549,7 +542,7 @@ table {
     z-index: 10;
     padding: 12px 8px;
     text-align: left;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.06);
+    /* box-shadow: 0 2px 4px rgba(0, 0, 0, 0.06); */
     border: none;
 }
 
@@ -586,7 +579,7 @@ table {
     top: 0;
     background-color: #fff;
     z-index: 2;
-    box-shadow: 0 2px 3px rgba(0, 0, 0, 0.1);
+    /* box-shadow: 0 2px 3px rgba(0, 0, 0, 0.1); */
 }
 
 /* ==== Scrollbar estilizado ==== */
@@ -599,4 +592,36 @@ table {
 .scrollable-funcionarios::-webkit-scrollbar-thumb {
     border-radius: 6px;
     background: rgba(0, 0, 0, 0.15);
+}
+
+
+.senha-container {
+    position: relative;
+}
+
+.senha-wrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.senha-wrapper input {
+    width: 100%;
+    padding-right: 40px; /* espaço pro botão do olho */
+}
+
+.toggle-senha {
+    position: absolute;
+    right: 10px;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    padding: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.toggle-senha:hover svg {
+    stroke: #555;
 }

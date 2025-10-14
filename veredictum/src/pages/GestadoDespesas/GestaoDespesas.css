@@ -110,7 +110,6 @@
     top: 0;
     z-index: 2;
     background-color: var(--white-normal);
-    box-shadow: 0px 2px 6px rgba(0, 0, 0, 0.15);
 }
 
 .bills-table thead th {
@@ -268,7 +267,8 @@ button.info-link {
 }
 
 .chart-container {
-    height: 300px;
+    transform: translateY(7%);
+    height: 350px;
     position: relative;
 }
 
@@ -1004,3 +1004,16 @@ button.info-link {
 #switch_edit {
     transform: translateY(-50%);
 }
+
+
+#monthTotal{
+    font-weight:bold
+}
+
+
+.month-selector-container span{
+    font-weight: bold;
+    color: #000000;
+}
+
+/* #chart-container */

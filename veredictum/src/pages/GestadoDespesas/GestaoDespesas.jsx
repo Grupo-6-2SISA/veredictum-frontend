@@ -81,7 +81,7 @@ export default function GestaoDespesas() {
     fetchMonthTotal();
   }, [selectedMonth, selectedYear]);
 
-  // === DADOS DO GRÁFICO (BACKEND) ===
+  // === DADOS DO GRÁFICO ===
   useEffect(() => {
     async function fetchYearData() {
       try {
@@ -96,7 +96,7 @@ export default function GestaoDespesas() {
     fetchYearData();
   }, [selectedYear]);
 
-  // === GRÁFICO (MANTÉM ESTILO ORIGINAL) ===
+  // === GRÁFICO ===
   useEffect(() => {
     if (!yearData.length) return;
 
@@ -123,7 +123,7 @@ export default function GestaoDespesas() {
             pointBorderColor: "#000000",
             pointRadius: 4,
             pointHoverRadius: 6,
-            tension: 0, // 🔹 sem curva, linha reta (como o gráfico anterior)
+            tension: 0,
           },
         ],
       },
@@ -191,7 +191,7 @@ export default function GestaoDespesas() {
           </button>
         </header>
 
-        {/* 🔹 SELETOR DE MÊS E ANO */}
+        {/* SELETOR DE MÊS E ANO */}
         <div className="month-selector">
           <div className="month-selector-container">
             <button className="month-selector-btn" onClick={() => setShowMonthPicker(!showMonthPicker)}>
@@ -245,7 +245,7 @@ export default function GestaoDespesas() {
           </div>
         </div>
 
-        {/* 🔹 CONTEÚDO PRINCIPAL */}
+        {/* CONTEÚDO PRINCIPAL */}
         <div className="content-grid">
           <div className="bills-section">
             <div className="section-header"><h2>Contas a Pagar</h2></div>
@@ -286,7 +286,7 @@ export default function GestaoDespesas() {
             </div>
           </div>
 
-          {/* 🔹 GRÁFICO */}
+          {/* GRÁFICO */}
           <div className="chart-section">
             <h2>Valor Gasto por Ano ({selectedYear})</h2>
             <div className="chart-container">

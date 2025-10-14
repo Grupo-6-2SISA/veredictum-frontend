@@ -18,6 +18,8 @@ function ModalEditarFuncionario({
         isAtivo: true,
     });
 
+    const [mostrarSenha, setMostrarSenha] = useState(false); 
+
     // Preenche o modal com os dados do funcionário ao abrir
     useEffect(() => {
         if (funcionarioData) {
@@ -26,7 +28,7 @@ function ModalEditarFuncionario({
                 idUsuario: funcionarioData.id || null,
                 nome: funcionarioData.nome || "",
                 email: funcionarioData.email || "",
-                senha: "",
+                senha: funcionarioData.senha || "", // 👈 senha atual pré-carregada
                 tipoUsuario: funcionarioData.isAdm ? "Administrador" : "Usuário",
                 fkAdm: funcionarioData.fkAdm || 1,
                 isAtivo: funcionarioData.isAtivo ?? true,
@@ -39,25 +41,22 @@ function ModalEditarFuncionario({
         setFormData((prev) => ({ ...prev, [name]: value }));
     };
 
-    // Função de validação dos campos
+    // Validação dos campos
     const validarCampos = () => {
         const { nome, email, senha } = formData;
 
-        // Nome: apenas letras e espaços
         const nomeRegex = /^[A-Za-zÀ-ÖØ-öø-ÿ\s]+$/;
         if (!nomeRegex.test(nome.trim())) {
             alert("❌ O nome deve conter apenas letras e espaços.");
             return false;
         }
 
-        // E-mail: formato válido
         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
         if (!emailRegex.test(email.trim())) {
             alert("❌ E-mail inválido. Use o formato: exemplo@dominio.com");
             return false;
         }
 
-        // Senha: só valida se o campo for preenchido
         if (senha.trim() !== "" && senha.length < 6) {
             alert("❌ A senha deve ter pelo menos 6 caracteres.");
             return false;
@@ -151,15 +150,34 @@ function ModalEditarFuncionario({
                             <option>Usuário</option>
                         </select>
                     </div>
-                    <div className="form-group">
+
+                    <div className="form-group senha-container">
                         <label>Senha</label>
-                        <input
-                            type="password"
-                            name="senha"
-                            placeholder="Mantenha vazio para não alterar"
-                            value={formData.senha}
-                            onChange={handleChange}
-                        />
+                        <div className="senha-wrapper">
+                            <input
+                                type={mostrarSenha ? "text" : "password"}
+                                name="senha"
+                                placeholder="Mantenha vazio para não alterar"
+                                value={formData.senha}
+                                onChange={handleChange}
+                            />
+                            <button
+                                type="button"
+                                className="toggle-senha"
+                                onClick={() => setMostrarSenha(!mostrarSenha)}
+                            >
+                                {mostrarSenha ? (
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="none" stroke="#333" strokeWidth="2" viewBox="0 0 24 24">
+                                        <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8S1 12 1 12z" />
+                                        <circle cx="12" cy="12" r="3" />
+                                    </svg>
+                                ) : (
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="none" stroke="#333" strokeWidth="2" viewBox="0 0 24 24">
+                                        <path d="M17.94 17.94A10.93 10.93 0 0 1 12 20c-7 0-11-8-11-8a18.4 18.4 0 0 1 5.06-6.94M9.9 4.24A10.94 10.94 0 0 1 12 4c7 0 11 8 11 8a18.45 18.45 0 0 1-3.26 4.74M1 1l22 22" />
+                                    </svg>
+                                )}
+                            </button>
+                        </div>
                     </div>
                 </div>
 

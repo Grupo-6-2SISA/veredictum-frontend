@@ -56,10 +56,10 @@ export default function ModalAdicionarDespesa({ show, onClose, atualizarLista })
             isPago,
         };
 
-        console.log("🟡 [DEBUG] Dados do formulário coletados:", formData);
+        console.log("Dados do formulário coletados:", formData);
 
         try {
-            console.log("📤 [DEBUG] Enviando requisição POST para backend...");
+            console.log("Enviando requisição POST para backend...");
             const response = await adicionarDespesa(formData);
             console.log("✅ [SUCESSO] Resposta do backend:", response.data);
 

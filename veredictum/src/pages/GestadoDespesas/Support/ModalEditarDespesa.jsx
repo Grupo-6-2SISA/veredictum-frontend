@@ -51,10 +51,10 @@ export default function ModalEditarDespesa({ show, onClose, editingItem, atualiz
             isPago,
         };
 
-        console.log("🟡 [DEBUG] Dados atualizados:", updatedData);
+        console.log("Dados atualizados:", updatedData);
 
         try {
-            console.log("📤 Enviando requisição PUT para backend...");
+            console.log("Enviando requisição PUT para backend...");
             const response = await atualizarDespesa(editingItem.idConta, updatedData);
             console.log("✅ [SUCESSO] Despesa atualizada:", response.data);
             alert("✅ Conta atualizada com sucesso");

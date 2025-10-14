@@ -55,7 +55,6 @@ export default function ModalInfoDespesa({ show, onClose, infoItem }) {
                         </div>
                     </div>
 
-                    {/* Switch "Pago?" */}
                     <div className="form-row" id="div_para_checkbox_info">
                         <label className="pagamento-label">Pago?</label>
 

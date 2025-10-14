@@ -93,7 +93,7 @@ export default function PainelControle() {
   useEffect(() => {
     const fetchRotinas = async () => {
       try {
-        const response = await ListarRotinas(); // Chama endpoint
+        const response = await ListarRotinas();
         if (response && response.data) {
           const rotinasFormatadas = response.data.map(r => ({
             id: r.idRotina,
@@ -169,7 +169,7 @@ export default function PainelControle() {
       setIsModalConfirmarOpen(true);
     } else {
       try {
-        await ativarFuncionario(id); // chama a função do Painel.js
+        await ativarFuncionario(id);
         setFuncionarios(prev =>
           prev.map(f => f.id === id ? { ...f, ativo: true } : f)
         );
@@ -313,7 +313,7 @@ export default function PainelControle() {
                           </button>
                         </td>
                         <td>
-                          <div
+                          <div style={{ transform: 'translateX(50%)' }} 
                             className={`toggle-switch ${func.ativo ? 'active' : ''}`}
                             onClick={() => alternarStatusFuncionario(func.id)}
                           ></div>
