@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';
 import Sidebar from '../../components/Sidebar/Sidebar';
 import Listagem from '../../components/Listagem/Listagem';
 import './LogEnvioEmail.css';
@@ -12,6 +13,7 @@ const colunasLogEmail = [
     { key: 'acoes', titulo: 'Ações' },
 ];
 
+// precisará montar um select com joins para pegar nome de cliente e montar o backend para isto
 const dadosLogEmail = [
     { tipo: 'Confirmação de Consulta', dataEnvio: '01/06/2025 10:00', mensagem: 'Sua consulta está confirmada para 09/06/2025 às 14:00.', clienteRelacionado: 'Davidson Mendes' },
     { tipo: 'Lembrete de Consulta', dataEnvio: '07/06/2025 09:00', mensagem: 'Lembrete: Você tem uma consulta agendada para 09/06/2025 às 14:00.', clienteRelacionado: 'Davidson Mendes' },
@@ -28,7 +30,27 @@ if (!nomeUsuario) {
     nomeUsuario = 'Lismara Ribeiro';
 }
 
+
+
+
 const LogEnvioEmail = () => {
+
+    useEffect(() => {
+
+        buscarTiposLembrete();
+
+    }, []);
+
+    const [tiposLembrete, setTiposLembrete] = useState([]);
+
+    async function buscarTiposLembrete() {
+
+
+        const resposta = await axios.get('http://localhost:8080/tipo-lembrete');
+        console.log('resposta: ', resposta.data);
+        setTiposLembrete(resposta.data);
+
+    }
     return (
         <div className="container">
             <Sidebar nomeCompleto={nomeUsuario} />
@@ -43,13 +65,13 @@ const LogEnvioEmail = () => {
                             <label htmlFor="filtroTipo">Filtrar Por:</label>
                             <select id="filtroTipo">
                                 <option value="">Todos</option>
-                                <option value="aniversario_cliente">Aniversário (Cliente)</option>
-                                <option value="aniversario_funcionario">Aniversário (Funcionário)</option>
-                                <option value="atendimento_cliente">Atendimento (Cliente)</option>
-                                <option value="atendimento_funcionario">Atendimento (Funcionário)</option>
-                                <option value="pesquisa_satisfacao_cliente">Pesquisa Satisfação (Cliente)</option>
-                                <option value="aniversario_inicio_cliente">Aniversário Início (Cliente)</option>
-                                <option value="agradecimento_indicacao_funcionario">Agradecimento Indicação (Funcionário)</option>
+                                {
+                                    tiposLembrete.map(tipoLembrete =>
+                                        <option key={tipoLembrete.idTipoLembrete} value={tipoLembrete.idTipoLembrete}>
+                                            {tipoLembrete.tipo}
+                                        </option>
+                                    )
+                                }
                             </select>
                         </div>
                         <div className="log-email-filtro-group">
