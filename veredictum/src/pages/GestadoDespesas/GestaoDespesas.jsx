@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import { Chart } from "chart.js/auto";
-import { listarDespesas, getTotalPorMesEAno } from "../GestadoDespesas/GestaoDespesas"; 
+import { listarDespesas, getTotalPorMesEAno, valorPorAno } from "../GestadoDespesas/GestaoDespesas"; 
 
 import BtnIcon from "../../assets/svg/btn.svg";
 import CalendarIcon from "../../assets/svg/calendar.svg";
@@ -15,10 +15,13 @@ import ModalInfoDespesa from "../GestadoDespesas/Support/ModalInfoDespesa";
 import "./GestaoDespesas.css";
 
 export default function GestaoDespesas() {
+
   const [expenses, setExpenses] = useState([]);
   const [showMonthPicker, setShowMonthPicker] = useState(false);
   const [selectedMonth, setSelectedMonth] = useState("Junho");
+  const [selectedYear, setSelectedYear] = useState(2025);
   const [monthTotal, setMonthTotal] = useState("0,00");
+  const [yearData, setYearData] = useState([]);
 
   const [showAddModal, setShowAddModal] = useState(false);
   const [showEditModal, setShowEditModal] = useState(false);
@@ -35,6 +38,7 @@ export default function GestaoDespesas() {
     "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro",
   ];
 
+  // === LISTAR DESPESAS ===
   useEffect(() => {
     async function fetchDespesas() {
       try {
@@ -61,7 +65,7 @@ export default function GestaoDespesas() {
 
     async function fetchMonthTotal() {
       try {
-        const response = await getTotalPorMesEAno(mesNumerico, 2025);
+        const response = await getTotalPorMesEAno(mesNumerico, selectedYear);
         if (response.status === 200 && response.data != null) {
           const totalFormatado = response.data.toFixed(2).replace('.', ',');
           setMonthTotal(totalFormatado);
@@ -75,16 +79,78 @@ export default function GestaoDespesas() {
     }
 
     fetchMonthTotal();
-  }, [selectedMonth]);
+  }, [selectedMonth, selectedYear]);
+
+  // === DADOS DO GRÁFICO (BACKEND) ===
+  useEffect(() => {
+    async function fetchYearData() {
+      try {
+        const response = await valorPorAno(selectedYear);
+        if (response.status === 200 && Array.isArray(response.data)) {
+          setYearData(response.data);
+        }
+      } catch (error) {
+        console.error("Erro ao buscar dados do gráfico:", error);
+      }
+    }
+    fetchYearData();
+  }, [selectedYear]);
+
+  // === GRÁFICO (MANTÉM ESTILO ORIGINAL) ===
+  useEffect(() => {
+    if (!yearData.length) return;
+
+    const valoresPorMes = new Array(12).fill(0);
+    yearData.forEach((item) => {
+      valoresPorMes[item.mes - 1] = item.valor;
+    });
+
+    if (chartInstance.current) chartInstance.current.destroy();
+
+    const ctx = chartRef.current.getContext("2d");
+    chartInstance.current = new Chart(ctx, {
+      type: "line",
+      data: {
+        labels: months.map((m) => m.substring(0, 3)),
+        datasets: [
+          {
+            label: `Gastos Mensais (${selectedYear})`,
+            data: valoresPorMes,
+            borderColor: "#000000",
+            backgroundColor: "transparent",
+            borderWidth: 2,
+            pointBackgroundColor: "#000000",
+            pointBorderColor: "#000000",
+            pointRadius: 4,
+            pointHoverRadius: 6,
+            tension: 0, // 🔹 sem curva, linha reta (como o gráfico anterior)
+          },
+        ],
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: { legend: { display: false } },
+        scales: {
+          y: {
+            beginAtZero: true,
+            grid: { display: false },
+            ticks: { color: "#666", font: { size: 12 } },
+          },
+          x: {
+            grid: { display: false },
+            ticks: { color: "#666", font: { size: 12 } },
+          },
+        },
+      },
+    });
+
+    return () => chartInstance.current?.destroy();
+  }, [yearData, selectedYear]);
 
   // === MODAIS ===
   const openModal = () => setShowAddModal(true);
   const closeModal = () => setShowAddModal(false);
-
-  const handleAddExpense = (formData) => {
-    console.log("Nova despesa adicionada:", formData);
-    closeModal();
-  };
 
   const openModalEdit = (etiqueta) => {
     const itemToEdit = expenses.find((item) => item.etiqueta === etiqueta);
@@ -97,11 +163,6 @@ export default function GestaoDespesas() {
   const closeModalEdit = () => {
     setShowEditModal(false);
     setEditingItem(null);
-  };
-
-  const handleEditSubmit = (formData) => {
-    console.log("Despesa atualizada:", formData);
-    closeModalEdit();
   };
 
   const modalVerMais = (etiqueta) => {
@@ -117,47 +178,6 @@ export default function GestaoDespesas() {
     setInfoItem(null);
   };
 
-  // === GRÁFICO ===
-  useEffect(() => {
-    if (chartInstance.current) chartInstance.current.destroy();
-
-    if (chartRef.current && typeof Chart !== "undefined") {
-      const ctx = chartRef.current.getContext("2d");
-
-      chartInstance.current = new Chart(ctx, {
-        type: "line",
-        data: {
-          labels: ["Jan", "Fev", "Mar", "Abr", "Mai", "Jun", "Jul", "Ago", "Set", "Out"],
-          datasets: [
-            {
-              label: "Gastos Mensais",
-              data: [150, 205, 180, 120, 190, 321, 173, 156, 180, 212],
-              borderColor: "#000000",
-              backgroundColor: "transparent",
-              borderWidth: 2,
-              pointBackgroundColor: "#000000",
-              pointBorderColor: "#000000",
-              pointRadius: 4,
-              pointHoverRadius: 6,
-              tension: 0,
-            },
-          ],
-        },
-        options: {
-          responsive: true,
-          maintainAspectRatio: false,
-          plugins: { legend: { display: false } },
-          scales: {
-            y: { beginAtZero: true, grid: { display: false }, ticks: { color: "#666", font: { size: 12 } } },
-            x: { grid: { display: false }, ticks: { color: "#666", font: { size: 12 } } },
-          },
-        },
-      });
-    }
-
-    return () => chartInstance.current?.destroy();
-  }, []);
-
   return (
     <div className="container">
       <Sidebar />
@@ -171,12 +191,12 @@ export default function GestaoDespesas() {
           </button>
         </header>
 
-        {/* 🔹 SELETOR DE MÊS */}
+        {/* 🔹 SELETOR DE MÊS E ANO */}
         <div className="month-selector">
           <div className="month-selector-container">
             <button className="month-selector-btn" onClick={() => setShowMonthPicker(!showMonthPicker)}>
               <img src={CalendarIcon} alt="Calendário" />
-              <span>{selectedMonth}</span>
+              <span>{selectedMonth} / {selectedYear}</span>
               <img src={SetaIcon} alt="Seta" />
             </button>
           </div>
@@ -199,7 +219,21 @@ export default function GestaoDespesas() {
                     {month}
                   </button>
                 ))}
+              </div> <br />
+
+              <div className="year-selector">
+                <label htmlFor="year">Ano:</label> <br /><br />
+                <select
+                  id="year"
+                  value={selectedYear}
+                  onChange={(e) => setSelectedYear(Number(e.target.value))}
+                >
+                  {[2023, 2024, 2025, 2026].map((y) => (
+                    <option key={y} value={y}>{y}</option>
+                  ))}
+                </select>
               </div>
+
               <div className="calendar-actions">
                 <button id="cancel-btn" onClick={() => setShowMonthPicker(false)}>Cancelar</button>
               </div>
@@ -252,9 +286,9 @@ export default function GestaoDespesas() {
             </div>
           </div>
 
-          {/* GRÁFICO */}
+          {/* 🔹 GRÁFICO */}
           <div className="chart-section">
-            <h2>Valor Gasto por Ano</h2>
+            <h2>Valor Gasto por Ano ({selectedYear})</h2>
             <div className="chart-container">
               <canvas ref={chartRef} id="expenseChart"></canvas>
             </div>
@@ -263,8 +297,8 @@ export default function GestaoDespesas() {
       </main>
 
       {/* === MODAIS === */}
-      <ModalAdicionarDespesa show={showAddModal} onClose={closeModal} onSubmit={handleAddExpense} />
-      <ModalEditarDespesa show={showEditModal} onClose={closeModalEdit} onSubmit={handleEditSubmit} editingItem={editingItem} />
+      <ModalAdicionarDespesa show={showAddModal} onClose={closeModal} />
+      <ModalEditarDespesa show={showEditModal} onClose={closeModalEdit} editingItem={editingItem} />
       <ModalInfoDespesa show={showInfoModal} onClose={closeModalVerMais} infoItem={infoItem} />
     </div>
   );

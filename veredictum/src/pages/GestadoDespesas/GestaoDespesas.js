@@ -17,3 +17,6 @@ export const atualizarDespesa = (id, data) =>
 
 export const getTotalPorMesEAno = (mes, ano) =>
     apiClient.get('contas/total-por-mes-e-ano', { params: { mes, ano } });
+
+export const valorPorAno = (ano) =>
+    apiClient.get(`contas/grafico-ano/${ano}`, ano);
