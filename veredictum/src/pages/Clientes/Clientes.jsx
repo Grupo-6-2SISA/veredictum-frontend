@@ -82,21 +82,28 @@ const CLIENT_FORM_COLUMNS = (clientList = []) => {
 
 
 
+const isEmptyValue = (value) => (
+    value === null
+    || value === undefined
+    || (typeof value === 'string' && !value.trim())
+);
+
 const validateClientData = (clientData) => {
     const errors = [];
     const pushError = (message) => errors.push(message);
 
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    const missingRequired = [];
 
-    if (!clientData.nome) {
-        pushError('Nome é obrigatório.');
+    if (isEmptyValue(clientData.nome)) {
+        missingRequired.push('Nome');
     } else {
         if (clientData.nome.length < 2) pushError('Nome deve ter pelo menos 2 caracteres.');
         if (clientData.nome.length > 255) pushError('Nome deve ter no máximo 255 caracteres.');
     }
     
-    if (!clientData.email) {
-        pushError('E-mail é obrigatório.');
+    if (isEmptyValue(clientData.email)) {
+        missingRequired.push('E-mail');
     } else {
         if (clientData.email.length > 255) pushError('E-mail deve ter no máximo 255 caracteres.');
         if (!emailRegex.test(clientData.email)) pushError('Formato de e-mail inválido.');
@@ -118,8 +125,8 @@ const validateClientData = (clientData) => {
         if (!/^\+55\d{10,11}$/.test(clientData.telefone)) pushError('Telefone deve estar no formato +55 seguido de DDD e número (ex: +5511999999999).');
     }
 
-    if (!clientData.dataNascimento) {
-        pushError('Data de Nascimento é obrigatória.');
+    if (isEmptyValue(clientData.dataNascimento)) {
+        missingRequired.push('Data de Nascimento');
     } else {
         const dataNascimento = new Date(clientData.dataNascimento);
         const hoje = new Date();
@@ -131,8 +138,8 @@ const validateClientData = (clientData) => {
         }
     }
 
-    if (!clientData.dataInicio) {
-        pushError('Data de Início é obrigatória.');
+    if (isEmptyValue(clientData.dataInicio)) {
+        missingRequired.push('Data de Início');
     } else {
         const dataInicio = new Date(clientData.dataInicio);
         if (Number.isNaN(dataInicio.getTime())) {
@@ -146,6 +153,11 @@ const validateClientData = (clientData) => {
 
     if (clientData.inscricaoEstadual) {
         if (!/^\d{9}$/.test(clientData.inscricaoEstadual)) pushError('Inscrição Estadual deve conter exatamente 9 dígitos numéricos.');
+    }
+
+    if (missingRequired.length) {
+        const formattedList = missingRequired.join(', ');
+        errors.unshift(`Preencha os campos obrigatórios: ${formattedList}.`);
     }
 
     return errors;
