@@ -123,8 +123,9 @@ export default function ModalEditarDespesa({ show, onClose, editingItem, atualiz
 
                     <div className="form-row">
                         <div className="form-group">
-                            <label htmlFor="edit-valor">Valor</label>
+                            <label style={{ transform: "translateX(-1%)"}} htmlFor="edit-valor">Valor</label>
                             <input
+                                style={{ transform: "translateX(-3%)", width:"47%" }}
                                 type="number"
                                 step="0.01"
                                 id="edit-valor"
@@ -137,7 +138,7 @@ export default function ModalEditarDespesa({ show, onClose, editingItem, atualiz
 
                     <div className="form-row" id="div_para_checkbox_edit">
                         <label className="pagamento-label">Pago?</label>
-                        <div className="switch-row">
+                        <div id="switch_edit" className="switch-row">
                             <span className="switch-text off">Não</span>
                             <label className="switch">
                                 <input

@@ -116,8 +116,15 @@ export default function ModalAdicionarDespesa({ show, onClose, atualizarLista })
                     {/* Valor */}
                     <div className="form-row">
                         <div className="form-group">
-                            <label htmlFor="valor">Valor</label>
-                            <input type="number" step="0.01" id="valor" name="valor" required />
+                            <label style={{ transform: "translateX(-1%)"}}
+                                htmlFor="valor">Valor</label>
+                            <input
+                                style={{ transform: "translateX(-3%)", width: "47%" }}
+
+                                type="number"
+                                step="0.01"
+                                id="valor"
+                                name="valor" required />
                         </div>
                     </div>
 
