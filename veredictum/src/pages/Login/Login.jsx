@@ -37,6 +37,12 @@ function Login() {
       });
 
       if (response.ok) {
+        const data = await response.json(); 
+
+      sessionStorage.setItem("userEmail", formData.email);
+      sessionStorage.setItem("userName", data.nome); 
+     
+
         alert("Login realizado com sucesso!");
         navigate("/VisaoGeral");
       } else if (response.status === 404) {

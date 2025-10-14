@@ -15,7 +15,8 @@ const navItems = [
 ];
 
 const Sidebar = () => {
-    const userName = "Lismara Ribeiro";
+    const userName = sessionStorage.getItem("userName") || "Usuário";
+
     
     // 1. O estado irá armazenar o nome do arquivo ativo (ex: 'visao_geral.html')
     const [activeFile, setActiveFile] = useState('');
