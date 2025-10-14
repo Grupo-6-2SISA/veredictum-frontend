@@ -1,8 +1,8 @@
 /* Importa os partials */
-@import 'src/styles/colors.css';
-@import 'src/styles/layout.css';
-@import 'src/styles/spacing.css';
-@import 'src/styles/typography.css';
+@import './styles/colors.css';
+@import './styles/layout.css';
+@import './styles/spacing.css';
+@import './styles/typography.css';
 
 
 

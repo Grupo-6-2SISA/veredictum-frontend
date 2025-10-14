@@ -170,15 +170,26 @@ const NotasFiscais = () => {
     }
   };
 
-  const handleDelete = (nota) => {
+  const handleDelete = async (nota) => {
     const notaId = getNormalizedId(nota);
     if (!notaId) {
       alert('Erro: ID da nota fiscal não encontrado');
       return;
     }
-    
-    setDeletingNota({ ...nota, id_nota_fiscal: notaId });
-    setIsDeleteModalOpen(true);
+
+    const confirmado = window.confirm(`Tem certeza que deseja excluir a nota fiscal "${nota.numero}"?`);
+    if (!confirmado) return;
+
+    try {
+      await deleteNotaFiscal(notaId);
+      setNotasFiscaisData(prev => prev.filter(item => getNormalizedId(item) != notaId));
+      alert('Nota fiscal excluída com sucesso!');
+    } catch (err) {
+      const message = err.response?.status === 409 
+        ? 'Não é possível excluir esta nota fiscal pois existem registros dependentes.'
+        : 'Erro ao excluir nota fiscal: ' + (err.response?.data?.message || err.message);
+      alert(message);
+    }
   };
 
   const confirmDelete = async () => {
@@ -338,13 +349,6 @@ const NotasFiscais = () => {
             onSubmit: handleSubmit,
             className: "appointment-form"
           }}
-          footer={
-            <div className="form-footer-notas">
-              <button type="submit" className="btn-new-appointment">
-                Salvar Nota Fiscal
-              </button>
-            </div>
-          }
         >
           <div className="form-row">
             <FormField label="Número da Nota" htmlFor="numeroNota">
@@ -372,8 +376,8 @@ const NotasFiscais = () => {
               <input type="date" id="dataVencimento" name="dataVencimento" required />
             </FormField>
             <FormField label="Emitida" htmlFor="emitida">
-              <select id="emitida" name="emitida" required>
-                <option value="">Selecione</option>
+              <select id="emitida" name="emitida" defaultValue="" required>
+                <option value="" disabled>Selecione</option>
                 <option value="true">Sim</option>
                 <option value="false">Não</option>
               </select>
@@ -388,6 +392,12 @@ const NotasFiscais = () => {
               <input type="text" id="descricao" name="descricao" placeholder="Descrição da nota" />
             </FormField>
           </div>
+
+          <div className="form-footer-notas">
+            <button type="submit" className="btn-new-appointment">
+              Salvar Nota Fiscal
+            </button>
+          </div>
         </Modal>
 
         {/* Modal Editar */}
@@ -401,13 +411,6 @@ const NotasFiscais = () => {
             onSubmit: handleEditSubmit,
             className: "appointment-form"
           }}
-          footer={
-            <div className="form-footer-notas">
-              <button type="submit" className="btn-new-appointment">
-                Salvar Alterações
-              </button>
-            </div>
-          }
         >
           {editingNota && (
             <>
@@ -438,7 +441,7 @@ const NotasFiscais = () => {
                 </FormField>
                 <FormField label="Emitida" htmlFor="emitidaEdit">
                   <select id="emitidaEdit" name="emitida" defaultValue={getEmitidaValue(editingNota.is_emitida)} required>
-                    <option value="">Selecione</option>
+                    <option disabled value="">Selecione</option>
                     <option value="true">Sim</option>
                     <option value="false">Não</option>
                   </select>
@@ -452,6 +455,15 @@ const NotasFiscais = () => {
                 <FormField label="Descrição" htmlFor="descricaoEdit">
                   <input type="text" id="descricaoEdit" name="descricao" defaultValue={editingNota.descricao || ''} />
                 </FormField>
+              </div>
+
+              <div className="form-footer-notas">
+                <button type="button" className="btn-new-appointment" onClick={closeEditModal} style={{background: '#666'}}>
+                  Cancelar
+                </button>
+                <button type="submit" className="btn-new-appointment">
+                  Salvar Alterações
+                </button>
               </div>
             </>
           )}
@@ -519,25 +531,7 @@ const NotasFiscais = () => {
           )}
         </Modal>
 
-        {/* Modal Delete */}
-        <Modal
-          isOpen={isDeleteModalOpen}
-          variant="delete"
-          title="Confirmar Exclusão"
-          onClose={closeDeleteModal}
-          modalId="modal-delete-note"
-          footer={
-            <div className="modal-footer">
-              <button className="btn-confirm-delete" onClick={confirmDelete}>
-                Excluir
-              </button>
-            </div>
-          }
-        >
-          {deletingNota && (
-            <p>Tem certeza que deseja excluir a nota fiscal "{deletingNota.numero}"?</p>
-          )}
-        </Modal>
+        {/* Modal Delete removido: exclusão agora usa window.confirm no handleDelete */}
       </div>
     </div>
   );

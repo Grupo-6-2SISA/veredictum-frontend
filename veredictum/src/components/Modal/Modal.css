@@ -29,45 +29,45 @@
 #new-appointment-modal-add-note {
     position: fixed;
     top: 50%;
-    left: 53%;
+    left: 50%;
     transform: translate(-50%, -50%);
     background-color: var(--light-black);
     border-radius: 12px;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.373);
-    width: 1000px;
-    max-width: 90%;
-    height: 75%;
-    z-index: 5;
+    box-shadow: 0 6px 30px rgba(0, 0, 0, 0.45);
+    width: 98vw;
+    max-width: 1200px;
+    max-height: 95vh;
+    z-index: 1005;
 }
 
 /* Estilos para o modal de Editar Nota Fiscal */
 #new-appointment-modal-edit-note {
     position: fixed;
     top: 50%;
-    left: 53%;
+    left: 50%;
     transform: translate(-50%, -50%);
     background-color: var(--light-black);
     border-radius: 12px;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.373);
-    width: 1000px;
-    max-width: 90%;
-    height: 75%;
-    z-index: 5;
+    box-shadow: 0 6px 30px rgba(0, 0, 0, 0.45);
+    width: 98vw;
+    max-width: 1200px;
+    max-height: 95vh;
+    z-index: 1005;
 }
 
 /* Estilos para o modal de Informações da Nota Fiscal */
 #new-appointment-modal-view-note {
     position: fixed;
     top: 50%;
-    left: 53%;
+    left: 50%;
     transform: translate(-50%, -50%);
     background-color: var(--light-black);
     border-radius: 12px;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.373);
-    width: 1000px;
-    max-width: 90%;
-    height: 70%;
-    z-index: 5;
+    box-shadow: 0 6px 30px rgba(0, 0, 0, 0.45);
+    width: 98vw;
+    max-width: 1200px;
+    max-height: 95vh;
+    z-index: 1005;
 }
 
 /* Estilos para o modal de confirmação de exclusão */
@@ -91,13 +91,27 @@
     align-items: center;
     padding: 20px 25px;
     position: relative;
+    background: transparent; /* remove fundo branco */
 }
 
 .modal-header h2 {
     margin: 0;
-    font-size: 2.5rem;
-    font-weight: bold;
+    font-size: 2rem;
+    font-weight: 700;
     color: var(--white-normal);
+}
+
+/* Garantir que os títulos dos modais add/edit/view fiquem brancos e sem fundo preto */
+#new-appointment-modal-add-note .modal-header,
+#new-appointment-modal-edit-note .modal-header,
+#new-appointment-modal-view-note .modal-header {
+    background: transparent !important;
+}
+
+#new-appointment-modal-add-note .modal-header h2,
+#new-appointment-modal-edit-note .modal-header h2,
+#new-appointment-modal-view-note .modal-header h2 {
+    color: var(--white-normal) !important;
 }
 
 #modal-delete-note .modal-header h2 {
@@ -115,9 +129,16 @@
     font-size: 2rem;
 }
 
-/* Corpo do modal */
+/* Corpo do modal (sem rolagem interna) */
+.modal {
+    overflow-y: auto; /* o wrapper rola quando o conteúdo excede a viewport */
+    -webkit-overflow-scrolling: touch;
+}
+
 .modal-body {
     padding: 25px;
+    max-height: none; /* não limitar a altura aqui para evitar scroll interno */
+    overflow: visible; /* permitir que o wrapper lide com a rolagem */
 }
 
 /* Corpo do formulário */
@@ -152,12 +173,13 @@
 .form-group-notas select, 
 .form-group-notas textarea {
     padding: 10px;
-    width: 400px;
+    width: 100%;
+    max-width: 100%;
     border: 1px solid #ddd;
     border-radius: 8px;
     font-size: 1rem;
     background-color: #f9f9f9;
-    margin-left: 3%;
+    margin-left: 0;
     margin-bottom: 10px;
 }
 
@@ -172,12 +194,13 @@
 /* Info Display para modais de visualização */
 .info-display {
     padding: 10px;
-    width: 400px;
+    width: 100%;
+    max-width: 100%;
     border: 1px solid #ddd;
     border-radius: 8px;
     font-size: 1rem;
     background-color: #f9f9f9;
-    margin-left: 3%;
+    margin-left: 0;
     margin-bottom: 10px;
     color: var(--darkness-black);
     min-height: 20px;
@@ -198,10 +221,17 @@
 /* Rodapé do formulário */
 .form-footer-notas {
     display: flex;
+    display: flex;
     justify-content: center;
     align-items: center;
     margin-top: 5px;
     gap: 15px;
+}
+
+/* Garantir centralização de botões quando form-footer estiver dentro de um modal */
+.modal .form-footer-notas {
+    justify-content: center !important;
+    padding: 16px 24px;
 }
 
 /* Modal de Delete específico */
