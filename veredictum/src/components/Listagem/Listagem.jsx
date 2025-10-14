@@ -1,8 +1,6 @@
 import React from 'react';
-import './Listagem.css';
-import '../../index.css';
+import './Listagem.css'; 
 
-<<<<<<< HEAD
 
 const variantConfigs = {
     clientes: {
@@ -12,41 +10,73 @@ const variantConfigs = {
         rowClasses: ['client-list-item-grid', 'clientes-listagem-row'],
     },
 };
-=======
-const Listagem = ({ dados, colunas }) => {
-  // Define o grid dinamicamente conforme o número de colunas
-  const gridTemplate = colunas.length === 3
-    ? '3fr 2fr 1fr'
-    : colunas.length === 2
-      ? '3fr 2fr'
-      : '1fr';
->>>>>>> f5d11bdca17ec11939ee4c7e9fe5cffac2d86bb3
 
-  return (
-    <div className="listagem-container">
-      <div
-        className="listagem-header"
-        style={{ gridTemplateColumns: gridTemplate }}
-      >
-        {colunas.map(col => (
-          <div key={col.key}>{col.titulo}</div>
-        ))}
-      </div>
-      {dados.map((item, idx) => (
-        <div
-          className="listagem-row"
-          style={{ gridTemplateColumns: gridTemplate }}
-          key={idx}
-        >
-          {colunas.map(col => (
-            <div className="listagem-data" key={col.key}>
-              {item[col.key]}
+const Listagem = ({ dados, colunas, variant }) => {
+    // Certifica que temos dados para exibir
+    if (!dados || dados.length === 0) {
+        return <p className="listagem-vazia">Nenhum item encontrado.</p>;
+    }
+
+    const variantConfig = variant ? variantConfigs[variant] : undefined;
+
+    const containerClassNames = ['listagem-container'];
+    const headerClassNames = ['listagem-header'];
+    const bodyClassNames = ['listagem-body'];
+    const rowClassNames = ['listagem-row'];
+
+    if (variantConfig?.containerClasses) {
+        containerClassNames.push(...variantConfig.containerClasses);
+    }
+
+    if (variantConfig?.headerClasses) {
+        headerClassNames.push(...variantConfig.headerClasses);
+    }
+
+    if (variantConfig?.bodyClasses) {
+        bodyClassNames.push(...variantConfig.bodyClasses);
+    }
+
+    if (variantConfig?.rowClasses) {
+        rowClassNames.push(...variantConfig.rowClasses);
+    }
+
+    const getColumnClassName = (coluna) => coluna.className ?? `col-${coluna.key}`;
+
+    return (
+        <div className={containerClassNames.join(' ')} data-variant={variant}>
+            {/* Cabeçalho da Lista */}
+            <div className={headerClassNames.join(' ')}>
+                {colunas.map((coluna, index) => (
+                    // Usa a chave do objeto (ex: nome, dia) para aplicar o estilo correto
+                    <p
+                        key={index}
+                        className={`header-item header-${coluna.key} ${getColumnClassName(coluna)}`.trim()}
+                    >
+                        {coluna.titulo}
+                    </p>
+                ))}
             </div>
-          ))}
+
+            {/* Linhas de Dados */}
+            <div className={bodyClassNames.join(' ')}>
+                {dados.map((item, index) => (
+                    <div
+                        key={index}
+                        className={rowClassNames.join(' ')}
+                    >
+                        {colunas.map((coluna) => (
+                            <div
+                                key={coluna.key}
+                                className={`listagem-data data-${coluna.key} ${getColumnClassName(coluna)}`.trim()}
+                            >
+                                {item[coluna.key]}
+                            </div>
+                        ))}
+                    </div>
+                ))}
+            </div>
         </div>
-      ))}
-    </div>
-  );
+    );
 };
 
 export default Listagem;

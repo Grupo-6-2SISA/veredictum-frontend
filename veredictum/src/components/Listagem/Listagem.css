@@ -1,55 +1,43 @@
-/* Estilo da Listagem */
+/* Estilo base da Listagem */
 .listagem-container {
     width: 100%;
 }
 
 .listagem-header {
     display: grid;
-    font-weight: 600;
-    color: var(--dark-black);
-    font-size: 1.08em;
-    position: sticky;
-    top: 0;
-    background: var(--white-normal);
-    z-index: 2;
-    padding-top: 0;
-    padding-bottom: 8px;
-    margin-left: 15px;
-    box-shadow: 0 2px 6px -4px #0002;
+}
+
+.listagem-body {
+    display: flex;
+    flex-direction: column;
 }
 
 .listagem-row {
     display: grid;
     align-items: center;
-    margin-top: 10px;
-    padding: 12px 15px;
-    margin-bottom: 10px;
-    background-color: #f6f6f6;
-    border-radius: 12px;
-    margin-left: 13px;
-    box-shadow: 0 1px 3px #424242;
 }
 
 .listagem-data {
-    color: #161617;
-    font-size: 16px;
-    font-weight: 700;
+    color: #333;
+    font-size: 0.95em;
     overflow: hidden;
     white-space: nowrap;
     text-overflow: ellipsis;
 }
 
-/* Card 1: Próximos Atendimentos (Nome, Dia, Horário) - 3 colunas */
-.listagem-header, .listagem-row {
-    /* Layout Padrão: 3 colunas, 3fr (Nome), 2fr (Dia), 1fr (Horário) */
-    grid-template-columns: 3fr 2fr 1fr;
+.listagem-vazia {
+    margin: 1rem auto;
+    font-size: 0.95rem;
+    color: var(--dark-black);
+    opacity: 0.75;
+    text-align: center;
 }
 
-.header-numero, .data-numero {
-    grid-column: 1 / span 1; /* Primeira Coluna */
-}
-.header-dataLimite, .data-dataLimite {
-    grid-column: 2 / span 1; /* Segunda Coluna */
+/* Variante Clientes */
+.listagem-clientes {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
 }
 .clientes-listagem-header {
   grid-template-columns: 3fr 1fr 1.5fr 1.5fr;
