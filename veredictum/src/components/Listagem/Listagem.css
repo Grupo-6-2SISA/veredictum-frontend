@@ -2,17 +2,19 @@
 .listagem-container {
     width: 100%;
     box-sizing: border-box;
+    font-family: "Montserrat", sans-serif;
     padding: 0 8px; /* espaço lateral controlado pelo container, facilita ajustes externos */
 }
 
 .listagem-header {
     display: grid;
-    font-weight: 600;
+    font-weight: 700;
     color: var(--dark-black);
     font-size: 1.08em;
     position: sticky;
     top: 0;
     background: var(--white-normal);
+    font-family: "Montserrat", sans-serif;
     z-index: 2;
     padding-top: 0;
     padding-bottom: 8px;
@@ -22,6 +24,7 @@
 
 .listagem-row {
     display: grid;
+    font-family: "Montserrat", sans-serif;
     align-items: center;
     margin-top: 10px;
     padding: 12px 15px;
@@ -34,6 +37,7 @@
 
 .listagem-data {
     color: #161617;
+    font-family: "Montserrat", sans-serif;
     font-size: 16px;
     font-weight: 700;
     overflow: hidden;
@@ -64,7 +68,6 @@
     grid-template-columns: 3fr 2fr; /* 2 colunas (tamanho longo, tamanho curto) */
 }
 
-/* ...existing code... */
 
 /* Ajuste do tamanho e alinhamento dos ícones dentro da listagem */
 .listagem-icon {
@@ -107,5 +110,3 @@
 .listagem-btn-excluir:hover {
     background: rgba(0,0,0,0.04);
 }
-
-/* ...existing code... */

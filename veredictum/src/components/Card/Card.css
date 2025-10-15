@@ -16,16 +16,18 @@
 .card-header {
     display: flex;
     align-items: center;
+    font-family: "Montserrat", sans-serif;
     margin-bottom: 20px;
 }
 
 .card-icon {
-    font-size: 1.5em;
+    font-size: 1.2em;
     margin-right: 10px;
 }
 
 .card-header h2 {
-    font-size: 19px;
+    font-size: 21px;
+    font-family: "Montserrat", sans-serif;
     font-weight: 700;
     color: #0c0c0c;
 }
