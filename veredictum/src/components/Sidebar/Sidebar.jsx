@@ -15,7 +15,8 @@ const navItems = [
 ];
 
 const Sidebar = () => {
-    const userName = "Lismara Ribeiro";
+    const userName = sessionStorage.getItem("userName") || "Usuário";
+
     
     const [activeFile, setActiveFile] = useState('');
 
