@@ -34,29 +34,9 @@
 
 
 .card-content-wrapper {
-    flex: 1 1 auto;
-    overflow-y: auto;
-    max-height: 100%;
-    padding-right: 10px;
+    max-height: 100%; /* Limite a altura como no design */
+    overflow-y: auto; /* Adiciona a barra de rolagem */
+   scrollbar-width: thin;
+   scrollbar-color: var(--light-black) var(--white-normal);
 }
 
-/* Estiliza a barra de rolagem apenas dentro do conteúdo do card */
-.card-content-wrapper::-webkit-scrollbar {
-    width: 8px;
-    background: transparent;
-}
-
-.card-content-wrapper::-webkit-scrollbar-thumb {
-    background: #222;
-    border-radius: 8px;
-}
-
-.card-content-wrapper::-webkit-scrollbar-track {
-    background: transparent;
-}
-
-/* Firefox */
-.card-content-wrapper {
-    scrollbar-width: thin;
-    scrollbar-color: #222 transparent;
-}

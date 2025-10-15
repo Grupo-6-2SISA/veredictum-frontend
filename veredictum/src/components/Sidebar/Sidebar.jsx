@@ -16,9 +16,9 @@ const navItems = [
     { name: 'Gestão de Logs', iconPath: 'src/assets/svg/logs.svg', path: './Logs', iconClass: 'icon_logs'},
 ];
 
-// 2. Receba a prop 'isAdmin' no componente
-const Sidebar = ({ isAdmin = false }) => {
-    const userName = "Lismara Ribeiro"; // Esta informação geralmente viria via props também
+const Sidebar = () => {
+    const userName = sessionStorage.getItem("userName") || "Usuário";
+
     
     const [activeFile, setActiveFile] = useState('');
 
