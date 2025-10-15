@@ -1,11 +1,16 @@
 /* Estilo do Card (Bloco Branco) */
 .card-box {
     background-color: #fff;
-    border-radius: 12px;
-    padding: 25px;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05); /* Sombra suave */
+    border-radius: 8px;
+    padding: 20px;
     display: flex;
     flex-direction: column;
+    box-shadow: 0 1px 3px #4242425e;
+    overflow: hidden;
+    width: 48%;
+    min-height: 200px; 
+    max-height: 280px; 
+    height: 280px;     
 }
 
 .card-header {
@@ -20,14 +25,16 @@
 }
 
 .card-header h2 {
-    font-size: 1.1em;
+    font-size: 19px;
     font-weight: 700;
-    color: #444;
+    color: #0c0c0c;
 }
 
-/* Wrapper para controlar a altura e a barra de rolagem (scroll) */
+
 .card-content-wrapper {
-    max-height: 250px; /* Limite a altura como no design */
+    max-height: 100%; /* Limite a altura como no design */
     overflow-y: auto; /* Adiciona a barra de rolagem */
-    padding-right: 10px; /* Espaço para a barra de rolagem não colidir com o conteúdo */
+   scrollbar-width: thin;
+   scrollbar-color: var(--light-black) var(--white-normal);
 }
+

@@ -1,8 +1,8 @@
-// src/components/Sidebar/Sidebar.jsx
 import React, { useState, useEffect } from 'react';
 import './Sidebar.css';
+import '../../index.css';
 
-// Dados para a navegação
+
 const navItems = [
     { name: 'Visão Geral', iconPath: 'src/assets/svg/visao-geral.svg', path: './visao_geral.html', iconClass: 'icon_vg' },
     { name: 'Dashboard', iconPath: 'src/assets/svg/dash.svg', path: 'src/dashboard.html', iconClass: 'icon_dash' },
@@ -18,30 +18,33 @@ const Sidebar = () => {
     const userName = sessionStorage.getItem("userName") || "Usuário";
 
     
-    // 1. O estado irá armazenar o nome do arquivo ativo (ex: 'visao_geral.html')
     const [activeFile, setActiveFile] = useState('');
 
-    // 2. Lógica useEffect (substitui o DOMContentLoaded)
     useEffect(() => {
-        // Obtém o nome do arquivo da URL atual (corresponde à sua lógica JS)
         const currentPath = window.location.pathname;
-        const currentFile = currentPath.substring(currentPath.lastIndexOf('/') + 1) || 'visao_geral.html'; // Fallback para a página inicial
-        setActiveFile(currentFile);
-    }, []); // Executa apenas uma vez ao montar o componente
+        let currentFile = '';
 
-    // 3. Função para obter o caminho do ícone (aplica a lógica de _black.svg)
+        const pathSegments = currentPath.split('/');
+        const lastSegment = pathSegments[pathSegments.length - 1];
+        
+        if (!lastSegment || lastSegment === 'index.html' || lastSegment === 'index.html') {
+            currentFile = 'visao_geral.html'; 
+        } else {
+            currentFile = lastSegment;
+        }
+
+        setActiveFile(currentFile);
+    }, []); 
+
     const getIconSrc = (originalPath, linkPath) => {
         const linkFile = linkPath.substring(linkPath.lastIndexOf('/') + 1);
         
-        // Verifica se o link é o ativo
         if (linkFile === activeFile) {
-            // Se for ativo, troca o .svg por _black.svg
             return originalPath.replace('.svg', '_black.svg');
         }
         return originalPath;
     };
     
-    // 4. Função para verificar se o link está ativo
     const isLinkActive = (linkPath) => {
         const linkFile = linkPath.substring(linkPath.lastIndexOf('/') + 1);
         return linkFile === activeFile;
@@ -68,13 +71,11 @@ const Sidebar = () => {
                                     href={item.path} 
                                     className={active ? 'active' : ''}
                                 >
-                                    {/* Usa a função getIconSrc para definir o caminho correto do ícone */}
                                     <img 
                                         src={getIconSrc(item.iconPath, item.path)} 
                                         className={item.iconClass} 
                                         alt={item.name} 
                                     />
-                                    {/* Aplica menu-text-active ou menu-text baseado no estado */}
                                     <span className={active ? 'menu-text-active' : 'menu-text'}>
                                         {item.name}
                                     </span>
@@ -87,9 +88,9 @@ const Sidebar = () => {
             
             <div className="sidebar-footer">
                 <a href="/Home.jsx">
-                    <img src="src/assets/svg/exit.svg" className="icon_exit" alt="" />
+                    <img src="src/assets/svg/exit.svg" className="icon_exit" alt="Sair" />
+                     <span className="menu-text">Sair</span> 
                 </a>
-                <span className="menu-text">Sair</span> 
             </div>
         </aside>
     );

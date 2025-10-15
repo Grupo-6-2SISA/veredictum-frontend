@@ -1,42 +1,40 @@
-// src/components/Listagem/Listagem.jsx
 import React from 'react';
-import './Listagem.css'; 
+import './Listagem.css';
+import '../../index.css';
 
 const Listagem = ({ dados, colunas }) => {
-    // Certifica que temos dados para exibir
-    if (!dados || dados.length === 0) {
-        return <p className="listagem-vazia">Nenhum item encontrado.</p>;
-    }
+  // Define o grid dinamicamente conforme o número de colunas
+  const gridTemplate = colunas.length === 3
+    ? '3fr 2fr 1fr'
+    : colunas.length === 2
+      ? '3fr 2fr'
+      : '1fr';
 
-    return (
-        <div className="listagem-container">
-            {/* Cabeçalho da Lista */}
-            <div className="listagem-header">
-                {colunas.map((coluna, index) => (
-                    // Usa a chave do objeto (ex: nome, dia) para aplicar o estilo correto
-                    <span key={index} className={`header-item header-${coluna.key}`}>
-                        {coluna.titulo}
-                    </span>
-                ))}
+  return (
+    <div className="listagem-container">
+      <div
+        className="listagem-header"
+        style={{ gridTemplateColumns: gridTemplate }}
+      >
+        {colunas.map(col => (
+          <div key={col.key}>{col.titulo}</div>
+        ))}
+      </div>
+      {dados.map((item, idx) => (
+        <div
+          className="listagem-row"
+          style={{ gridTemplateColumns: gridTemplate }}
+          key={idx}
+        >
+          {colunas.map(col => (
+            <div className="listagem-data" key={col.key}>
+              {item[col.key]}
             </div>
-
-            {/* Linhas de Dados */}
-            <div className="listagem-body">
-                {dados.map((item, index) => (
-                    <div key={index} className="listagem-row">
-                        {colunas.map((coluna) => (
-                            <div 
-                                key={coluna.key} 
-                                className={`listagem-data data-${coluna.key}`}
-                            >
-                                {item[coluna.key]}
-                            </div>
-                        ))}
-                    </div>
-                ))}
-            </div>
+          ))}
         </div>
-    );
+      ))}
+    </div>
+  );
 };
 
 export default Listagem;
