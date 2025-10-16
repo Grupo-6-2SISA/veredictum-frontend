@@ -91,6 +91,11 @@ npm install
 npm install axios
 ```
 
+- prop-types (validação de props em componentes React)
+```
+npm install prop-types
+```
+
 - Tailwind CSS (opcional, caso queira usar)
 ```
 npm install -D tailwindcss postcss autoprefixer
