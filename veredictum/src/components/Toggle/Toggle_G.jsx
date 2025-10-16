@@ -1,6 +1,6 @@
 import PropTypes from 'prop-types';
-import '../Css/Main.css';
-import './Toggle.css';
+import '../../index.css';
+import './Toggle_G.css';
 
 const Toggle = ({ checked, onChange, label, id, name, disabled }) => {
   return (
