@@ -83,7 +83,7 @@ const Sidebar = () => {
                 </div>
                     <div className="user-info">
                         <span className="user-name">{userName}</span>
-                        {adminFlag && <span className="user-role badge-admin">Administrador</span>}
+                        {/* {adminFlag && <span className="user-role badge-admin">Administrador</span>} */}
                     </div>
             </div>
 

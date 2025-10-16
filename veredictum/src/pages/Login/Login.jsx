@@ -39,10 +39,8 @@ function Login() {
       if (response.ok) {
         const data = await response.json();
 
-        // 1. TENTA PEGAR 'isAdm' ou 'isAdmin'
         const isAdminValue = data.isAdm !== undefined ? data.isAdm : data.isAdmin;
 
-        // 2. NORMALIZA para string 'true' ou 'false' antes de salvar (boas práticas)
         const isAdminString = isAdminValue === true || isAdminValue === 'true' || isAdminValue === 1 ? 'true' : 'false';
 
         sessionStorage.setItem("userEmail", formData.email);

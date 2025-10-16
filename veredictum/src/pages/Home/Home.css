@@ -2,58 +2,40 @@
 
 
 
-
-
- /* body {
-    min-height: 100vh;
+ body {
+    /* min-height: 100vh;
     background: #222;
     display: flex;
     justify-content: center;
     align-items: center;
     margin: 0;
-    padding: 0;
+    padding: 0; */
     font-family: 'Segoe UI', Arial, sans-serif;
-} */
+}
 
-/* .home-card {
-    width: 100%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    background-color: white;
-    border-radius: 8px;
-    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
-    display: flex;
-    flex-direction: row;
-    height: 600px;
-    max-width: 1400px;
-    width: 100%;
-} */
 
-.home-info {
+
+/* .home-info {
     width: 50%;
     height: 100%;
     box-sizing: border-box;
-}
+} */
 
 
 .home-boas-vindas{
-    display: flex;
-    flex-direction: column;
     margin-left: 70px;
-    margin-top: 40px;
-    gap: 30px;
 }
 
-.logo-row {
+
+/* .logo-row {
     display: flex;
     justify-content: start;
     flex-direction: row;
     gap: 12px;
     align-items: start;
     margin-top: 20px;
-    /* border: 2px solid #222; */
-}
+} */
+
 .logo-row img {
     margin-left: 70px;
 }
@@ -62,38 +44,39 @@
     font-size: 1.5rem;
     font-weight: bold;
     color: #222;
-
+    display: flex;
+    align-items: center;
 }
 
 
 
-.boas-vindas {
+/* .boas-vindas {
     font-size: 2.5rem;
     font-weight: bold;
     margin: 16px 0 8px 0;
     color: #222;
     line-height: 100%;
-}
+} */
 
-.subtitle {
+/* .subtitle {
     color: #555;
     margin-bottom: 8px;
-}
+} */
 
-.divider {
+/* .divider {
     width: 180px;
     height: 8px;
     background: #FFC300;
     margin: 12px 0;
     border-radius: 2px;
-}
+} */
 
-.button-row {
+/* .button-row {
     display: flex;
     gap: 8px;
     margin-left: 60px;
     margin-top: 40px;
-}
+} */
 
 
 .btn-login {
@@ -128,7 +111,7 @@
     color: #000;
 }
 
-.home-image {
+/* .home-image {
     display: flex;
     width: 50%;
     height: 100%;
@@ -137,14 +120,14 @@
     box-sizing: border-box;
     justify-content: center;
     align-items: center;
-}
+} */
 
-.home-image img {
+/* .home-image img {
     width: 90%;
     height: 90%;
     border-radius: 8px;
     object-fit: cover;
-}
+} */
 
 
 @media (max-width: 1024px) {
