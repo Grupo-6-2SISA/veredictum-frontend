@@ -1,117 +1,69 @@
-// src/api/Agenda.js 
+// src/pages/VisaoGeral/VisaoGeral.js 
 
 import axios from 'axios';
 
 const apiClient = axios.create({
-    baseURL: 'http://localhost:8080/',
+    baseURL: 'http://localhost:8080/', 
     headers: { 'Content-Type': 'application/json' },
     withCredentials: true,
 });
 
 /**
- * Funções de busca, criação, edição e exclusão de dados para a tela de Agenda & Relacionamento.
- * Rotas baseadas em AtendimentoController (@RequestMapping("/atendimentos")) e 
- * ClienteController (@RequestMapping("/clientes")).
+ * Funções de busca de dados para a tela de Visão Geral.
  */
 
-// ===================================================================
-// 1. FUNÇÕES DE BUSCA (READ)
-// ===================================================================
-
-/**
- * Lista atendimentos de um mês/ano específico, ordenados pelo mais recente.
- * Rota: GET /atendimentos/listar-por-mes-ano/{ano}/{mes}
- */
-export const listarAtendimentosPorMesEAno = (ano, mes) => {
-    console.log(`[Agenda API] listarAtendimentosPorMesEAno chamado -> GET /atendimentos/listar-por-mes-ano/${ano}/${mes}`);
-    return apiClient.get(`/atendimentos/listar-por-mes-ano/${ano}/${mes}`)
+// 1. Próximos Atendimentos (AtendimentoController: @RequestMapping("/atendimentos"))
+export const listarProximosAtendimentos = () => {
+    console.log('[VisaoGeral API] listarProximosAtendimentos chamado -> GET /atendimentos/mais-recentes');
+    return apiClient.get('/atendimentos/mais-recentes')
         .then(res => {
-            console.log('[Agenda API] listarAtendimentosPorMesEAno resposta:', res.data.length, 'itens');
+            console.log('[VisaoGeral API] listarProximosAtendimentos resposta:', res);
             return res;
         })
         .catch(err => {
-            console.error('[Agenda API] listarAtendimentosPorMesEAno erro:', err);
+            console.error('[VisaoGeral API] listarProximosAtendimentos erro:', err);
             throw err;
         });
 };
 
-/**
- * Lista todos os clientes que fazem aniversário no ano (ou uma lista grande)
- * para o frontend filtrar por mês (mantendo a função genérica que havíamos criado).
- * Rota: GET /clientes/aniversariantes
- */
-export const listarTodosAniversariantes = () => {
-    // Mantendo a rota /clientes/aniversariantes como rota presumida para listar todos.
-    console.log('[Agenda API] listarTodosAniversariantes chamado -> GET /clientes/aniversariantes');
-    return apiClient.get('/clientes/aniversariantes')
+// 2. Prazos de Notas Fiscais (NotaFiscalController: @RequestMapping("/notas-fiscais"))
+export const listarPrazosNotasFiscais = () => {
+    console.log('[VisaoGeral API] listarPrazosNotasFiscais chamado -> GET /notas/mais-atrasadas/10');
+    return apiClient.get('/notas-fiscais/mais-atrasadas/10') 
         .then(res => {
-            console.log('[Agenda API] listarTodosAniversariantes resposta:', res.data.length, 'itens');
+            console.log('[VisaoGeral API] listarPrazosNotasFiscais resposta:', res);
             return res;
         })
         .catch(err => {
-            console.error('[Agenda API] listarTodosAniversariantes erro:', err);
+            console.error('[VisaoGeral API] listarPrazosNotasFiscais erro:', err);
             throw err;
         });
 }
 
-
-// ===================================================================
-// 2. FUNÇÕES DE MANIPULAÇÃO (CRUD - Atendimentos)
-// ===================================================================
-
-/**
- * Cria um novo atendimento.
- * Rota: POST /atendimentos?statusInicialId={statusInicialId}
- * O backend requer 'statusInicialId' como RequestParam.
- */
-export const criarAtendimento = (atendimentoDTO, statusInicialId) => {
-    console.log('[Agenda API] criarAtendimento chamado -> POST /atendimentos', atendimentoDTO, 'Status:', statusInicialId);
-    return apiClient.post(`/atendimentos?statusInicialId=${statusInicialId}`, atendimentoDTO)
-        .then(res => res)
+// 3. Aniversariantes do Mês (ClienteController: @RequestMapping("/clientes"))
+export const listarAniversariantesDoMes = () => {
+    console.log('[VisaoGeral API] listarAniversariantesDoMes chamado -> GET /clientes/aniversariantes-do-mes');
+    return apiClient.get('/clientes/aniversariantes-do-mes')
+        .then(res => {
+            console.log('[VisaoGeral API] listarAniversariantesDoMes resposta:', res);
+            return res;
+        })
         .catch(err => {
-            console.error('[Agenda API] criarAtendimento erro:', err);
+            console.error('[VisaoGeral API] listarAniversariantesDoMes erro:', err);
             throw err;
         });
-};
+}
 
-/**
- * Edita um atendimento existente.
- * Rota: PUT /atendimentos/{id}
- */
-export const editarAtendimento = (id, atendimentoData) => {
-    console.log(`[Agenda API] editarAtendimento chamado -> PUT /atendimentos/${id}`, atendimentoData);
-    return apiClient.put(`/atendimentos/${id}`, atendimentoData)
-        .then(res => res)
+// 4. Contas a Pagar (ContaController: @RequestMapping("/contas"))
+export const listarContasAPagar = () => {
+    console.log('[VisaoGeral API] listarContasAPagar chamado -> GET /contas/a-pagar');
+    return apiClient.get('/contas/mais-atrasadas/10')
+        .then(res => {
+            console.log('[VisaoGeral API] listarContasAPagar resposta:', res);
+            return res;
+        })
         .catch(err => {
-            console.error('[Agenda API] editarAtendimento erro:', err);
+            console.error('[VisaoGeral API] listarContasAPagar erro:', err);
             throw err;
         });
-};
-
-/**
- * Exclui um atendimento pelo ID.
- * Rota: DELETE /atendimentos/{id}
- */
-export const excluirAtendimento = (id) => {
-    console.log(`[Agenda API] excluirAtendimento chamado -> DELETE /atendimentos/${id}`);
-    return apiClient.delete(`/atendimentos/${id}`)
-        .then(res => res)
-        .catch(err => {
-            console.error('[Agenda API] excluirAtendimento erro:', err);
-            throw err;
-        });
-};
-
-/**
- * Altera o status de um atendimento.
- * Rota: PATCH /atendimentos/mudar-status/{id}/{status}
- */
-export const mudarStatusAtendimento = (id, statusId) => {
-    console.log(`[Agenda API] mudarStatusAtendimento chamado -> PATCH /atendimentos/mudar-status/${id}/${statusId}`);
-    return apiClient.patch(`/atendimentos/mudar-status/${id}/${statusId}`)
-        .then(res => res)
-        .catch(err => {
-            console.error('[Agenda API] mudarStatusAtendimento erro:', err);
-            throw err;
-        });
-};
+}

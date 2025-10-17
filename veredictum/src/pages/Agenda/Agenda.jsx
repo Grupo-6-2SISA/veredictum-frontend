@@ -1,28 +1,25 @@
-import React, { useState, useMemo } from 'react';
-import Sidebar from '../../components/Sidebar/Sidebar';
+
+import React, { useState, useMemo, useEffect } from 'react';
 import Listagem from '../../components/Listagem/Listagem';
 import Button from '../../components/Button/Button';
-import MonthPickerButton from '../../components/MonthPicker/MonthPickerButton'; // NOVO IMPORT
+import MonthPickerButton from '../../components/MonthPicker/MonthPickerButton';
 import './Agenda.css';
 import '../../index.css';
 import EditIcon from '../../assets/svg/lapiz.svg';
 import TrashIcon from '../../assets/svg/lixo.svg';
 
+// ===================================================================
+// IMPORT DA REQUISIÇÃO (SEGUNDA ETAPA: ANIVERSARIANTES)
+// ===================================================================
+import { 
+    listarAtendimentosPorMesEAno,
+    listarAniversariantesDoMes // CORRIGIDO O NOME DO IMPORT
+} from './Agenda.js'; 
+
 
 // ===================================================================
-// DADOS MOCK
+// DADOS / COLUNAS
 // ===================================================================
-
-const atendimentosDoMes = [
-    { nome: 'Davidson Mendes', dia: '09/06/2025', horario: '15:00', status: 'Agendado', editar: EditIcon, excluir: TrashIcon },
-    { nome: 'Gabriel Cordeiro', dia: '12/06/2025', horario: '12:00', status: 'Agendado', editar: EditIcon, excluir: TrashIcon },
-    { nome: 'Luiz Gustavo', dia: '12/06/2025', horario: '15:00', status: 'Agendado', editar: EditIcon, excluir: TrashIcon },
-    { nome: 'Márcio Ribeiro', dia: '13/10/2025', horario: '09:45', status: 'Agendado', editar: EditIcon, excluir: TrashIcon },
-    { nome: 'Isabel C. Oliveira', dia: '14/06/2025', horario: '11:00', status: 'Agendado', editar: EditIcon, excluir: TrashIcon },
-    { nome: 'Isabel C. Oliveira', dia: '14/06/2025', horario: '11:00', status: 'Agendado', editar: EditIcon, excluir: TrashIcon },
-    { nome: 'Novo Cliente', dia: '15/10/2025', horario: '10:00', status: 'Agendado', editar: EditIcon, excluir: TrashIcon },
-];
-
 const colunasAtendimentoAgenda = [
     { key: 'checkbox', titulo: '' },
     { key: 'nome', titulo: 'Nome' },
@@ -33,94 +30,235 @@ const colunasAtendimentoAgenda = [
     { key: 'excluir', titulo: 'Excluir' },
 ];
 
-const aniversariantesDoMesMOCK = [
-    { nome: 'Davidson Mendes', dia: '09/06/2025' },
-    { nome: 'João Matos', dia: '10/06/2025' },
-    { nome: 'Lilian Medeiros', dia: '16/06/2025' },
-    { nome: 'Márcio Ribeiro', dia: '13/10/2025' }, // Aniversário em Outubro
-    { nome: 'William Ferreira', dia: '23/06/2025' },
-    { nome: 'Cesar Sampaio', dia: '24/06/2025' },
-];
-
 const colunasAniversarioAgenda = [
     { key: 'nome', titulo: 'Nome' },
     { key: 'dia', titulo: 'Dia' },
 ];
 
-// Função utilitária para converter D/M/Y para timestamp
-const parseDMY = (str) => {
-    if (!str) return 0;
-    const [d, m, y] = String(str).split('/').map(Number);
-    return new Date(y, (m || 1) - 1, d || 1); // Retorna objeto Date
-};
+// Funções utilitárias
+const formatarDataHora = (isoString) => {
+    if (!isoString) return { dia: '', horario: '' };
+    try {
+        const date = new Date(isoString);
+        const dia = String(date.getDate()).padStart(2, '0');
+        const mes = String(date.getMonth() + 1).padStart(2, '0');
+        const ano = date.getFullYear();
+        const hora = String(date.getHours()).padStart(2, '0');
+        const minuto = String(date.getMinutes()).padStart(2, '0');
+
+        return {
+            dia: `${dia}/${mes}/${ano}`,
+            horario: `${hora}:${minuto}`,
+            dataCompleta: date
+        };
+    } catch (e) {
+        console.error("Erro ao formatar data:", isoString, e);
+        return { dia: 'Erro', horario: 'Erro', dataCompleta: null };
+    }
+}
 
 
 const Agenda = () => {
-    // Estado que armazena o mês/ano selecionado para filtragem. Inicializa com a data atual.
+    // ATENDIMENTOS
+    const [atendimentosBrutos, setAtendimentosBrutos] = useState([]);
+    const [loadingAtendimentos, setLoadingAtendimentos] = useState(false);
+    const [erroAtendimentos, setErroAtendimentos] = useState(null);
+
+    // ANIVERSARIANTES
+    const [aniversariantesBrutos, setAniversariantesBrutos] = useState([]);
+    const [loadingAniversariantes, setLoadingAniversariantes] = useState(false);
+    const [erroAniversariantes, setErroAniversariantes] = useState(null);
+
+    // filtro de mês/ano
     const [currentFilterDate, setCurrentFilterDate] = useState(new Date());
-
-    // Função callback chamada pelo MonthPickerButton quando um novo mês é confirmado
-    const handleMonthChange = (newDate) => {
-        setCurrentFilterDate(newDate);
-    };
+    const handleMonthChange = (newDate) => setCurrentFilterDate(newDate);
 
     // ===================================================================
-    // FILTRAGEM E ORDENAÇÃO DE DADOS
+    // EFEITO 1: CARREGAMENTO DOS ATENDIMENTOS
     // ===================================================================
+    useEffect(() => {
+        const fetchAtendimentos = async () => {
+            setLoadingAtendimentos(true);
+            setErroAtendimentos(null);
 
-    // Filtra os atendimentos para exibir apenas o mês selecionado
-    const atendimentosFiltrados = useMemo(() => {
-        const filterMonth = currentFilterDate.getMonth();
-        const filterYear = currentFilterDate.getFullYear();
+            const ano = currentFilterDate.getFullYear();
+            const mes = currentFilterDate.getMonth() + 1;
 
-        // 1. Filtra
-        const filtered = atendimentosDoMes.filter(atendimento => {
-            const atendimentoDate = parseDMY(atendimento.dia);
-            return (
-                atendimentoDate.getMonth() === filterMonth &&
-                atendimentoDate.getFullYear() === filterYear
-            );
-        });
+            try {
+                const res = await listarAtendimentosPorMesEAno(ano, mes);
+                if (res.status === 204) {
+                    setAtendimentosBrutos([]);
+                } else {
+                    setAtendimentosBrutos(res.data || []);
+                }
+            } catch (error) {
+                const message = error.response?.data?.message || "Falha ao carregar atendimentos do mês.";
+                setErroAtendimentos(message);
+                console.error("Erro ao carregar atendimentos:", error);
+            } finally {
+                setLoadingAtendimentos(false);
+            }
+        };
 
-        // 2. Ordena (por dia do mês)
-        return filtered.sort((a, b) => {
-            return parseDMY(a.dia).getDate() - parseDMY(b.dia).getDate();
-        });
+        fetchAtendimentos();
     }, [currentFilterDate]);
 
 
-    // Filtra os aniversariantes para exibir apenas o mês selecionado
+    // ===================================================================
+    // EFEITO 2: CARREGAMENTO DOS ANIVERSARIANTES
+    // ===================================================================
+    useEffect(() => {
+        const fetchAniversariantes = async () => {
+            setLoadingAniversariantes(true);
+            setErroAniversariantes(null);
+
+            try {
+                const res = await listarAniversariantesDoMes(); // GET /clientes/aniversariantes-do-mes
+                if (res.status === 204) {
+                    setAniversariantesBrutos([]);
+                } else {
+                    setAniversariantesBrutos(res.data || []);
+                }
+            } catch (error) {
+                const message = error.response?.data?.message || "Falha ao carregar aniversariantes do mês.";
+                setErroAniversariantes(message);
+                console.error("Erro ao carregar aniversariantes:", error);
+            } finally {
+                setLoadingAniversariantes(false);
+            }
+        };
+
+        fetchAniversariantes();
+    }, [currentFilterDate]);
+
+
+    // ===================================================================
+    // MEMO: MAPEAR ATENDIMENTOS
+    // ===================================================================
+    const atendimentosFiltrados = useMemo(() => {
+        return atendimentosBrutos.map(item => {
+            const { dia, horario } = formatarDataHora(item.dataInicio || item.data);
+            return {
+                checkbox: item.idAtendimento ?? item.id,
+                nome: item.nomeCliente || item.nome || 'Desconhecido',
+                dia,
+                horario,
+                status: item.status || 'Agendado',
+                editar: EditIcon,
+                excluir: TrashIcon,
+                ...item
+            };
+        });
+    }, [atendimentosBrutos]);
+
+
+    // ===================================================================
+    // MEMO: MAPEAR ANIVERSARIANTES
+    // ===================================================================
     const aniversariantesFiltrados = useMemo(() => {
         const filterMonth = currentFilterDate.getMonth();
-        
-        // 1. Filtra
-        const filtered = aniversariantesDoMesMOCK.filter(aniversariante => {
-            const birthdayDate = parseDMY(aniversariante.dia);
-            // Compara apenas o mês (o ano não importa para aniversário, mas o parseDMY exige)
-            return birthdayDate.getMonth() === filterMonth;
-        });
 
-        // 2. Ordena (por dia do mês)
-        return filtered.sort((a, b) => {
-            return parseDMY(a.dia).getDate() - parseDMY(b.dia).getDate();
-        });
+        const isPessoaFisica = (item) => {
+            // Normaliza campos de documento (cpf/cnpj/documento)
+            const rawDoc = String(item.cpf || item.cnpj || item.documento || item.documentoFiscal || '').replace(/\D/g, '');
+            // Se existir campo tipoPessoa use-o (PF = pessoa física, PJ = pessoa jurídica)
+            if (item.tipoPessoa) {
+                const t = String(item.tipoPessoa).toLowerCase();
+                if (t === 'j' || t === 'pj') return false;
+                if (t === 'f' || t === 'pf') return true;
+            }
+            // CNPJ tem 14 dígitos => empresa (excluir)
+            if (rawDoc.length === 14) return false;
+            // CPF tem 11 dígitos => pessoa física (incluir)
+            if (rawDoc.length === 11) return true;
+            // Fallback: se existir campo 'cnpj' explicitamente, trata como empresa
+            if (item.cnpj) return false;
+            // Caso não seja possível determinar, assume pessoa física
+            return true;
+        };
 
-    }, [currentFilterDate]);
+        const mapped = (aniversariantesBrutos || [])
+            // 1) Excluir empresas (CNPJ) e manter apenas pessoas físicas (CPF)
+            .filter(isPessoaFisica)
+            // 2) Mapear para o formato esperado pela Listagem
+            .map(item => {
+                const dataAniversario = item.dataNascimento || item.dataAniversario || item.dataCriacao || null;
+                const date = dataAniversario ? new Date(dataAniversario) : null;
+                const dia = date ? String(date.getDate()).padStart(2, '0') : '--';
+                const mes = date ? String(date.getMonth() + 1).padStart(2, '0') : '--';
+
+                return {
+                    nome: item.nome || item.nomeCliente || 'Nome Indisponível',
+                    dia: date ? `${dia}/${mes}` : 'Data Indisponível',
+                    dataObj: date,
+                    ...item
+                };
+            })
+            // 3) Filtrar pelo mês selecionado (se a API não retornar já filtrado)
+            .filter(aniversariante => {
+                if (!aniversariante.dataObj) return false;
+                return aniversariante.dataObj.getMonth() === filterMonth;
+            })
+            // 4) Ordenar por dia do mês
+            .sort((a, b) => {
+                const [dA] = a.dia.split('/').map(Number);
+                const [dB] = b.dia.split('/').map(Number);
+                return dA - dB;
+            });
+
+        return mapped;
+    }, [aniversariantesBrutos, currentFilterDate]);
+
+
+
+    // Render helpers
+    const renderAtendimentosList = () => {
+        if (loadingAtendimentos) return <p className="loading-message">Carregando atendimentos...</p>;
+        if (erroAtendimentos) return <p className="error-message">{erroAtendimentos}</p>;
+        if (!atendimentosFiltrados || atendimentosFiltrados.length === 0) {
+            const nomeMes = currentFilterDate.toLocaleString('pt-BR', { month: 'long', year: 'numeric' });
+            return <p className="no-data-message">Nenhum atendimento agendado para {nomeMes}.</p>;
+        }
+
+        return (
+            <Listagem
+                dados={atendimentosFiltrados}
+                colunas={colunasAtendimentoAgenda}
+                id="atendimento-list"
+                isFullTable
+            />
+        );
+    };
+
+    const renderAniversariantesList = () => {
+        if (loadingAniversariantes) return <p className="loading-message">Carregando aniversariantes...</p>;
+        if (erroAniversariantes) return <p className="error-message">{erroAniversariantes}</p>;
+        if (!aniversariantesFiltrados || aniversariantesFiltrados.length === 0) {
+            const nomeMes = currentFilterDate.toLocaleString('pt-BR', { month: 'long' });
+            return <p className="no-data-message">Nenhum aniversariante em {nomeMes}.</p>;
+        }
+
+        return (
+            <Listagem
+                dados={aniversariantesFiltrados}
+                colunas={colunasAniversarioAgenda}
+                id="agenda-birthdays-list"
+            />
+        );
+    };
 
 
     return (
         <div className="agenda-container">
-            {/* Note: O Sidebar provavelmente precisa receber 'isAdmin' do seu estado global de login */}
-            <Sidebar nomeCompleto="Lismara Ribeiro" /> 
+            {/* <Sidebar nomeCompleto="Lismara Ribeiro" /> */}
             <main className="main-content agenda-page">
                 <header className="agenda-header">
                     <h1>Agenda & Relacionamento</h1>
-                    <Button /> {/* Botão 'Novo Cliente' ou similar */}
+                    <Button />
                 </header>
 
                 <div className="agenda-layout-grid">
                     <div className="month-selector">
-                        {/* NOVO COMPONENTE INTEGRADO */}
                         <MonthPickerButton onMonthChange={handleMonthChange} />
                     </div>
 
@@ -139,12 +277,7 @@ const Agenda = () => {
                             </div>
 
                             <div className="agenda-listagem-container">
-                                <Listagem
-                                    dados={atendimentosFiltrados} // <-- USA DADOS FILTRADOS
-                                    colunas={colunasAtendimentoAgenda}
-                                    id="atendimento-list"
-                                    isFullTable
-                                />
+                                {renderAtendimentosList()}
                             </div>
                         </div>
 
@@ -156,11 +289,7 @@ const Agenda = () => {
                                 </div>
 
                                 <div className="agenda-listagem-container">
-                                    <Listagem
-                                        dados={aniversariantesFiltrados} // <-- USA DADOS FILTRADOS
-                                        colunas={colunasAniversarioAgenda}
-                                        id="agenda-birthdays-list"
-                                    />
+                                    {renderAniversariantesList()}
                                 </div>
                             </div>
                         </aside>
