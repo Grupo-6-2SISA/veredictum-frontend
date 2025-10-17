@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import Sidebar from '../../components/Sidebar/Sidebar';
-import Modal from '../../components/Modal/Modal';
+import Modal from '../../components/Modal_P/Modal_P';
 import './NotasFiscais.css';
 import { 
   getNotasFiscais, 
@@ -96,6 +96,18 @@ const NotasFiscais = () => {
       isEmitida: formData.get('emitida') === 'true' ? 1 : 0
     };
 
+    // Validação: não permitir número duplicado
+    const novoNumero = (notaFiscalData.numero || '').toString().trim().toLowerCase();
+    const duplicada = notasFiscaisData.some(n => {
+      const existente = (n.numero || n.numeroNota || '').toString().trim().toLowerCase();
+      return existente && existente === novoNumero;
+    });
+
+    if (duplicada) {
+      alert('Já existe uma nota fiscal cadastrada com este número. Escolha outro número.');
+      return;
+    }
+
     try {
       const response = await createNotaFiscal(notaFiscalData, 1);
       setNotasFiscaisData(prev => [...prev, response.data]);
@@ -148,6 +160,19 @@ const NotasFiscais = () => {
       urlNuvem: formData.get('urlCloud') || '',
       isEmitida: formData.get('emitida') === 'true' ? 1 : 0
     };
+
+    // Validação: não permitir número duplicado (exceto se for a própria nota)
+    const novoNumeroEdit = (updatedData.numero || '').toString().trim().toLowerCase();
+    const duplicadaEdit = notasFiscaisData.some(n => {
+      const existente = (n.numero || n.numeroNota || '').toString().trim().toLowerCase();
+      const idAtual = getNormalizedId(n);
+      return existente && existente === novoNumeroEdit && idAtual != notaId;
+    });
+
+    if (duplicadaEdit) {
+      alert('Já existe outra nota fiscal com esse número.');
+      return;
+    }
 
     try {
       await updateNotaFiscal(notaId, updatedData);

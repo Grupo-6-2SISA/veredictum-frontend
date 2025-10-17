@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import './Modal.css';
+import './Modal_P.css';
 import closeIcon from '../../assets/svg/close.svg';
 import closeBlackIcon from '../../assets/svg/close_black.svg';
 
