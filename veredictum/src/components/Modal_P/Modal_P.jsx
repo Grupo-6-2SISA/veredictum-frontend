@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import PropTypes from 'prop-types';
 import './Modal_P.css';
 import closeIcon from '../../assets/svg/close.svg';
@@ -18,8 +18,18 @@ function Modal({
     return null;
   }
 
+  // evita scroll do body quando o modal está aberto
+  useEffect(() => {
+    const prev = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
+    return () => {
+      document.body.style.overflow = prev || '';
+    };
+  }, []); // roda apenas enquanto o modal estiver montado
+
   const isDelete = variant === 'delete';
-  const backdropClass = `modal-backdrop-${variant}`;
+  // CLASSE RENOMEADA: modal-backdrop -> modal-backdrop_P
+  const backdropClass = `modal-backdrop_P-${variant}`;
   const CloseButtonIcon = isDelete ? closeBlackIcon : closeIcon;
 
   const handleBackdropClick = (e) => {
@@ -32,13 +42,17 @@ function Modal({
   if (formProps) {
     return (
       <>
+        {/* CLASSE RENOMEADA: backdropClass agora é modal-backdrop_P-[variant] */}
         <div className={backdropClass} onClick={handleBackdropClick}></div>
-        <div id={modalId}>
-          <div className="modal-header">
+        {/* Adicionado o sufixo _P ao id principal, caso queira estilizar com ele */}
+        <div id={modalId} className="modal_P">
+          {/* CLASSE RENOMEADA: modal-header -> modal-header_P */}
+          <div className="modal-header_P">
             <h2>{title}</h2>
             <button
               type="button"
-              className={isDelete ? 'modal-close-delete-btn' : 'modal-close-btn'}
+              // CLASSES RENOMEADAS: modal-close-delete-btn_P e modal-close-btn_P
+              className={isDelete ? 'modal-close-delete-btn_P' : 'modal-close-btn_P'}
               onClick={onClose}
             >
               {CloseButtonIcon ? <img src={CloseButtonIcon} alt="Fechar" /> : '×'}
@@ -46,7 +60,8 @@ function Modal({
           </div>
 
           <form {...formProps}>
-            <div className="modal-body">{children}</div>
+            {/* CLASSE RENOMEADA: modal-body -> modal-body_P */}
+            <div className="modal-body_P">{children}</div>
             {footer}
           </form>
         </div>
@@ -57,20 +72,25 @@ function Modal({
   // Se não é formulário, estrutura normal
   return (
     <>
+      {/* CLASSE RENOMEADA: backdropClass agora é modal-backdrop_P-[variant] */}
       <div className={backdropClass} onClick={handleBackdropClick}></div>
-      <div id={modalId}>
-        <div className="modal-header">
+      {/* Adicionado o sufixo _P ao id principal, caso queira estilizar com ele */}
+      <div id={modalId} className="modal_P">
+        {/* CLASSE RENOMEADA: modal-header -> modal-header_P */}
+        <div className="modal-header_P">
           <h2>{title}</h2>
           <button
             type="button"
-            className={isDelete ? 'modal-close-delete-btn' : 'modal-close-btn'}
+            // CLASSES RENOMEADAS: modal-close-delete-btn_P e modal-close-btn_P
+            className={isDelete ? 'modal-close-delete-btn_P' : 'modal-close-btn_P'}
             onClick={onClose}
           >
             {CloseButtonIcon ? <img src={CloseButtonIcon} alt="Fechar" /> : '×'}
           </button>
         </div>
 
-        <div className="modal-body">{children}</div>
+        {/* CLASSE RENOMEADA: modal-body -> modal-body_P */}
+        <div className="modal-body_P">{children}</div>
 
         {footer}
       </div>

@@ -11,7 +11,7 @@ const navItems = [
     { name: 'Agenda & Relacionamento', iconPath: 'src/assets/svg/agenda.svg', path: '/Agenda', iconClass: 'icon_agenda' },
     { name: 'Gestão de Despesas', iconPath: 'src/assets/svg/despezas.svg', path: '/GestaoDespesas', iconClass: 'icon_notas' },
     { name: 'Gestão de Notas Fiscais', iconPath: 'src/assets/svg/notas_fiscais.svg', path: '/NotasFiscais', iconClass: 'icon_notas' },
-    { name: 'Gestão de Logs', iconPath: 'src/assets/svg/logs.svg', path: '/logs', iconClass: 'icon_logs', adminOnly: true },
+    { name: 'Gestão de Logs', iconPath: 'src/assets/svg/logs.svg', path: '/logs', iconClass: 'icon_logs' },
 ];
 
 const Sidebar = () => {
@@ -112,7 +112,7 @@ const Sidebar = () => {
             </nav>
 
             <div className="sidebar-footer">
-                <a href="/home">
+                <a href="/">
                     <img src="src/assets/svg/exit.svg" className="icon_exit" alt="Sair" />
                     <span className="menu-text">Sair</span>
                 </a>

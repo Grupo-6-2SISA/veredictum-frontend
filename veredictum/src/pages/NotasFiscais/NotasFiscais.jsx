@@ -2,10 +2,10 @@ import React, { useState, useEffect } from 'react';
 import Sidebar from '../../components/Sidebar/Sidebar';
 import Modal from '../../components/Modal_P/Modal_P';
 import './NotasFiscais.css';
-import { 
-  getNotasFiscais, 
-  createNotaFiscal, 
-  updateNotaFiscal, 
+import {
+  getNotasFiscais,
+  createNotaFiscal,
+  updateNotaFiscal,
   deleteNotaFiscal,
   getClientes
 } from './NotasFiscais';
@@ -23,7 +23,7 @@ const NotasFiscais = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  const getEmitidaText = (isEmitida) => 
+  const getEmitidaText = (isEmitida) =>
     (isEmitida === 1 || isEmitida === "1" || isEmitida === true || isEmitida === "true") ? 'Sim' : 'Não';
 
   const formatDateForDisplay = (dateString) => {
@@ -84,7 +84,7 @@ const NotasFiscais = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     const formData = new FormData(e.target);
-    
+
     const notaFiscalData = {
       numero: formData.get('numeroNota'),
       fkCliente: parseInt(formData.get('cliente')),
@@ -125,7 +125,7 @@ const NotasFiscais = () => {
       alert('Erro: ID da nota fiscal não encontrado');
       return;
     }
-    
+
     setEditingNota({
       id_nota_fiscal: notaId,
       numero: nota.numero || nota.numeroNota,
@@ -144,12 +144,12 @@ const NotasFiscais = () => {
     e.preventDefault();
     const formData = new FormData(e.target);
     const notaId = editingNota?.id_nota_fiscal;
-    
+
     if (!notaId || !formData.get('cliente')) {
       alert('Erro: Dados obrigatórios não preenchidos');
       return;
     }
-    
+
     const updatedData = {
       numero: formData.get('numeroNota'),
       fkCliente: parseInt(formData.get('cliente')),
@@ -176,8 +176,8 @@ const NotasFiscais = () => {
 
     try {
       await updateNotaFiscal(notaId, updatedData);
-      
-      setNotasFiscaisData(prev => 
+
+      setNotasFiscaisData(prev =>
         prev.map(nota => getNormalizedId(nota) == notaId ? {
           ...nota,
           ...updatedData,
@@ -187,7 +187,7 @@ const NotasFiscais = () => {
           is_emitida: updatedData.isEmitida
         } : nota)
       );
-      
+
       alert('Nota fiscal editada com sucesso!');
       closeEditModal();
     } catch (err) {
@@ -210,7 +210,7 @@ const NotasFiscais = () => {
       setNotasFiscaisData(prev => prev.filter(item => getNormalizedId(item) != notaId));
       alert('Nota fiscal excluída com sucesso!');
     } catch (err) {
-      const message = err.response?.status === 409 
+      const message = err.response?.status === 409
         ? 'Não é possível excluir esta nota fiscal pois existem registros dependentes.'
         : 'Erro ao excluir nota fiscal: ' + (err.response?.data?.message || err.message);
       alert(message);
@@ -219,14 +219,14 @@ const NotasFiscais = () => {
 
   const confirmDelete = async () => {
     if (!deletingNota) return;
-    
+
     try {
       await deleteNotaFiscal(deletingNota.id_nota_fiscal);
       setNotasFiscaisData(prev => prev.filter(item => getNormalizedId(item) != deletingNota.id_nota_fiscal));
       alert('Nota fiscal excluída com sucesso!');
       closeDeleteModal();
     } catch (err) {
-      const message = err.response?.status === 409 
+      const message = err.response?.status === 409
         ? 'Não é possível excluir esta nota fiscal pois existem registros dependentes.'
         : 'Erro ao excluir nota fiscal: ' + (err.response?.data?.message || err.message);
       alert(message);
@@ -252,10 +252,10 @@ const NotasFiscais = () => {
     return dateString;
   };
 
-  const getEmitidaValue = (isEmitida) => 
+  const getEmitidaValue = (isEmitida) =>
     (isEmitida === 1 || isEmitida === "1" || isEmitida === true || isEmitida === "true") ? 'true' : 'false';
 
-  const renderClienteOptions = () => 
+  const renderClienteOptions = () =>
     clientesData.map((cliente, index) => {
       const clienteId = cliente.id_cliente || cliente.id;
       const clienteNome = cliente.nome || cliente.nomeCliente || cliente.name || `Cliente ${index + 1}`;
@@ -276,9 +276,9 @@ const NotasFiscais = () => {
   return (
     <div className="notas-fiscais-container">
       <Sidebar />
-      
+
       <div className="notas-fiscais-content">
-        <div className="header-top">
+        <div className="header-top-nf">
           <div className="head-description">
             <div className="div_topo">
               <h1>Gestão de Notas Fiscais</h1>
@@ -298,7 +298,7 @@ const NotasFiscais = () => {
             <div className="card-header">
               <h2>Lista de Notas Fiscais</h2>
             </div>
-            
+
             <div className="card-content">
               <div className="list-header-nf">
                 <p>Número</p>
@@ -317,7 +317,7 @@ const NotasFiscais = () => {
               ) : error ? (
                 <div style={{ padding: '40px', textAlign: 'center', color: 'red' }}>
                   <p>{error}</p>
-                  <button onClick={loadNotasFiscais} style={{ 
+                  <button onClick={loadNotasFiscais} style={{
                     padding: '10px 20px', marginTop: '10px', background: 'var(--darkness-black)',
                     color: 'white', border: 'none', borderRadius: '4px', cursor: 'pointer'
                   }}>
@@ -333,22 +333,23 @@ const NotasFiscais = () => {
                   {notasFiscaisData.map((nota, index) => {
                     const notaId = getNormalizedId(nota);
                     const emitidaText = getEmitidaText(nota.is_emitida);
-                    
+
                     return (
                       <div key={notaId || index} className="nf-list-item">
                         <p>{nota.numero}</p>
-                        <p>{nota.etiqueta}</p>
+
+                        <p className="nf-etiqueta" title={nota.etiqueta}>{nota.etiqueta}</p>
                         <p>{formatDateForDisplay(nota.dataVencimento)}</p>
-                        <p style={{ 
-                          color: emitidaText === 'Sim' ? 'green' : 'red', 
-                          fontWeight: 'bold' 
+                        <p style={{
+                          color: emitidaText === 'Sim' ? 'green' : 'red',
+                          fontWeight: 'bold'
                         }}>
                           {emitidaText}
                         </p>
                         <img src="src/assets/svg/edit.svg" alt="Editar" onClick={() => handleEdit(nota)} />
                         <img src="src/assets/svg/lixo.svg" alt="Excluir" onClick={() => handleDelete(nota)} />
-                        <a 
-                          href="#" 
+                        <a
+                          href="#"
                           onClick={(e) => { e.preventDefault(); handleViewInfo(nota); }}
                           style={{ color: 'black', textDecoration: 'underline' }}
                         >
@@ -372,7 +373,7 @@ const NotasFiscais = () => {
           modalId="new-appointment-modal-add-note"
           formProps={{
             onSubmit: handleSubmit,
-            className: "appointment-form"
+            className: "appointment-form_P"
           }}
         >
           <div className="form-row">
@@ -386,7 +387,7 @@ const NotasFiscais = () => {
               </select>
             </FormField>
           </div>
-          
+
           <div className="form-row">
             <FormField label="Etiqueta" htmlFor="etiqueta">
               <input type="text" id="etiqueta" name="etiqueta" placeholder="Ex: Vendas" required />
@@ -395,7 +396,7 @@ const NotasFiscais = () => {
               <input type="number" step="0.01" id="valor" name="valor" placeholder="0.00" required />
             </FormField>
           </div>
-          
+
           <div className="form-row">
             <FormField label="Data de Vencimento" htmlFor="dataVencimento">
               <input type="date" id="dataVencimento" name="dataVencimento" required />
@@ -408,7 +409,7 @@ const NotasFiscais = () => {
               </select>
             </FormField>
           </div>
-          
+
           <div className="form-row">
             <FormField label="URL na Nuvem" htmlFor="urlCloud">
               <input type="url" id="urlCloud" name="urlCloud" placeholder="https://..." />
@@ -419,7 +420,7 @@ const NotasFiscais = () => {
           </div>
 
           <div className="form-footer-notas">
-            <button type="submit" className="btn-new-appointment">
+            <button type="submit" className="btn-new-appointment_P">
               Salvar Nota Fiscal
             </button>
           </div>
@@ -450,7 +451,7 @@ const NotasFiscais = () => {
                   </select>
                 </FormField>
               </div>
-              
+
               <div className="form-row">
                 <FormField label="Etiqueta" htmlFor="etiquetaEdit">
                   <input type="text" id="etiquetaEdit" name="etiqueta" defaultValue={editingNota.etiqueta || ''} required />
@@ -459,7 +460,7 @@ const NotasFiscais = () => {
                   <input type="number" step="0.01" id="valorEdit" name="valor" defaultValue={editingNota.valor || ''} required />
                 </FormField>
               </div>
-              
+
               <div className="form-row">
                 <FormField label="Data de Vencimento" htmlFor="dataVencimentoEdit">
                   <input type="date" id="dataVencimentoEdit" name="dataVencimento" defaultValue={formatDateForInput(editingNota.dataVencimento)} required />
@@ -472,7 +473,7 @@ const NotasFiscais = () => {
                   </select>
                 </FormField>
               </div>
-              
+
               <div className="form-row">
                 <FormField label="URL na Nuvem" htmlFor="urlCloudEdit">
                   <input type="url" id="urlCloudEdit" name="urlCloud" defaultValue={editingNota.url_nuvem || ''} />
@@ -483,7 +484,7 @@ const NotasFiscais = () => {
               </div>
 
               <div className="form-footer-notas">
-                <button type="button" className="btn-new-appointment" onClick={closeEditModal} style={{background: '#666'}}>
+                <button type="button" className="btn-new-appointment" onClick={closeEditModal} style={{ background: '#666' }}>
                   Cancelar
                 </button>
                 <button type="submit" className="btn-new-appointment">
@@ -519,7 +520,7 @@ const NotasFiscais = () => {
                   <div className="info-display">{getClienteNome(viewingNota.fk_cliente)}</div>
                 </FormField>
               </div>
-              
+
               <div className="form-row">
                 <FormField label="Etiqueta">
                   <div className="info-display">{viewingNota.etiqueta}</div>
@@ -528,7 +529,7 @@ const NotasFiscais = () => {
                   <div className="info-display">R$ {viewingNota.valor}</div>
                 </FormField>
               </div>
-              
+
               <div className="form-row">
                 <FormField label="Data de Vencimento">
                   <div className="info-display">{formatDateForDisplay(viewingNota.dataVencimento)}</div>
@@ -537,7 +538,7 @@ const NotasFiscais = () => {
                   <div className="info-display">{getEmitidaText(viewingNota.is_emitida)}</div>
                 </FormField>
               </div>
-              
+
               <div className="form-row">
                 <FormField label="URL na Nuvem">
                   <div className="info-display">

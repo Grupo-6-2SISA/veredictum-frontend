@@ -11,11 +11,11 @@
     --gray-3: #939393;
 }
 
-/* Fundo escuro que cobre a tela */
-.modal-backdrop-add,
-.modal-backdrop-edit,
-.modal-backdrop-view,
-.modal-backdrop-delete {
+/* Fundo escuro que cobre a tela (Backdrop) */
+.modal-backdrop_P-add,
+.modal-backdrop_P-edit,
+.modal-backdrop_P-view,
+.modal-backdrop_P-delete {
     position: fixed;
     top: 0;
     left: 0;
@@ -25,76 +25,81 @@
     z-index: 4;
 }
 
-/* Estilos para o modal de Adicionar Nota Fiscal */
-#new-appointment-modal-add-note {
+/* CONTAINER PRINCIPAL DO MODAL (Classe adicionada no JS) */
+.modal_P {
     position: fixed;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    background-color: var(--light-black);
+    background-color: var(--light-black); /* Cor de fundo padrão (será sobrescrita pelos IDs) */
     border-radius: 12px;
     box-shadow: 0 6px 30px rgba(0, 0, 0, 0.45);
     width: 98vw;
     max-width: 1200px;
-    max-height: 95vh;
+    max-height: 90vh; /* menor para dar margem */
     z-index: 1005;
+    overflow: hidden; /* evita barra no container principal */
+    -webkit-overflow-scrolling: touch;
 }
 
-/* Estilos para o modal de Editar Nota Fiscal */
-#new-appointment-modal-edit-note {
-    position: fixed;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    background-color: var(--light-black);
-    border-radius: 12px;
-    box-shadow: 0 6px 30px rgba(0, 0, 0, 0.45);
-    width: 98vw;
-    max-width: 1200px;
-    max-height: 95vh;
-    z-index: 1005;
+/* Área rolável interna do modal - permite scroll sem exibir barra */
+.modal-body_P {
+    padding: 25px;
+    max-height: calc(90vh - 72px); /* ajuste conforme header/footer */
+    overflow: auto;
+    -ms-overflow-style: none; /* IE/Edge - esconde scrollbar */
+    scrollbar-width: none;    /* Firefox - esconde scrollbar */
 }
 
-/* Estilos para o modal de Informações da Nota Fiscal */
+/* Esconder scrollbar em WebKit (Chrome, Safari, Opera) */
+.modal-body_P::-webkit-scrollbar {
+    width: 0;
+    height: 0;
+    display: none;
+}
+
+/* Impede scroll chaining quando se alcança topo/fim do conteúdo */
+.modal-backdrop_P-add,
+.modal-backdrop_P-edit,
+.modal-backdrop_P-view,
+.modal-backdrop_P-delete,
+.modal_P {
+  overscroll-behavior: contain;
+}
+
+/* Estilos para o modal de Adicionar Nota Fiscal (Ajustado para usar a classe .modal_P) */
+#new-appointment-modal-add-note,
+#new-appointment-modal-edit-note,
 #new-appointment-modal-view-note {
-    position: fixed;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    background-color: var(--light-black);
-    border-radius: 12px;
-    box-shadow: 0 6px 30px rgba(0, 0, 0, 0.45);
+    background-color: var(--light-black); /* Mantém fundo escuro */
     width: 98vw;
     max-width: 1200px;
     max-height: 95vh;
     z-index: 1005;
+    /* Remoção de position/transform/box-shadow/border-radius se usar .modal_P */
 }
 
-/* Estilos para o modal de confirmação de exclusão */
+/* Estilos para o modal de confirmação de exclusão (Ajustado para usar a classe .modal_P) */
 #modal-delete-note {
-    position: fixed;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
     background-color: var(--white-dark);
-    border-radius: 12px;
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.373);
     width: 500px;
     max-width: 90%;
     z-index: 1000;
+    /* Remoção de position/transform/box-shadow/border-radius se usar .modal_P */
 }
 
 /* Cabeçalho do modal */
-.modal-header {
+.modal-header_P {
     display: flex;
     justify-content: center;
     align-items: center;
     padding: 20px 25px;
     position: relative;
-    background: transparent; /* remove fundo branco */
+    background: transparent;
 }
 
-.modal-header h2 {
+.modal-header_P h2 {
     margin: 0;
     font-size: 2rem;
     font-weight: 700;
@@ -102,25 +107,25 @@
 }
 
 /* Garantir que os títulos dos modais add/edit/view fiquem brancos e sem fundo preto */
-#new-appointment-modal-add-note .modal-header,
-#new-appointment-modal-edit-note .modal-header,
-#new-appointment-modal-view-note .modal-header {
+#new-appointment-modal-add-note .modal-header_P,
+#new-appointment-modal-edit-note .modal-header_P,
+#new-appointment-modal-view-note .modal-header_P {
     background: transparent !important;
 }
 
-#new-appointment-modal-add-note .modal-header h2,
-#new-appointment-modal-edit-note .modal-header h2,
-#new-appointment-modal-view-note .modal-header h2 {
+#new-appointment-modal-add-note .modal-header_P h2,
+#new-appointment-modal-edit-note .modal-header_P h2,
+#new-appointment-modal-view-note .modal-header_P h2 {
     color: var(--white-normal) !important;
 }
 
-#modal-delete-note .modal-header h2 {
+#modal-delete-note .modal-header_P h2 {
     font-size: 1.5rem;
     color: var(--darkness-black);
 }
 
-.modal-close-btn,
-.modal-close-delete-btn {
+.modal-close-btn_P,
+.modal-close-delete-btn_P {
     background: none;
     border: none;
     cursor: pointer;
@@ -130,32 +135,27 @@
 }
 
 /* Corpo do modal (sem rolagem interna) */
-.modal {
-    overflow-y: auto; /* o wrapper rola quando o conteúdo excede a viewport */
-    -webkit-overflow-scrolling: touch;
-}
-
-.modal-body {
+.modal-body_P {
     padding: 25px;
-    max-height: none; /* não limitar a altura aqui para evitar scroll interno */
-    overflow: visible; /* permitir que o wrapper lide com a rolagem */
+    max-height: none;
+    overflow: visible;
 }
 
 /* Corpo do formulário */
-.appointment-form {
+.appointment-form_P { /* Mantido se for uma classe genérica de form, senão mude para .appointment-form_P */
     padding: 0;
     display: flex;
     flex-direction: column;
     gap: 20px;
 }
 
-.form-row {
+.form-row { /* Mantido se for uma classe genérica de form, senão mude para .form-row_P */
     display: grid;
     grid-template-columns: repeat(2, 1fr);
     gap: 20px;
 }
 
-.form-group-notas {
+.form-group-notas { /* Mantido se for uma classe específica */
     flex: 1;
     display: flex;
     flex-direction: column;
@@ -192,7 +192,7 @@
 }
 
 /* Info Display para modais de visualização */
-.info-display {
+.info-display { /* Mantido se for uma classe específica */
     padding: 10px;
     width: 100%;
     max-width: 100%;
@@ -219,7 +219,7 @@
 }
 
 /* Rodapé do formulário */
-.form-footer-notas {
+.form-footer-notas { /* Mantido se for uma classe específica */
     display: flex;
     display: flex;
     justify-content: center;
@@ -229,30 +229,30 @@
 }
 
 /* Garantir centralização de botões quando form-footer estiver dentro de um modal */
-.modal .form-footer-notas {
+.modal_P .form-footer-notas {
     justify-content: center !important;
     padding: 16px 24px;
 }
 
 /* Modal de Delete específico */
-#modal-delete-note .modal-body {
+#modal-delete-note .modal-body_P {
     padding: 25px;
     font-size: 1.2rem;
     color: var(--darkness-black);
 }
 
-#modal-delete-note .modal-body p {
+#modal-delete-note .modal-body_P p {
     margin: 0;
 }
 
-#modal-delete-note .modal-footer {
+#modal-delete-note .modal-footer { /* Mantido se for uma classe específica */
     display: flex;
     justify-content: flex-end;
     gap: 10px;
     padding: 20px 25px;
 }
 
-.btn-confirm-delete {
+.btn-confirm-delete { /* Mantido se for uma classe específica de botão */
     padding: 8px 15px;
     border-radius: 5px;
     cursor: pointer;
@@ -264,6 +264,7 @@
 
 /* Responsividade */
 @media (max-width: 768px) {
+    /* IDs mantidos, mas as regras de estilo de modal devem ser aplicadas em .modal_P */
     #new-appointment-modal-add-note,
     #new-appointment-modal-edit-note,
     #new-appointment-modal-view-note {
