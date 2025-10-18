@@ -1,13 +1,18 @@
 import React from 'react';
-import './Button.css'; // O CSS para o estilo do botão
+import './Button.css';
+import '../Css/Main.css';
 
-const Button = ({ onClick }) => {
-    return (
-        <button className="new-appointment-button" onClick={onClick}>
-            Novo Agendamento 
-            <span className="plus-icon">+</span>
-        </button>
-    );
-};
+function Button({ children, className = '', ...props }) {
+  const classes = ['btn-component'];
+  if (className) {
+    classes.push(className);
+  }
+
+  return (
+    <button className={classes.join(' ')} {...props}>
+      {children}
+    </button>
+  );
+}
 
 export default Button;

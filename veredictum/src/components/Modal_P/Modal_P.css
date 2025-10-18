@@ -1,0 +1,284 @@
+@import url('../Css/Color.css');
+
+/* Variáveis adicionais */
+:root {
+    --white-normal: #ffffff;
+    --white-light: #f8f9fa;
+    --white-darknes: #f5f5f5;
+    --normal-black-strong: #2c2c2c;
+    --light-black: #2c2c2c;
+    --white-dark: #f8f9fa;
+    --gray-3: #939393;
+}
+
+/* Fundo escuro que cobre a tela */
+.modal-backdrop-add,
+.modal-backdrop-edit,
+.modal-backdrop-view,
+.modal-backdrop-delete {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 4;
+}
+
+/* Estilos para o modal de Adicionar Nota Fiscal */
+#new-appointment-modal-add-note {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: var(--light-black);
+    border-radius: 12px;
+    box-shadow: 0 6px 30px rgba(0, 0, 0, 0.45);
+    width: 98vw;
+    max-width: 1200px;
+    max-height: 95vh;
+    z-index: 1005;
+}
+
+/* Estilos para o modal de Editar Nota Fiscal */
+#new-appointment-modal-edit-note {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: var(--light-black);
+    border-radius: 12px;
+    box-shadow: 0 6px 30px rgba(0, 0, 0, 0.45);
+    width: 98vw;
+    max-width: 1200px;
+    max-height: 95vh;
+    z-index: 1005;
+}
+
+/* Estilos para o modal de Informações da Nota Fiscal */
+#new-appointment-modal-view-note {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: var(--light-black);
+    border-radius: 12px;
+    box-shadow: 0 6px 30px rgba(0, 0, 0, 0.45);
+    width: 98vw;
+    max-width: 1200px;
+    max-height: 95vh;
+    z-index: 1005;
+}
+
+/* Estilos para o modal de confirmação de exclusão */
+#modal-delete-note {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: var(--white-dark);
+    border-radius: 12px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.373);
+    width: 500px;
+    max-width: 90%;
+    z-index: 1000;
+}
+
+/* Cabeçalho do modal */
+.modal-header {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px 25px;
+    position: relative;
+    background: transparent; /* remove fundo branco */
+}
+
+.modal-header h2 {
+    margin: 0;
+    font-size: 2rem;
+    font-weight: 700;
+    color: var(--white-normal);
+}
+
+/* Garantir que os títulos dos modais add/edit/view fiquem brancos e sem fundo preto */
+#new-appointment-modal-add-note .modal-header,
+#new-appointment-modal-edit-note .modal-header,
+#new-appointment-modal-view-note .modal-header {
+    background: transparent !important;
+}
+
+#new-appointment-modal-add-note .modal-header h2,
+#new-appointment-modal-edit-note .modal-header h2,
+#new-appointment-modal-view-note .modal-header h2 {
+    color: var(--white-normal) !important;
+}
+
+#modal-delete-note .modal-header h2 {
+    font-size: 1.5rem;
+    color: var(--darkness-black);
+}
+
+.modal-close-btn,
+.modal-close-delete-btn {
+    background: none;
+    border: none;
+    cursor: pointer;
+    position: absolute;
+    right: 25px;
+    font-size: 2rem;
+}
+
+/* Corpo do modal (sem rolagem interna) */
+.modal {
+    overflow-y: auto; /* o wrapper rola quando o conteúdo excede a viewport */
+    -webkit-overflow-scrolling: touch;
+}
+
+.modal-body {
+    padding: 25px;
+    max-height: none; /* não limitar a altura aqui para evitar scroll interno */
+    overflow: visible; /* permitir que o wrapper lide com a rolagem */
+}
+
+/* Corpo do formulário */
+.appointment-form {
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.form-row {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+}
+
+.form-group-notas {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+.form-group-notas label {
+    font-size: 1rem;
+    color: var(--white-normal);
+    margin-bottom: 5px;
+    font-weight: 600;
+    margin-left: 3%;
+}
+
+.form-group-notas input, 
+.form-group-notas select, 
+.form-group-notas textarea {
+    padding: 10px;
+    width: 100%;
+    max-width: 100%;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    font-size: 1rem;
+    background-color: #f9f9f9;
+    margin-left: 0;
+    margin-bottom: 10px;
+}
+
+.form-group-notas input:focus, 
+.form-group-notas select:focus, 
+.form-group-notas textarea:focus {
+    outline: none;
+    border-color: var(--gray-3);
+    box-shadow: 0 0 0 2px rgba(147, 147, 147, 0.25);
+}
+
+/* Info Display para modais de visualização */
+.info-display {
+    padding: 10px;
+    width: 100%;
+    max-width: 100%;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    font-size: 1rem;
+    background-color: #f9f9f9;
+    margin-left: 0;
+    margin-bottom: 10px;
+    color: var(--darkness-black);
+    min-height: 20px;
+    display: flex;
+    align-items: center;
+}
+
+.info-display a {
+    color: var(--darkness-black);
+    text-decoration: none;
+    font-weight: 500;
+}
+
+.info-display a:hover {
+    text-decoration: underline;
+}
+
+/* Rodapé do formulário */
+.form-footer-notas {
+    display: flex;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 5px;
+    gap: 15px;
+}
+
+/* Garantir centralização de botões quando form-footer estiver dentro de um modal */
+.modal .form-footer-notas {
+    justify-content: center !important;
+    padding: 16px 24px;
+}
+
+/* Modal de Delete específico */
+#modal-delete-note .modal-body {
+    padding: 25px;
+    font-size: 1.2rem;
+    color: var(--darkness-black);
+}
+
+#modal-delete-note .modal-body p {
+    margin: 0;
+}
+
+#modal-delete-note .modal-footer {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    padding: 20px 25px;
+}
+
+.btn-confirm-delete {
+    padding: 8px 15px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-weight: bold;
+    background-color: #f44336;
+    border: none;
+    color: var(--white-normal);
+}
+
+/* Responsividade */
+@media (max-width: 768px) {
+    #new-appointment-modal-add-note,
+    #new-appointment-modal-edit-note,
+    #new-appointment-modal-view-note {
+        width: 95%;
+        max-width: 95%;
+        left: 50%;
+    }
+    
+    .form-row {
+        grid-template-columns: 1fr;
+    }
+    
+    .form-group-notas input,
+    .form-group-notas select,
+    .info-display {
+        width: 90%;
+    }
+}
