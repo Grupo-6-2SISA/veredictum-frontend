@@ -2,6 +2,8 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Home from './pages/Home/Home.jsx';
 import Cadastro from './pages/Cadastro/Cadastro.jsx';
 import VisaoGeral from './pages/VisaoGeral/VisaoGeral.jsx';
+import PainelControle from "./pages/PainelControle/PainelControle.jsx";
+import GestaoDespesas from './pages/GestadoDespesas/GestaoDespesas.jsx';
 import NotasFiscais from './pages/NotasFiscais/NotasFiscais.jsx';
 import Clientes from './pages/Clientes/Clientes.jsx';
 import Agenda from './pages/Agenda/Agenda.jsx';
@@ -17,6 +19,8 @@ function App() {
         <Route path="/login" element={<Login />} />
         <Route path="/recuperarSenha" element={<RecuperarSenha/>} />
         <Route path="/VisaoGeral" element={<VisaoGeral />} />
+        <Route path="/painel-controle" element={<PainelControle />} />
+        <Route path="/gestao-despesas" element={<GestaoDespesas />} />
         <Route path="/NotasFiscais" element={<NotasFiscais />} />
         <Route path="/Clientes" element={<Clientes />} />
         <Route path="/Agenda" element={<Agenda />} />
