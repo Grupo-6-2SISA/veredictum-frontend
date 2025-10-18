@@ -71,6 +71,60 @@ O projeto agora está organizado em uma estrutura padrão de aplicações React 
 
 -----
 
+## 🛠️ Pré-requisitos e instalação (antes de rodar o projeto)
+
+Recomenda-se executar os passos abaixo no terminal (PowerShell/CMD) a partir da pasta raiz do projeto:
+
+1. Node.js
+   - Instalar Node.js (recomenda-se versão LTS: 16.x ou 18.x).
+   - Verifique: node -v && npm -v
+
+2. Instalar dependências do projeto
+```
+cd "c:\Users\DELL_GUUH\Downloads\veredictum-frontend\veredictum"
+npm install
+```
+
+3. Pacotes úteis (se não estiverem no package.json)
+- axios (cliente HTTP)
+```
+npm install axios
+```
+
+- prop-types (validação de props em componentes React)
+```
+npm install prop-types
+```
+
+- Tailwind CSS (opcional, caso queira usar)
+```
+npm install -D tailwindcss postcss autoprefixer
+npx tailwindcss init -p
+```
+Após gerar o arquivo de configuração, adicione em src/index.css:
+```
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+```
+
+4. Configurar variáveis de ambiente / backend
+- Certifique-se de que o backend (API) esteja rodando (por exemplo em http://localhost:8080).
+- Ajuste variáveis (se houver) em .env.local ou conforme a configuração do projeto.
+
+5. Rodar o servidor de desenvolvimento
+```
+npm run dev
+```
+
+6. Verificações rápidas
+- Abra DevTools → Network / Console para checar chamadas ao backend (rotas e CORS).
+- Confirme que sessionStorage contém chaves usadas pela aplicação (ex.: isAdmin, userName) após login.
+
+Observações:
+- Se estiver usando yarn ou pnpm, substitua os comandos npm pelos equivalentes (yarn / pnpm).
+- Para produção, siga o processo padrão de build: npm run build.
+
 ## 💻 Padrões de Código
 
 Os padrões de código se mantêm os mesmos, com uma pequena adaptação para a sintaxe do React (JSX).
@@ -103,3 +157,96 @@ O código JavaScript deve seguir o padrão `camelCase` e as convenções do Reac
 # 🚀 Padrões de Commits e GitHub
 
 A seção de padrões de commits e branches se mantém **inalterada**, pois as boas práticas de versionamento são independentes da tecnologia utilizada no projeto.
+
+## 📌 Formato do Commit
+
+```bash
+<tipo>(<escopo opcional>): <descrição curta no presente e imperativo>
+
+[Corpo opcional explicando o motivo da mudança, o que foi alterado e impactos]
+
+[Issue relacionada, se houver]
+```
+
+## 📊 Tipos de Commits (Conventional Commits)
+
+| Prefixo        | Significado                                         |
+| -------------- | --------------------------------------------------- |
+| 🎉 `feat`      | Adição de nova funcionalidade                       |
+| 🐛 `fix`       | Correção de bugs                                    |
+| 🏗️ `refactor` | Refatoração do código (sem mudar funcionalidade)    |
+| 🛠️ `chore`    | Mudanças na configuração, dependências              |
+| 🎨 `style`     | Alterações de formatação, lint, espaços, indentação |
+| 🧪 `test`      | Adição ou correção de testes                        |
+| 📖 `docs`      | Alterações na documentação                          |
+| 🔧 `ci`        | Mudanças na configuração de CI/CD                   |
+| ⚡ `perf`       | Melhorias de performance                            |
+| ⏪ `revert`     | Reversão de commit                                  |
+
+## 🏆 Exemplos de Commits Bem Escritos
+
+### ✅ Commit Simples
+
+```bash
+feat(user): adicionar validação de e-mail no cadastro
+```
+
+### 📜 Commit com Corpo Explicativo
+
+```bash
+fix(auth): corrigir erro na geração de token JWT
+
+O erro acontecia porque o tempo de expiração estava sendo passado como string 
+ao invés de um número inteiro. Agora, a conversão para `Long` foi corrigida.
+
+Fixes #42
+```
+
+### 🔄 Commit para Atualização de Dependências
+
+```bash
+chore(deps): atualizar Spring Boot para versão 3.1.0
+```
+
+# 🚦Padrão de branches
+
+| Branch                                        | Descrição                               |
+| --------------------------------------------- | --------------------------------------- |
+| 🌍 `main`                                     | versão estável do projeto.             |
+| ⚙ `develop`                                  | branch principal para desenvolvimento. |
+| 🔛 `feature/nome-da-feature`                  | novas funcionalidades.                 |
+| 🐞 `bugfix/nome-do-bug`                       | correções de bugs.                     |
+| 🔥 `hotfix/nome-do-hotfix`                    | correções urgentes na produção.        |
+| 🔖 `release/versao`                           | preparação de novas versões.          |
+
+
+
+## Criar uma nova branch
+Para criar uma nova branch e mudar para ela, use o comando:
+```bash 
+git checkout -b nome-da-branch
+```
+Ou, se você estiver usando uma versão mais recente do Git, pode usar:
+```bash
+git switch -c nome-da-branch
+```
+Exemplo: Se você quiser criar uma branch chamada feature/nova-funcionalidade:
+```bash
+git checkout -b feature/nova-funcionalidade
+```
+Ou:
+```bash
+git switch -c feature/nova-funcionalidade
+```
+Isso cria a branch e muda automaticamente para ela.
+
+## Dar push para o repositório remoto
+Depois de fazer o commit, envie (push) a nova branch para o repositório remoto com o comando:
+```bash
+git push -u origin nome-da-branch
+```
+Exemplo:
+```bash
+git push -u origin feature/nova-funcionalidade
+```
+O -u (ou --set-upstream) faz com que a branch local seja associada à branch remota, então nas próximas vezes, você pode apenas rodar git push ou git pull sem precisar especificar o nome da branch.
