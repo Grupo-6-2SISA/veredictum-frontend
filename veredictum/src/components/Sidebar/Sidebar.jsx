@@ -2,51 +2,76 @@ import React, { useState, useEffect } from 'react';
 import './Sidebar.css';
 import '../../index.css';
 
-
+// itens de navegação (use paths consistentes com o roteamento)
 const navItems = [
-    { name: 'Visão Geral', iconPath: 'src/assets/svg/visao-geral.svg', path: './visao_geral.html', iconClass: 'icon_vg' },
-    { name: 'Dashboard', iconPath: 'src/assets/svg/dash.svg', path: 'src/dashboard.html', iconClass: 'icon_dash' },
-    { name: 'Painel', iconPath: 'src/assets/svg/painel.svg', path: 'src/painel_controle.html', iconClass: 'icon_painel' },
-    { name: 'Gestão de Clientes', iconPath: 'src/assets/svg/funcionario.svg', path: 'src/clientes.html', iconClass: 'icon_funcionario' },
-    { name: 'Agenda & Relacionamento', iconPath: 'src/assets/svg/agenda.svg', path: 'src/agenda_relacionamento.html', iconClass: 'icon_agenda' },
-    { name: 'Gestão de Despesas', iconPath: 'src/assets/svg/despezas.svg', path: 'src/gestao_dispesas.html', iconClass: 'icon_notas' },
-    { name: 'Gestão de Notas Fiscais', iconPath: 'src/assets/svg/notas_fiscais.svg', path: 'src/notas-fiscais.html', iconClass: 'icon_notas' },
-    { name: 'Gestão de Logs', iconPath: 'src/assets/svg/logs.svg', path: 'src/log_envio_email.html', iconClass: 'icon_logs' },
+    { name: 'Visão Geral', iconPath: 'src/assets/svg/visao-geral.svg', path: '/VisaoGeral', iconClass: 'icon_vg' },
+    { name: 'Dashboard', iconPath: 'src/assets/svg/dash.svg', path: '/Dashboard', iconClass: 'icon_dash' },
+    { name: 'Painel', iconPath: 'src/assets/svg/painel.svg', path: '/Painel', iconClass: 'icon_painel', adminOnly: true },
+    { name: 'Gestão de Clientes', iconPath: 'src/assets/svg/funcionario.svg', path: '/Clientes', iconClass: 'icon_funcionario' },
+    { name: 'Agenda & Relacionamento', iconPath: 'src/assets/svg/agenda.svg', path: '/Agenda', iconClass: 'icon_agenda' },
+    { name: 'Gestão de Despesas', iconPath: 'src/assets/svg/despezas.svg', path: '/GestaoDespesas', iconClass: 'icon_notas' },
+    { name: 'Gestão de Notas Fiscais', iconPath: 'src/assets/svg/notas_fiscais.svg', path: '/NotasFiscais', iconClass: 'icon_notas' },
+    { name: 'Gestão de Logs', iconPath: 'src/assets/svg/logs.svg', path: '/logs', iconClass: 'icon_logs', adminOnly: true },
 ];
 
 const Sidebar = () => {
-    const userName = "Lismara Ribeiro";
-    
+    const userName = sessionStorage.getItem('userName') || 'Usuário';
+
+        // lê isAdmin salvo no login (sessionStorage) e normaliza para boolean
+    const [isAdmin, setIsAdmin] = useState(() => {
+        const raw = sessionStorage.getItem('isAdmin');
+        console.log('[Sidebar] isAdmin (init raw):', raw);
+        return raw === 'true' || raw === '1';
+    });
+
     const [activeFile, setActiveFile] = useState('');
 
+
+    // Normaliza e protege isAdmin para evitar ReferenceError em runtime
+    const adminFlag = typeof isAdmin !== 'undefined' && (isAdmin === true || isAdmin === 'true' || isAdmin === '1');
+
+
+
     useEffect(() => {
-        const currentPath = window.location.pathname;
-        let currentFile = '';
+        console.log('[Sidebar] mounted - userName:', userName, 'isAdmin:', isAdmin);
 
-        const pathSegments = currentPath.split('/');
-        const lastSegment = pathSegments[pathSegments.length - 1];
-        
-        if (!lastSegment || lastSegment === 'index.html' || lastSegment === 'index.html') {
-            currentFile = 'visao_geral.html'; 
-        } else {
-            currentFile = lastSegment;
-        }
+        const onStorage = (e) => {
+            if (e.key === 'isAdmin') {
+                const newVal = e.newValue === 'true' || e.newValue === '1';
+                console.log('[Sidebar] storage event isAdmin:', e.newValue, '->', newVal);
+                setIsAdmin(newVal);
+            }
+            if (e.key === 'userName') {
+                console.log('[Sidebar] storage event userName:', e.newValue);
+            }
+        };
+        window.addEventListener('storage', onStorage);
 
-        setActiveFile(currentFile);
-    }, []); 
+        // determina rota ativa a partir do pathname e normaliza
+        const currentPath = (window.location.pathname || '/').toLowerCase();
+        // se estiver na raiz, assumimos visão geral
+        const normalized = currentPath === '/' || currentPath === '' ? '/visao-geral' : currentPath;
+        // pega apenas o primeiro segmento relevante para comparação (ex: /clientes/123 -> clientes)
+        const firstSegment = normalized.split('/').filter(Boolean)[0] || 'visao-geral';
+        setActiveFile(firstSegment);
+
+        return () => {
+            window.removeEventListener('storage', onStorage);
+            console.log('[Sidebar] unmounted');
+        };
+    }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
     const getIconSrc = (originalPath, linkPath) => {
-        const linkFile = linkPath.substring(linkPath.lastIndexOf('/') + 1);
-        
-        if (linkFile === activeFile) {
+        const linkClean = (linkPath || '').replace('/', '').toLowerCase();
+        if (activeFile && linkClean.includes(activeFile.toLowerCase())) {
             return originalPath.replace('.svg', '_black.svg');
         }
         return originalPath;
     };
-    
+
     const isLinkActive = (linkPath) => {
-        const linkFile = linkPath.substring(linkPath.lastIndexOf('/') + 1);
-        return linkFile === activeFile;
+        const linkClean = (linkPath || '').replace('/', '').toLowerCase();
+        return activeFile.toLowerCase() === linkClean;
     };
 
     return (
@@ -56,39 +81,40 @@ const Sidebar = () => {
                     <img src="src/assets/svg/logo_vectorized.svg" alt="Logo Veredictum" />
                     <span className="menu-text-logo">Veredictum</span>
                 </div>
-                <span className="user-name">{userName}</span>
+                    <div className="user-info">
+                        <span className="user-name">{userName}</span>
+                        {/* {adminFlag && <span className="user-role badge-admin">Administrador</span>} */}
+                    </div>
             </div>
-            
+
             <nav className="sidebar-nav">
                 <ul>
-                    {navItems.map((item) => {
-                        const active = isLinkActive(item.path);
-                        
-                        return (
-                            <li key={item.name}>
-                                <a 
-                                    href={item.path} 
-                                    className={active ? 'active' : ''}
-                                >
-                                    <img 
-                                        src={getIconSrc(item.iconPath, item.path)} 
-                                        className={item.iconClass} 
-                                        alt={item.name} 
-                                    />
-                                    <span className={active ? 'menu-text-active' : 'menu-text'}>
-                                        {item.name}
-                                    </span>
-                                </a>
-                            </li>
-                        );
-                    })}
+                    {navItems
+                        .filter(item => !item.adminOnly || adminFlag)
+                        .map((item) => {
+                            const active = isLinkActive(item.path);
+                            return (
+                                <li key={item.name}>
+                                    <a href={item.path} className={active ? 'active' : ''}>
+                                        <img
+                                            src={getIconSrc(item.iconPath, item.path)}
+                                            className={item.iconClass}
+                                            alt={item.name}
+                                        />
+                                        <span className={active ? 'menu-text-active' : 'menu-text'}>
+                                            {item.name}
+                                        </span>
+                                    </a>
+                                </li>
+                            );
+                        })}
                 </ul>
             </nav>
-            
+
             <div className="sidebar-footer">
-                <a href="/Home.jsx">
+                <a href="/home">
                     <img src="src/assets/svg/exit.svg" className="icon_exit" alt="Sair" />
-                     <span className="menu-text">Sair</span> 
+                    <span className="menu-text">Sair</span>
                 </a>
             </div>
         </aside>
