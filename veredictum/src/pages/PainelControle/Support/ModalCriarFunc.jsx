@@ -1,6 +1,9 @@
 import React, { useState } from "react";
 import { criarFuncionario } from "../Painel";
 
+import OlhoAberto from '../../../assets/img/olho-aberto.png';
+import OlhoFechado from '../../../assets/img/olho-vermelho.png';
+
 function ModalCriarFuncionario({ isModalOpen, closeModalCriar, atualizarLista, FecharIcone }) {
     const [formData, setFormData] = useState({
         nome: "",
@@ -9,7 +12,8 @@ function ModalCriarFuncionario({ isModalOpen, closeModalCriar, atualizarLista, F
         tipoUsuario: "Usuário",
     });
 
-    const [mostrarSenha, setMostrarSenha] = useState(false); 
+    const [mostrarSenha, setMostrarSenha] = useState(false);
+
     const handleChange = (e) => {
         const { name, value } = e.target;
         setFormData({ ...formData, [name]: value });
@@ -128,16 +132,15 @@ function ModalCriarFuncionario({ isModalOpen, closeModalCriar, atualizarLista, F
                                 className="toggle-senha"
                                 onClick={() => setMostrarSenha(!mostrarSenha)}
                             >
-                                {mostrarSenha ? (
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="none" stroke="#333" strokeWidth="2" viewBox="0 0 24 24">
-                                        <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8S1 12 1 12z"/>
-                                        <circle cx="12" cy="12" r="3"/>
-                                    </svg>
-                                ) : (
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="none" stroke="#333" strokeWidth="2" viewBox="0 0 24 24">
-                                        <path d="M17.94 17.94A10.93 10.93 0 0 1 12 20c-7 0-11-8-11-8a18.4 18.4 0 0 1 5.06-6.94M9.9 4.24A10.94 10.94 0 0 1 12 4c7 0 11 8 11 8a18.45 18.45 0 0 1-3.26 4.74M1 1l22 22"/>
-                                    </svg>
-                                )}
+                                <img
+                                    src={mostrarSenha ? OlhoAberto : OlhoFechado}
+                                    alt={mostrarSenha ? "Ocultar senha" : "Mostrar senha"}
+                                    style={{
+                                        width: "24px",
+                                        height: "24px",
+                                        cursor: "pointer",
+                                    }}
+                                />
                             </button>
                         </div>
                     </div>
