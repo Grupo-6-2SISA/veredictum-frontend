@@ -5,7 +5,7 @@ import Listagem from '../../components/Listagem/Listagem';
 import './LogEnvioEmail.css';
 import '../../index.css';
 
-const colunasLogEmail = [
+const COLUNAS_LOG_EMAIL = [
     { key: 'tipo', titulo: 'Tipo' },
     { key: 'dataEnvio', titulo: 'Data de Envio' },
     { key: 'mensagem', titulo: 'Mensagem' },
@@ -14,20 +14,20 @@ const colunasLogEmail = [
 ];
 
 // precisará montar um select com joins para pegar nome de cliente e montar o backend para isto
-const dadosLogEmail = [
-    { tipo: 'Confirmação de Consulta', dataEnvio: '01/06/2025 10:00', mensagem: 'Sua consulta está confirmada para 09/06/2025 às 14:00.', clienteRelacionado: 'Davidson Mendes' },
-    { tipo: 'Lembrete de Consulta', dataEnvio: '07/06/2025 09:00', mensagem: 'Lembrete: Você tem uma consulta agendada para 09/06/2025 às 14:00.', clienteRelacionado: 'Davidson Mendes' },
-    { tipo: 'Confirmação de Consulta', dataEnvio: '02/06/2025 11:30', mensagem: 'Sua consulta está confirmada para 09/06/2025 às 17:30.', clienteRelacionado: 'Gabriel Cordeiro' },
-    { tipo: 'Lembrete de Consulta', dataEnvio: '08/06/2025 10:30', mensagem: 'Lembrete: Você tem uma consulta agendada para 09/06/2025 às 17:30.', clienteRelacionado: 'Gabriel Cordeiro' },
-    { tipo: 'Confirmação de Consulta', dataEnvio: '01/06/2025 10:00', mensagem: 'Sua consulta está confirmada para 09/06/2025 às 14:00.', clienteRelacionado: 'Davidson Mendes' },
-    { tipo: 'Lembrete de Consulta', dataEnvio: '07/06/2025 09:00', mensagem: 'Lembrete: Você tem uma consulta agendada para 09/06/2025 às 14:00.', clienteRelacionado: 'Davidson Mendes' },
-    { tipo: 'Confirmação de Consulta', dataEnvio: '02/06/2025 11:30', mensagem: 'Sua consulta está confirmada para 09/06/2025 às 17:30.', clienteRelacionado: 'Gabriel Cordeiro' },
-    { tipo: 'Lembrete de Consulta', dataEnvio: '08/06/2025 10:30', mensagem: 'Lembrete: Você tem uma consulta agendada para 09/06/2025 às 17:30.', clienteRelacionado: 'Gabriel Cordeiro' },
-];
+// const dadosLogEmail = [
+//     { tipo: 'Confirmação de Consulta', dataEnvio: '01/06/2025 10:00', mensagem: 'Sua consulta está confirmada para 09/06/2025 às 14:00.', clienteRelacionado: 'Davidson Mendes' },
+//     { tipo: 'Lembrete de Consulta', dataEnvio: '07/06/2025 09:00', mensagem: 'Lembrete: Você tem uma consulta agendada para 09/06/2025 às 14:00.', clienteRelacionado: 'Davidson Mendes' },
+//     { tipo: 'Confirmação de Consulta', dataEnvio: '02/06/2025 11:30', mensagem: 'Sua consulta está confirmada para 09/06/2025 às 17:30.', clienteRelacionado: 'Gabriel Cordeiro' },
+//     { tipo: 'Lembrete de Consulta', dataEnvio: '08/06/2025 10:30', mensagem: 'Lembrete: Você tem uma consulta agendada para 09/06/2025 às 17:30.', clienteRelacionado: 'Gabriel Cordeiro' },
+//     { tipo: 'Confirmação de Consulta', dataEnvio: '01/06/2025 10:00', mensagem: 'Sua consulta está confirmada para 09/06/2025 às 14:00.', clienteRelacionado: 'Davidson Mendes' },
+//     { tipo: 'Lembrete de Consulta', dataEnvio: '07/06/2025 09:00', mensagem: 'Lembrete: Você tem uma consulta agendada para 09/06/2025 às 14:00.', clienteRelacionado: 'Davidson Mendes' },
+//     { tipo: 'Confirmação de Consulta', dataEnvio: '02/06/2025 11:30', mensagem: 'Sua consulta está confirmada para 09/06/2025 às 17:30.', clienteRelacionado: 'Gabriel Cordeiro' },
+//     { tipo: 'Lembrete de Consulta', dataEnvio: '08/06/2025 10:30', mensagem: 'Lembrete: Você tem uma consulta agendada para 09/06/2025 às 17:30.', clienteRelacionado: 'Gabriel Cordeiro' },
+// ];
 
 let nomeUsuario = localStorage.getItem('nomeUsuario');
 if (!nomeUsuario) {
-    nomeUsuario = 'Lismara Ribeiro';
+    nomeUsuario = 'PLACEHOLDER';
 }
 
 
@@ -38,10 +38,12 @@ const LogEnvioEmail = () => {
     useEffect(() => {
 
         buscarTiposLembrete();
+        buscarLogs();
 
     }, []);
 
     const [tiposLembrete, setTiposLembrete] = useState([]);
+    const [logs, setLogs] = useState([]);
 
     async function buscarTiposLembrete() {
 
@@ -51,6 +53,14 @@ const LogEnvioEmail = () => {
         setTiposLembrete(resposta.data);
 
     }
+
+
+    async function buscarLogs() {
+        const resposta = await axios.get('http://localhost:8080/log-envio-lembrete/listagem-logs');
+        console.log('resposta: ', resposta.data);
+        setLogs(resposta.data)
+    }
+
     return (
         <div className="container">
             <Sidebar nomeCompleto={nomeUsuario} />
@@ -80,14 +90,10 @@ const LogEnvioEmail = () => {
                         </div>
                     </div>
 
-                    {/* substitui Card por div que imita o card e permite manipular tamanho */}
                     <div className="card-box-logs" role="region" aria-label="Logs de Email">
-                        <Listagem colunas={colunasLogEmail} dados={dadosLogEmail} />
+                        <Listagem colunas={COLUNAS_LOG_EMAIL} dados={logs} />
                     </div>
 
-                    {/* <div className="log-email-listagem">
-                        <Listagem colunas={colunasLogEmail} dados={dadosLogEmail} />
-                    </div> */}
                 </div>
             </main>
         </div>
