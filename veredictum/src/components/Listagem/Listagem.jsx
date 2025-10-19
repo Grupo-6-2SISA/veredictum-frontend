@@ -2,18 +2,16 @@ import React from 'react';
 import './Listagem.css';
 import '../../index.css';
 
-const Listagem = ({ dados, colunas }) => {
-  // Define o grid dinamicamente conforme o número de colunas
-  // Cria uma string para grid-template-columns baseada no número de colunas
-  const gridTemplate = colunas.map(() => '1fr').join(' ');
+const Listagem = ({ dados = [], colunas = [], classNamePrefix = 'listagem', id, isFullTable = false }) => {
+    const prefix = classNamePrefix;
 
-    // const gridTemplate = isFullTable
-    //     ? '0.2fr 2fr 1fr 1fr 1fr 0.5fr 0.5fr'
-    //     : (colunas.length === 3
-    //         ? '3fr 2fr 1fr'
-    //         : colunas.length === 2
-    //             ? '3fr 2fr'
-    //             : '1fr');
+    const gridTemplate = isFullTable
+        ? '0.2fr 2fr 1fr 1fr 1fr 0.5fr 0.5fr'
+        : (colunas.length === 3
+            ? '3fr 2fr 1fr'
+            : colunas.length === 2
+                ? '3fr 2fr'
+                : '1fr');
 
     // Função de exemplo para tratar os cliques nas ações de Editar/Excluir
     const handleActionClick = (key, item) => {
