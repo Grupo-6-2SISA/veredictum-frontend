@@ -32,28 +32,26 @@ function ModalEditarRotina({ isModalOpen, closeModalEditarRotina, rotinaData, Fe
     };
 
     const handleSalvar = async () => {
+
         // 🧩 Validações
-        const somenteLetrasEspacos = /^[A-Za-zÀ-ÿ\s]+$/;
 
-        // Validação 1: Nome só com letras e espaços
-        if (!somenteLetrasEspacos.test(formData.nome)) {
-            alert("O nome da rotina deve conter apenas letras e espaços.");
+        const nomeValido = /^[A-Za-zÀ-ÿ\s()_]+$/;
+
+        if (!nomeValido.test(formData.nome)) {
+            alert("O nome da rotina deve conter apenas letras, espaços, parênteses ou underline (_).");
             return;
         }
 
-        // Validação 2: Campo 'Rotina' só com letras e espaços
-        if (!somenteLetrasEspacos.test(formData.arquivo)) {
-            alert("O campo 'Rotina' deve conter apenas letras e espaços.");
+        if (!nomeValido.test(formData.arquivo)) {
+            alert("O campo 'Rotina' deve conter apenas letras, espaços, parênteses ou underline (_).");
             return;
         }
 
-        // Validação 3: Data Fim não pode ser menor que Data Início
         if (formData.dataInicio && formData.dataFim && formData.dataFim < formData.dataInicio) {
             alert("A data de fim não pode ser anterior à data de início.");
             return;
         }
 
-        // Validação 4: Data Início não pode ser maior que Data Fim (redundante mas deixa claro)
         if (formData.dataInicio && formData.dataFim && formData.dataInicio > formData.dataFim) {
             alert("A data de início não pode ser posterior à data de fim.");
             return;

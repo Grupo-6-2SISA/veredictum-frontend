@@ -57,13 +57,18 @@ export default function ModalEditarDespesa({ show, onClose, editingItem, atualiz
             console.log("Enviando requisição PUT para backend...");
             const response = await atualizarDespesa(editingItem.idConta, updatedData);
             console.log("✅ [SUCESSO] Despesa atualizada:", response.data);
+
             alert("✅ Conta atualizada com sucesso");
+
             onClose();
-            atualizarLista();
+
+            window.location.reload();
+
         } catch (error) {
             console.error("❌ [ERRO] Falha ao atualizar despesa:", error);
             alert("Erro ao atualizar despesa. Verifique o console para mais detalhes.");
         }
+
     };
 
     return (
@@ -123,9 +128,9 @@ export default function ModalEditarDespesa({ show, onClose, editingItem, atualiz
 
                     <div className="form-row">
                         <div className="form-group">
-                            <label style={{ transform: "translateX(-1%)"}} htmlFor="edit-valor">Valor</label>
+                            <label style={{ transform: "translateX(-1%)" }} htmlFor="edit-valor">Valor</label>
                             <input
-                                style={{ transform: "translateX(-3%)", width:"47%" }}
+                                style={{ transform: "translateX(-3%)", width: "47%" }}
                                 type="number"
                                 step="0.01"
                                 id="edit-valor"

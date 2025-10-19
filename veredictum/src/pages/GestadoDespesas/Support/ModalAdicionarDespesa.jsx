@@ -63,17 +63,26 @@ export default function ModalAdicionarDespesa({ show, onClose, atualizarLista })
             const response = await adicionarDespesa(formData);
             console.log("✅ [SUCESSO] Resposta do backend:", response.data);
 
-            alert("Despesa adicionada com sucesso!");
+            alert("✅ Despesa adicionada com sucesso!");
+
             atualizarLista();
-            window.location.reload();
             onClose();
+
+            setTimeout(() => {
+                window.location.reload();
+            }, 300);
+
         } catch (error) {
             console.error("❌ [ERRO] Falha ao adicionar despesa:", error);
             alert("Erro ao adicionar despesa. Verifique o console para mais detalhes.");
-            atualizarLista();
-            window.location.reload();
+
+            setTimeout(() => {
+                window.location.reload();
+            }, 300);
+
             onClose();
         }
+
     };
 
     return (
@@ -116,7 +125,7 @@ export default function ModalAdicionarDespesa({ show, onClose, atualizarLista })
                     {/* Valor */}
                     <div className="form-row">
                         <div className="form-group">
-                            <label style={{ transform: "translateX(-1%)"}}
+                            <label style={{ transform: "translateX(-1%)" }}
                                 htmlFor="valor">Valor</label>
                             <input
                                 style={{ transform: "translateX(-3%)", width: "47%" }}
