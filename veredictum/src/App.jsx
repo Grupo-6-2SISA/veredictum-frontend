@@ -19,8 +19,8 @@ function App() {
         <Route path="/login" element={<Login />} />
         <Route path="/recuperarSenha" element={<RecuperarSenha/>} />
         <Route path="/VisaoGeral" element={<VisaoGeral />} />
-        <Route path="/painel-controle" element={<PainelControle />} />
-        <Route path="/gestao-despesas" element={<GestaoDespesas />} />
+        <Route path="/PainelControle" element={<PainelControle />} />
+        <Route path="/GestaoDespesas" element={<GestaoDespesas />} />
         <Route path="/NotasFiscais" element={<NotasFiscais />} />
         <Route path="/Clientes" element={<Clientes />} />
         <Route path="/Agenda" element={<Agenda />} />
