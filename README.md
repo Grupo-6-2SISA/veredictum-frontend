@@ -96,6 +96,11 @@ npm install axios
 npm install prop-types
 ```
 
+- Chart.js (Visualização de gráficos via JS)
+```
+npm install chart.js
+```
+
 - Tailwind CSS (opcional, caso queira usar)
 ```
 npm install -D tailwindcss postcss autoprefixer
