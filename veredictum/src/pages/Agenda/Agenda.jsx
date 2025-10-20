@@ -1,5 +1,4 @@
-
-import React, { useState, useMemo, useEffect } from 'react';
+import React, { useState, useMemo, useEffect, useCallback } from 'react';
 import Listagem from '../../components/Listagem/Listagem';
 import Button from '../../components/Button/Button';
 import MonthPickerButton from '../../components/MonthPicker/MonthPickerButton';
@@ -8,14 +7,18 @@ import '../../index.css';
 import EditIcon from '../../assets/svg/lapiz.svg';
 import TrashIcon from '../../assets/svg/lixo.svg';
 
-// ===================================================================
-// IMPORT DA REQUISIÇÃO (SEGUNDA ETAPA: ANIVERSARIANTES)
-// ===================================================================
-import { 
+import {
     listarAtendimentosPorMesEAno,
-    listarAniversariantesDoMes // CORRIGIDO O NOME DO IMPORT
-} from './Agenda.js'; 
+    listarAniversariantesDoMes,
+    criarAtendimento,
+    editarAtendimento,
+    excluirAtendimento
+} from './Agenda.js';
 
+import ModalContainer from './Support/ModalContainer';
+import ModalAdicionarAtendimento from './Support/ModalAdicionarAtendimento';
+import ModalEditarAtendimento from './Support/ModalEditarAtendimento';
+import ConfirmacaoExclusao from './Support/ConfirmacaoExclusao';
 
 // ===================================================================
 // DADOS / COLUNAS
@@ -58,7 +61,7 @@ const formatarDataHora = (isoString) => {
 }
 
 
-const Agenda = () => {
+export default function Agenda() {
     // ATENDIMENTOS
     const [atendimentosBrutos, setAtendimentosBrutos] = useState([]);
     const [loadingAtendimentos, setLoadingAtendimentos] = useState(false);
@@ -73,35 +76,36 @@ const Agenda = () => {
     const [currentFilterDate, setCurrentFilterDate] = useState(new Date());
     const handleMonthChange = (newDate) => setCurrentFilterDate(newDate);
 
+    // MODAL / CRUD
+    const [showAddModal, setShowAddModal] = useState(false);
+    const [showEditModal, setShowEditModal] = useState(false);
+    const [showDeleteModal, setShowDeleteModal] = useState(false);
+    const [editingItem, setEditingItem] = useState(null);
+    const [deletingItem, setDeletingItem] = useState(null);
+
+    // fetch atendimentos (centralizado)
+    const fetchAtendimentos = useCallback(async () => {
+        setLoadingAtendimentos(true);
+        setErroAtendimentos(null);
+        const ano = currentFilterDate.getFullYear();
+        const mes = currentFilterDate.getMonth() + 1;
+        try {
+            const res = await listarAtendimentosPorMesEAno(ano, mes);
+            setAtendimentosBrutos(res?.data || []);
+        } catch (err) {
+            setErroAtendimentos(err?.response?.data?.message || 'Erro ao carregar atendimentos');
+        } finally {
+            setLoadingAtendimentos(false);
+        }
+    }, [currentFilterDate]);
+
     // ===================================================================
     // EFEITO 1: CARREGAMENTO DOS ATENDIMENTOS
     // ===================================================================
     useEffect(() => {
-        const fetchAtendimentos = async () => {
-            setLoadingAtendimentos(true);
-            setErroAtendimentos(null);
-
-            const ano = currentFilterDate.getFullYear();
-            const mes = currentFilterDate.getMonth() + 1;
-
-            try {
-                const res = await listarAtendimentosPorMesEAno(ano, mes);
-                if (res.status === 204) {
-                    setAtendimentosBrutos([]);
-                } else {
-                    setAtendimentosBrutos(res.data || []);
-                }
-            } catch (error) {
-                const message = error.response?.data?.message || "Falha ao carregar atendimentos do mês.";
-                setErroAtendimentos(message);
-                console.error("Erro ao carregar atendimentos:", error);
-            } finally {
-                setLoadingAtendimentos(false);
-            }
-        };
-
+        // usa a função fetchAtendimentos definida acima
         fetchAtendimentos();
-    }, [currentFilterDate]);
+    }, [fetchAtendimentos]);
 
 
     // ===================================================================
@@ -133,20 +137,120 @@ const Agenda = () => {
 
 
     // ===================================================================
-    // MEMO: MAPEAR ATENDIMENTOS
+    // FUNÇÕES DE MANIPULAÇÃO DE MODAL / CRUD
+    // ===================================================================
+    const openAddModal = () => setShowAddModal(true);
+    const closeModalAdd = () => setShowAddModal(false);
+
+    const openEditModal = (item) => {
+        const id = item?.idAtendimento ?? item?.id;
+        if (id == null) return;
+        const itemToEdit = atendimentosBrutos.find((a) => (a.idAtendimento ?? a.id) === id);
+        if (itemToEdit) {
+            setEditingItem(itemToEdit);
+            setShowEditModal(true);
+        }
+    };
+    const closeModalEdit = () => {
+        setShowEditModal(false);
+        setEditingItem(null);
+    };
+
+    const openDeleteModal = (item) => {
+        const id = item?.idAtendimento ?? item?.id;
+        if (id == null) return;
+        const itemToDelete = atendimentosBrutos.find((a) => (a.idAtendimento ?? a.id) === id);
+        if (itemToDelete) {
+            setDeletingItem(itemToDelete);
+            setShowDeleteModal(true);
+        }
+    };
+    const closeModalDelete = () => {
+        setShowDeleteModal(false);
+        setDeletingItem(null);
+    };
+
+    // create
+    const handleCreateSubmit = async (atendimentoDTO) => {
+        try {
+            console.debug('Agenda - creating atendimento:', atendimentoDTO);
+            await criarAtendimento(atendimentoDTO, 1); // statusInicialId = 1 por padrão
+            closeModalAdd();
+            await fetchAtendimentos();
+            alert('Atendimento criado com sucesso!');
+        } catch (err) {
+            console.error('Erro criarAtendimento ->', err);
+            // mostra payload de resposta do backend (detalhes)
+            console.error('Resposta do servidor:', err.response?.data);
+            alert('Erro ao criar atendimento: ' + (err?.response?.data?.message || err?.message || 'Erro de conexão.'));
+        }
+    };
+
+    // edit
+    const handleEditSubmit = async (atendimentoDTO) => {
+        if (!editingItem) return;
+        try {
+            await editarAtendimento(editingItem.idAtendimento ?? editingItem.id, atendimentoDTO);
+            closeModalEdit();
+            await fetchAtendimentos();
+            alert('Atendimento atualizado!');
+        } catch (err) {
+            console.error(err);
+            alert('Erro ao atualizar atendimento: ' + (err?.response?.data?.message || err?.message));
+        }
+    };
+
+    // delete
+    const handleDeleteConfirm = async () => {
+        if (!deletingItem) return;
+        try {
+            await excluirAtendimento(deletingItem.idAtendimento ?? deletingItem.id);
+            closeModalDelete();
+            await fetchAtendimentos();
+            alert('Atendimento excluído!');
+        } catch (err) {
+            console.error(err);
+            alert('Erro ao excluir atendimento: ' + (err?.response?.data?.message || err?.message));
+        }
+    };
+
+
+    // ===================================================================
+    // MEMO: MAPEAR ATENDIMENTOS (render buttons para editar/excluir)
     // ===================================================================
     const atendimentosFiltrados = useMemo(() => {
-        return atendimentosBrutos.map(item => {
+        return (atendimentosBrutos || []).map(item => {
             const { dia, horario } = formatarDataHora(item.dataInicio || item.data);
+            const idAtendimento = item.idAtendimento ?? item.id;
+            const itemComId = { ...item, idAtendimento };
+
             return {
-                checkbox: item.idAtendimento ?? item.id,
+                checkbox: idAtendimento,
                 nome: item.nomeCliente || item.nome || 'Desconhecido',
                 dia,
                 horario,
                 status: item.status || 'Agendado',
-                editar: EditIcon,
-                excluir: TrashIcon,
-                ...item
+                editar: (
+                    <button
+                        type="button"
+                        onClick={() => openEditModal(itemComId)}
+                        aria-label="Editar atendimento"
+                        className="btn-icon-plain"
+                    >
+                        <img src={EditIcon} alt="Editar" />
+                    </button>
+                ),
+                excluir: (
+                    <button
+                        type="button"
+                        onClick={() => openDeleteModal(itemComId)}
+                        aria-label="Excluir atendimento"
+                        className="btn-icon-plain"
+                    >
+                        <img src={TrashIcon} alt="Excluir" />
+                    </button>
+                ),
+                ...itemComId
             };
         });
     }, [atendimentosBrutos]);
@@ -254,7 +358,7 @@ const Agenda = () => {
             <main className="main-content agenda-page">
                 <header className="agenda-header">
                     <h1>Agenda & Relacionamento</h1>
-                    <Button />
+                    <Button onClick={openAddModal} text="Novo Agendamento" />
                 </header>
 
                 <div className="agenda-layout-grid">
@@ -296,8 +400,28 @@ const Agenda = () => {
                     </section>
                 </div>
             </main>
+
+            +            {/* MODAIS */}
+            <ModalAdicionarAtendimento show={showAddModal} onClose={closeModalAdd} atualizarLista={fetchAtendimentos} />
+
+            <ModalEditarAtendimento
+                show={showEditModal}
+                onClose={closeModalEdit}
+                editingItem={editingItem}
+                atualizarLista={fetchAtendimentos}
+            />
+
+            <ModalContainer show={showDeleteModal} onClose={closeModalDelete} title="Confirmar Exclusão" variant="delete" modalId="modal-delete-atendimento">
+                {deletingItem && (
+                    <ConfirmacaoExclusao
+                        message={`Tem certeza que deseja excluir o atendimento de ${deletingItem.nomeCliente || deletingItem.nome}?`}
+                        onConfirm={handleDeleteConfirm}
+                        onCancel={closeModalDelete}
+                    />
+                )}
+            </ModalContainer>
         </div>
     );
 };
 
-export default Agenda;
+export { Agenda };
