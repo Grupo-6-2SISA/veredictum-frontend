@@ -107,7 +107,7 @@
 }
 
 /* Garantir que os títulos dos modais add/edit/view fiquem brancos e sem fundo preto */
-#new-appointment-modal-add-note .modal-header_P,
+#new-appointment-modal-add-note-notas .modal-header_P,
 #new-appointment-modal-edit-note .modal-header_P,
 #new-appointment-modal-view-note .modal-header_P {
     background: transparent !important;
@@ -147,21 +147,22 @@
     display: flex;
     flex-direction: column;
     gap: 20px;
+    
 }
 
-.form-row { /* Mantido se for uma classe genérica de form, senão mude para .form-row_P */
+.form-row_P { /* Mantido se for uma classe genérica de form, senão mude para .form-row_P */
     display: grid;
     grid-template-columns: repeat(2, 1fr);
     gap: 20px;
 }
 
-.form-group-notas { /* Mantido se for uma classe específica */
+.form-group-notas_P { /* Mantido se for uma classe específica */
     flex: 1;
     display: flex;
     flex-direction: column;
 }
 
-.form-group-notas label {
+.form-group-notas_P label {
     font-size: 1rem;
     color: var(--white-normal);
     margin-bottom: 5px;
@@ -169,12 +170,11 @@
     margin-left: 3%;
 }
 
-.form-group-notas input, 
-.form-group-notas select, 
-.form-group-notas textarea {
+.form-group-notas_P input, 
+.form-group-notas_P select, 
+.form-group-notas_P textarea {
     padding: 10px;
     width: 100%;
-    max-width: 100%;
     border: 1px solid #ddd;
     border-radius: 8px;
     font-size: 1rem;
@@ -183,9 +183,9 @@
     margin-bottom: 10px;
 }
 
-.form-group-notas input:focus, 
-.form-group-notas select:focus, 
-.form-group-notas textarea:focus {
+.form-group-notas_P input:focus, 
+.form-group-notas_P select:focus, 
+.form-group-notas_P textarea:focus {
     outline: none;
     border-color: var(--gray-3);
     box-shadow: 0 0 0 2px rgba(147, 147, 147, 0.25);
@@ -219,7 +219,7 @@
 }
 
 /* Rodapé do formulário */
-.form-footer-notas { /* Mantido se for uma classe específica */
+.form-footer-notas_P { /* Mantido se for uma classe específica */
     display: flex;
     display: flex;
     justify-content: center;
@@ -229,7 +229,7 @@
 }
 
 /* Garantir centralização de botões quando form-footer estiver dentro de um modal */
-.modal_P .form-footer-notas {
+.modal_P .form-footer-notas_P {
     justify-content: center !important;
     padding: 16px 24px;
 }

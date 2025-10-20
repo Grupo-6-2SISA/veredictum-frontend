@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import Sidebar from '../../components/Sidebar/Sidebar';
 import Modal from '../../components/Modal_P/Modal_P';
+import '../../components/Button/Button_P';
 import './NotasFiscais.css';
+
 import {
   getNotasFiscais,
   createNotaFiscal,
@@ -267,7 +269,7 @@ const NotasFiscais = () => {
     });
 
   const FormField = ({ label, children, htmlFor }) => (
-    <div className="form-group-notas">
+    <div className="form-group-notas_P">
       <label htmlFor={htmlFor}>{label}</label>
       {children}
     </div>
@@ -287,7 +289,7 @@ const NotasFiscais = () => {
               Organize, atualize e controle todas as suas notas fiscais de forma eficiente.
             </p>
           </div>
-          <button className="btn-new-appointment" onClick={() => setIsModalOpen(true)}>
+          <button className="btn-new-appointment_P" onClick={() => setIsModalOpen(true)}>
             Adicionar Nota Fiscal
             <img src="src/assets/svg/btn.svg" alt="" />
           </button>
@@ -368,15 +370,15 @@ const NotasFiscais = () => {
         <Modal
           isOpen={isModalOpen}
           variant="add"
-          title="Nova Nota Fiscal"
+          title="Adicionar Nota Fiscal"
           onClose={closeModal}
-          modalId="new-appointment-modal-add-note"
+          modalId="new-appointment-modal-add-note-notas"
           formProps={{
             onSubmit: handleSubmit,
             className: "appointment-form_P"
           }}
         >
-          <div className="form-row">
+          <div className="form-row_P">
             <FormField label="Número da Nota" htmlFor="numeroNota">
               <input type="text" id="numeroNota" name="numeroNota" placeholder="Ex: NF-001" required />
             </FormField>
@@ -388,7 +390,7 @@ const NotasFiscais = () => {
             </FormField>
           </div>
 
-          <div className="form-row">
+          <div className="form-row_P">
             <FormField label="Etiqueta" htmlFor="etiqueta">
               <input type="text" id="etiqueta" name="etiqueta" placeholder="Ex: Vendas" required />
             </FormField>
@@ -397,7 +399,7 @@ const NotasFiscais = () => {
             </FormField>
           </div>
 
-          <div className="form-row">
+          <div className="form-row_P">
             <FormField label="Data de Vencimento" htmlFor="dataVencimento">
               <input type="date" id="dataVencimento" name="dataVencimento" required />
             </FormField>
@@ -410,7 +412,7 @@ const NotasFiscais = () => {
             </FormField>
           </div>
 
-          <div className="form-row">
+          <div className="form-row_P">
             <FormField label="URL na Nuvem" htmlFor="urlCloud">
               <input type="url" id="urlCloud" name="urlCloud" placeholder="https://..." />
             </FormField>
@@ -419,7 +421,7 @@ const NotasFiscais = () => {
             </FormField>
           </div>
 
-          <div className="form-footer-notas">
+          <div className="form-footer-notas_P">
             <button type="submit" className="btn-new-appointment_P">
               Salvar Nota Fiscal
             </button>
@@ -432,15 +434,15 @@ const NotasFiscais = () => {
           variant="edit"
           title="Editar Nota Fiscal"
           onClose={closeEditModal}
-          modalId="new-appointment-modal-edit-note"
+          modalId="new-appointment-modal-edit-note_P"
           formProps={{
             onSubmit: handleEditSubmit,
-            className: "appointment-form"
+            className: "appointment-form_P"
           }}
         >
           {editingNota && (
             <>
-              <div className="form-row">
+              <div className="form-row_P">
                 <FormField label="Número da Nota" htmlFor="numeroNotaEdit">
                   <input type="text" id="numeroNotaEdit" name="numeroNota" defaultValue={editingNota.numero || ''} required />
                 </FormField>
@@ -452,7 +454,7 @@ const NotasFiscais = () => {
                 </FormField>
               </div>
 
-              <div className="form-row">
+              <div className="form-row_P">
                 <FormField label="Etiqueta" htmlFor="etiquetaEdit">
                   <input type="text" id="etiquetaEdit" name="etiqueta" defaultValue={editingNota.etiqueta || ''} required />
                 </FormField>
@@ -461,7 +463,7 @@ const NotasFiscais = () => {
                 </FormField>
               </div>
 
-              <div className="form-row">
+              <div className="form-row_P">
                 <FormField label="Data de Vencimento" htmlFor="dataVencimentoEdit">
                   <input type="date" id="dataVencimentoEdit" name="dataVencimento" defaultValue={formatDateForInput(editingNota.dataVencimento)} required />
                 </FormField>
@@ -474,7 +476,7 @@ const NotasFiscais = () => {
                 </FormField>
               </div>
 
-              <div className="form-row">
+              <div className="form-row_P">
                 <FormField label="URL na Nuvem" htmlFor="urlCloudEdit">
                   <input type="url" id="urlCloudEdit" name="urlCloud" defaultValue={editingNota.url_nuvem || ''} />
                 </FormField>
@@ -483,11 +485,11 @@ const NotasFiscais = () => {
                 </FormField>
               </div>
 
-              <div className="form-footer-notas">
-                <button type="button" className="btn-new-appointment" onClick={closeEditModal} style={{ background: '#666' }}>
+              <div className="form-footer-notas_P">
+                <button type="button" className="btn-new-appointment_P" onClick={closeEditModal} style={{ background: '#666' }}>
                   Cancelar
                 </button>
-                <button type="submit" className="btn-new-appointment">
+                <button type="submit" className="btn-new-appointment_P">
                   Salvar Alterações
                 </button>
               </div>
@@ -501,10 +503,10 @@ const NotasFiscais = () => {
           variant="view"
           title="Informações da Nota Fiscal"
           onClose={closeInfoModal}
-          modalId="new-appointment-modal-view-note"
+          modalId="new-appointment-modal-view-note_P"
           footer={
-            <div className="form-footer-notas">
-              <button type="button" className="btn-new-appointment" onClick={closeInfoModal}>
+            <div className="form-footer-notas_P">
+              <button type="button" className="btn-new-appointment_P" onClick={closeInfoModal}>
                 Fechar
               </button>
             </div>
@@ -512,7 +514,7 @@ const NotasFiscais = () => {
         >
           {viewingNota && (
             <>
-              <div className="form-row">
+              <div className="form-row_P">
                 <FormField label="Número da Nota">
                   <div className="info-display">{viewingNota.numero}</div>
                 </FormField>
@@ -521,7 +523,7 @@ const NotasFiscais = () => {
                 </FormField>
               </div>
 
-              <div className="form-row">
+              <div className="form-row_P">
                 <FormField label="Etiqueta">
                   <div className="info-display">{viewingNota.etiqueta}</div>
                 </FormField>
@@ -530,7 +532,7 @@ const NotasFiscais = () => {
                 </FormField>
               </div>
 
-              <div className="form-row">
+              <div className="form-row_P">
                 <FormField label="Data de Vencimento">
                   <div className="info-display">{formatDateForDisplay(viewingNota.dataVencimento)}</div>
                 </FormField>
@@ -539,7 +541,7 @@ const NotasFiscais = () => {
                 </FormField>
               </div>
 
-              <div className="form-row">
+              <div className="form-row_P">
                 <FormField label="URL na Nuvem">
                   <div className="info-display">
                     {viewingNota.url_nuvem ? (

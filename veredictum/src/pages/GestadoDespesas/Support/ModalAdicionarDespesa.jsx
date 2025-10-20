@@ -79,7 +79,7 @@ export default function ModalAdicionarDespesa({ show, onClose, atualizarLista })
     return (
         <div id="ModalAdicionarDespesa" className="modal">
             <div className="modal_add_despesas">
-                <div className="modal-header">
+                <div className="modal-header_D">
                     <h2>Adicionar Despesa</h2>
                     <button className="modal-close-btn" onClick={onClose}>
                         <img src={FecharIcon} alt="Fechar" />
