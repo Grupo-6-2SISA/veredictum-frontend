@@ -143,27 +143,54 @@ export default function Agenda() {
     const closeModalAdd = () => setShowAddModal(false);
 
     const openEditModal = (item) => {
-        const id = item?.idAtendimento ?? item?.id;
-        if (id == null) return;
-        const itemToEdit = atendimentosBrutos.find((a) => (a.idAtendimento ?? a.id) === id);
-        if (itemToEdit) {
-            setEditingItem(itemToEdit);
-            setShowEditModal(true);
+        console.log('--- ABRINDO MODAL DE EDIÇÃO ---');
+        console.log('Item recebido:', item);
+
+        // 1. Tenta pegar o ID, usando idAtendimento ou id
+        const id = item?.idAtendimento ?? item?.idAgendamento ?? item?.id;
+        if (id == null) {
+            console.warn('openEditModal: id is null, aborting', item);
+            alert('Não foi possível identificar o ID do atendimento para edição.');
+            return;
         }
+
+        // 2. Busca o item completo e atualizado no estado (atendimentosBrutos)
+        const itemToEdit = atendimentosBrutos.find((a) =>
+            (a.idAtendimento ?? a.idAgendamento ?? a.id) === id // <--- ADICIONADO idAgendamento
+        );
+
+        if (!itemToEdit) {
+            console.warn(`Item com ID ${id} não encontrado no estado. Usando o item passado...`);
+        }
+
+        // 3. Define o item de edição e abre o modal
+        setEditingItem(itemToEdit || item); // Usa o do estado ou o passado, se não achou
+        setShowEditModal(true);
+        console.log('showEditModal setado para true');
     };
+
+
+    // Agenda.js
+
     const closeModalEdit = () => {
         setShowEditModal(false);
-        setEditingItem(null);
+        setEditingItem(null); // <-- ESSA LINHA É CRUCIAL
     };
 
     const openDeleteModal = (item) => {
-        const id = item?.idAtendimento ?? item?.id;
-        if (id == null) return;
-        const itemToDelete = atendimentosBrutos.find((a) => (a.idAtendimento ?? a.id) === id);
-        if (itemToDelete) {
-            setDeletingItem(itemToDelete);
-            setShowDeleteModal(true);
+        // Tenta encontrar o ID usando as chaves mais prováveis
+        const id = item?.idAtendimento ?? item?.idAgendamento ?? item?.id;
+
+        if (id == null) {
+            console.warn('openDeleteModal: ID nulo, abortando.', item);
+            return;
         }
+
+        // NOVO: Define diretamente o item para deleção e abre o modal.
+        // O item que chega aqui já foi processado no useMemo e contém o ID consolidado.
+        setDeletingItem(item);
+        setShowDeleteModal(true);
+        console.log('Modal de Exclusão Aberto para ID:', id);
     };
     const closeModalDelete = () => {
         setShowDeleteModal(false);
@@ -204,7 +231,8 @@ export default function Agenda() {
     const handleDeleteConfirm = async () => {
         if (!deletingItem) return;
         try {
-            await excluirAtendimento(deletingItem.idAtendimento ?? deletingItem.id);
+            // Usa idAtendimento, idAgendamento ou id como fallback, garantindo que o ID é encontrado
+            await excluirAtendimento(deletingItem.idAtendimento ?? deletingItem.idAgendamento ?? deletingItem.id);
             closeModalDelete();
             await fetchAtendimentos();
             alert('Atendimento excluído!');
@@ -221,7 +249,9 @@ export default function Agenda() {
     const atendimentosFiltrados = useMemo(() => {
         return (atendimentosBrutos || []).map(item => {
             const { dia, horario } = formatarDataHora(item.dataInicio || item.data);
-            const idAtendimento = item.idAtendimento ?? item.id;
+
+            // ATUALIZAÇÃO: Use idAgendamento se idAtendimento for nulo/indefinido
+            const idAtendimento = item.idAtendimento ?? item.idAgendamento ?? item.id;
             const itemComId = { ...item, idAtendimento };
 
             return {
@@ -243,7 +273,7 @@ export default function Agenda() {
                 excluir: (
                     <button
                         type="button"
-                        onClick={() => openDeleteModal(itemComId)}
+                        onClick={() => openDeleteModal(itemComId)} // <--- Chamando a função openDeleteModal
                         aria-label="Excluir atendimento"
                         className="btn-icon-plain"
                     >
@@ -401,7 +431,7 @@ export default function Agenda() {
                 </div>
             </main>
 
-            +            {/* MODAIS */}
+            {/* MODAIS */}
             <ModalAdicionarAtendimento show={showAddModal} onClose={closeModalAdd} atualizarLista={fetchAtendimentos} />
 
             <ModalEditarAtendimento
@@ -410,12 +440,11 @@ export default function Agenda() {
                 editingItem={editingItem}
                 atualizarLista={fetchAtendimentos}
             />
-
             <ModalContainer show={showDeleteModal} onClose={closeModalDelete} title="Confirmar Exclusão" variant="delete" modalId="modal-delete-atendimento">
                 {deletingItem && (
                     <ConfirmacaoExclusao
                         message={`Tem certeza que deseja excluir o atendimento de ${deletingItem.nomeCliente || deletingItem.nome}?`}
-                        onConfirm={handleDeleteConfirm}
+                        onConfirm={handleDeleteConfirm} // <--- Chamando a função de exclusão
                         onCancel={closeModalDelete}
                     />
                 )}

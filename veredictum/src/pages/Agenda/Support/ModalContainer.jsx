@@ -1,4 +1,3 @@
-
 import React, { useEffect, useRef } from 'react';
 import PropTypes from 'prop-types';
 import './ModalContainer.css'; // <-- import do CSS novo
@@ -61,6 +60,7 @@ export default function ModalContainer({
       >
         <div className="modal-header_P">
           <h2 id={titleId}>{title}</h2>
+          {/* Botão de fechar com o caractere '×' */}
           <button type="button" className="modal-close-btn_P" onClick={onClose} aria-label="Fechar">×</button>
         </div>
         <div className="modal-body_P">
@@ -79,4 +79,3 @@ ModalContainer.propTypes = {
   modalId: PropTypes.string,
   variant: PropTypes.oneOf(['default','add','edit','view','delete'])
 };
-// ...existing code...

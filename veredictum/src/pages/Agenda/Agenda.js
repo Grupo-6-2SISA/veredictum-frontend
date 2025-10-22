@@ -41,9 +41,15 @@ export const editarAtendimento = (id, atendimentoDTO) => {
         .catch(err => { throw err; });
 };
 
+export const mudarStatusAtendimento = (idAtendimento, idStatus) => {
+    // PATCH é usado para alterações parciais (neste caso, apenas o status)
+    return apiClient.patch(`/atendimentos/mudar-status/${idAtendimento}/${idStatus}`)
+        .then(res => res)
+        .catch(err => { throw err; });
+};
+
 export const excluirAtendimento = (id) => {
     return apiClient.delete(`/atendimentos/${id}`)
         .then(res => res)
         .catch(err => { throw err; });
 };
-// ...existing code...

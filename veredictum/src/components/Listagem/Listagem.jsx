@@ -52,29 +52,14 @@ const Listagem = ({ dados = [], colunas = [], classNamePrefix = 'listagem', id, 
                                 );
                             }
 
-                            // === AJUSTE PARA RENDERIZAR ÍCONES DE ASSETS ===
+                            // === AJUSTE PARA RENDERIZAR COMPONENTES REACT/ELEMENTOS ===
                             if (key === 'editar' || key === 'excluir') {
-                                // Verifica se o componente pai passou o caminho do ícone
-                                if (value) {
-                                    return (
-                                        <div className={`${prefix}-data`} key={key}>
-                                            <button 
-                                                className={`${prefix}-btn ${prefix}-btn-${key}`} 
-                                                aria-label={`${key} ${item.nome}`} // Acessibilidade
-                                                onClick={() => handleActionClick(key, item)}
-                                            >
-                                                {/* Usa a tag <img> com o caminho do asset no 'src' */}
-                                                <img 
-                                                    src={value} 
-                                                    alt={col.titulo} // 'Editar' ou 'Excluir'
-                                                    className={`${prefix}-icon`} 
-                                                />
-                                            </button>
-                                        </div>
-                                    );
-                                }
-                                // Retorna célula vazia se o ícone não foi fornecido
-                                return <div className={`${prefix}-data`} key={key}></div>;
+                                return (
+                                    <div className={`${prefix}-data`} key={key}>
+                                        {/* Simplesmente renderiza o botão/elemento que veio do componente pai */}
+                                        {value}
+                                    </div>
+                                );
                             }
                             // === FIM DO AJUSTE ===
 
