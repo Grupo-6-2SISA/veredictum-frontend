@@ -9,6 +9,7 @@ import Clientes from './pages/Clientes/Clientes.jsx';
 import Agenda from './pages/Agenda/Agenda.jsx';
 import Login from './pages/Login/Login.jsx';
 import RecuperarSenha from './pages/RecuperarSenha/RecuperarSenha.jsx';
+import LogEnvioEmail from './pages/LogEnvioEmail/LogEnvioEmail.jsx';
 
 function App() {
   return (
@@ -19,11 +20,12 @@ function App() {
         <Route path="/login" element={<Login />} />
         <Route path="/recuperarSenha" element={<RecuperarSenha/>} />
         <Route path="/VisaoGeral" element={<VisaoGeral />} />
-        <Route path="/painel-controle" element={<PainelControle />} />
-        <Route path="/gestao-despesas" element={<GestaoDespesas />} />
+        <Route path="/PainelControle" element={<PainelControle />} />
+        <Route path="/GestaoDespesas" element={<GestaoDespesas />} />
         <Route path="/NotasFiscais" element={<NotasFiscais />} />
         <Route path="/Clientes" element={<Clientes />} />
         <Route path="/Agenda" element={<Agenda />} />
+        <Route path="/LogEnvioEmail" element={<LogEnvioEmail />} />
       </Routes>
     </Router>
   );

@@ -207,7 +207,7 @@
     display: none;
 }
 /* Cabeçalho do modal */
-.modal-header {
+.modal-header_D {
     display: flex;
     justify-content: center;
     align-items: center;

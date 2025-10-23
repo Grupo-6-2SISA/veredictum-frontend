@@ -1,36 +1,46 @@
+// Listagem.js
 import React from 'react';
 import './Listagem.css';
 import '../../index.css';
 
-const Listagem = ({ dados = [], colunas = [], classNamePrefix = 'listagem', id, isFullTable = false }) => {
+// ADICIONADA A PROPRIEDADE isHeaderless com valor padrão false
+const Listagem = ({ dados = [], colunas = [], classNamePrefix = 'listagem', id, isFullTable = false, gridTemplateCustom, isHeaderless = false }) => {
     const prefix = classNamePrefix;
 
-    const gridTemplate = isFullTable
-        ? '0.2fr 2fr 1fr 1fr 1fr 0.5fr 0.5fr'
-        : (colunas.length === 3
-            ? '3fr 2fr 1fr'
-            : colunas.length === 2
-                ? '3fr 2fr'
-                : '1fr');
-
-    // Função de exemplo para tratar os cliques nas ações de Editar/Excluir
+    // USE A PROP gridTemplateCustom SE ELA EXISTIR. CASO CONTRÁRIO, USE A LÓGICA EXISTENTE
+    const gridTemplate = gridTemplateCustom 
+        ? gridTemplateCustom 
+        : (isFullTable
+            ? '0.2fr 2fr 1fr 1fr 1fr 0.5fr 0.5fr'
+            : (colunas.length === 3
+                ? '3fr 2fr 1fr'
+                : colunas.length === 2
+                    ? '3fr 2fr'
+                    : '1fr'));
+    
+    // Função de exemplo para tratar os cliques nas ações de Editar/Excluir/Ver Mais
     const handleActionClick = (key, item) => {
-        // Esta função deve ser substituída pela lógica real da sua aplicação (ex: abrir modal, chamar API)
-        console.log(`Ação ${key} clicada para o item:`, item.nome);
-        alert(`Você clicou em ${key} para o agendamento de ${item.nome}!`);
+        console.log(`Ação ${key} clicada para o item:`, item.Tipo || item.nome);
+        alert(`Você clicou em ${key} para o item de ${item.Tipo || item.nome}!`);
     };
+
+    const isLastColumn = (index) => index === colunas.length - 1;
 
     return (
         <div className={`${prefix}-container`} id={id}>
-            <div
-                className={`${prefix}-header`}
-                style={{ gridTemplateColumns: gridTemplate }}
-                role="row"
-            >
-                {colunas.map(col => (
-                    <div key={col.key} className={`${prefix}-header-cell`}>{col.titulo}</div>
-                ))}
-            </div>
+            {/* RENDERIZAÇÃO CONDICIONAL: O header só será renderizado se isHeaderless NÃO for true */}
+            {!isHeaderless && (
+                <div
+                    className={`${prefix}-header`}
+                    style={{ gridTemplateColumns: gridTemplate }}
+                    role="row"
+                >
+                    {colunas.map(col => (
+                        <div key={col.key} className={`${prefix}-header-cell`}>{col.titulo}</div>
+                    ))}
+                </div>
+            )}
+            {/* FIM DA RENDERIZAÇÃO CONDICIONAL */}
 
             <div className={`${prefix}-body`}>
                 {dados.map((item, idx) => (
@@ -40,9 +50,9 @@ const Listagem = ({ dados = [], colunas = [], classNamePrefix = 'listagem', id, 
                         key={idx}
                         role="row"
                     >
-                        {colunas.map(col => {
+                        {colunas.map((col, colIndex) => {
                             const key = col.key;
-                            const value = item[key]; // O valor é o caminho do SVG passado pelo componente pai
+                            const value = item[key];
 
                             if (key === 'checkbox') {
                                 return (
@@ -52,33 +62,22 @@ const Listagem = ({ dados = [], colunas = [], classNamePrefix = 'listagem', id, 
                                 );
                             }
 
-                            // === AJUSTE PARA RENDERIZAR ÍCONES DE ASSETS ===
-                            if (key === 'editar' || key === 'excluir') {
-                                // Verifica se o componente pai passou o caminho do ícone
-                                if (value) {
+                            if (key === 'editar' || key === 'excluir' || (isLastColumn(colIndex) && col.titulo === 'Ações')) {
+                                if (key === 'editar' || key === 'excluir' || col.titulo === 'Ações') {
                                     return (
                                         <div className={`${prefix}-data`} key={key}>
                                             <button 
-                                                className={`${prefix}-btn ${prefix}-btn-${key}`} 
-                                                aria-label={`${key} ${item.nome}`} // Acessibilidade
-                                                onClick={() => handleActionClick(key, item)}
+                                                className={`${prefix}-btn ${prefix}-btn-vermais`} 
+                                                aria-label={`Ver mais detalhes sobre ${item.Tipo || 'este item'}`}
+                                                onClick={() => handleActionClick('verMais', item)}
                                             >
-                                                {/* Usa a tag <img> com o caminho do asset no 'src' */}
-                                                <img 
-                                                    src={value} 
-                                                    alt={col.titulo} // 'Editar' ou 'Excluir'
-                                                    className={`${prefix}-icon`} 
-                                                />
+                                                Ver Mais
                                             </button>
                                         </div>
                                     );
                                 }
-                                // Retorna célula vazia se o ícone não foi fornecido
-                                return <div className={`${prefix}-data`} key={key}></div>;
                             }
-                            // === FIM DO AJUSTE ===
 
-                            // Renderização padrão para outros dados (nome, dia, horario, status, etc.)
                             return (
                                 <div className={`${prefix}-data`} key={key}>
                                     {value}

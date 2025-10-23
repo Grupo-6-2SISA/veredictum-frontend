@@ -6,7 +6,7 @@ import '../../index.css';
 const navItems = [
     { name: 'Visão Geral', iconPath: 'src/assets/svg/visao-geral.svg', path: '/VisaoGeral', iconClass: 'icon_vg' },
     { name: 'Dashboard', iconPath: 'src/assets/svg/dash.svg', path: '/Dashboard', iconClass: 'icon_dash' },
-    { name: 'Painel', iconPath: 'src/assets/svg/painel.svg', path: '/Painel', iconClass: 'icon_painel', adminOnly: true },
+    { name: 'Painel', iconPath: 'src/assets/svg/painel.svg', path: '/PainelControle', iconClass: 'icon_painel', adminOnly: true },
     { name: 'Gestão de Clientes', iconPath: 'src/assets/svg/funcionario.svg', path: '/Clientes', iconClass: 'icon_funcionario' },
     { name: 'Agenda & Relacionamento', iconPath: 'src/assets/svg/agenda.svg', path: '/Agenda', iconClass: 'icon_agenda' },
     { name: 'Gestão de Despesas', iconPath: 'src/assets/svg/despezas.svg', path: '/GestaoDespesas', iconClass: 'icon_notas' },
