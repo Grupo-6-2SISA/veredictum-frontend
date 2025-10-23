@@ -262,8 +262,8 @@ export default function PainelControle() {
   return (
     <div className="container">
       <Sidebar />
-      <main className="main-content">
-        <h1 className="page-title" style={{ transform: "translateY(-10px)" }}>Painel de Controle</h1>
+      <main className="main-content_Davidson">
+        <h1 className="page-title_Davidson" style={{ transform: "translateY(-10px)" }}>Painel de Controle</h1>
 
         <div className="panels-container">
 
@@ -356,7 +356,7 @@ export default function PainelControle() {
                       <td>{rotina.nome}</td>
                       <td>{"Sim"}</td>
                       <td>
-                        <a href="#" className="link" onClick={(e) => { e.preventDefault(); openModalVerMaisRotina(rotina.id); }}>
+                        <a href="#"   style={{ textDecoration: 'none'}} className="link" onClick={(e) => { e.preventDefault(); openModalVerMaisRotina(rotina.id); }}>
                           Ver Mais
                         </a>
                       </td>

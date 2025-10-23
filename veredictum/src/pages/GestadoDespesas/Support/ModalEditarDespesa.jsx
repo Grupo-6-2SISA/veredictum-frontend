@@ -57,27 +57,32 @@ export default function ModalEditarDespesa({ show, onClose, editingItem, atualiz
             console.log("Enviando requisição PUT para backend...");
             const response = await atualizarDespesa(editingItem.idConta, updatedData);
             console.log("✅ [SUCESSO] Despesa atualizada:", response.data);
+
             alert("✅ Conta atualizada com sucesso");
+
             onClose();
-            atualizarLista();
+
+            window.location.reload();
+
         } catch (error) {
             console.error("❌ [ERRO] Falha ao atualizar despesa:", error);
             alert("Erro ao atualizar despesa. Verifique o console para mais detalhes.");
         }
+
     };
 
     return (
         <div id="editExpenseModal" className="modal">
             <div className="modal-content-despesas" style={{ maxHeight: "580px" }}>
-                <div id="modal-header-top" className="modal-header">
+                <div id="modal-header-top"  style={{ backgroundColor: '#424242', borderBottom: 'none' }} className="modal-header">
                     <h2>Editar Despesa</h2>
-                    <button className="modal-close-btn" onClick={onClose}>
+                    <button className="modal-close-btn_Despesas_edit"  style={{transform: "translateY(-7%)"}} onClick={onClose}>
                         <img src={FecharIcon} alt="Fechar" />
                     </button>
                 </div>
 
                 <form id="editExpenseForm" onSubmit={handleSubmit}>
-                    <div className="form-row">
+                    <div className="form-row_Davidson">
                         <div className="form-group">
                             <label htmlFor="edit-etiqueta">Etiqueta</label>
                             <input
@@ -99,7 +104,7 @@ export default function ModalEditarDespesa({ show, onClose, editingItem, atualiz
                         </div>
                     </div>
 
-                    <div className="form-row">
+                    <div className="form-row_Davidson">
                         <div className="form-group">
                             <label htmlFor="edit-vencimento">Data de Vencimento</label>
                             <input
@@ -121,11 +126,13 @@ export default function ModalEditarDespesa({ show, onClose, editingItem, atualiz
                         </div>
                     </div>
 
-                    <div className="form-row">
+                    <div className="form-row_Davidson">
                         <div className="form-group">
-                            <label style={{ transform: "translateX(-1%)"}} htmlFor="edit-valor">Valor</label>
+                            <label 
+                            style={{ transform: "translateX(-1%)" }} 
+                            htmlFor="edit-valor">Valor</label>
                             <input
-                                style={{ transform: "translateX(-3%)", width:"47%" }}
+                                style={{ transform: "translateX(-3%)", width: "47%" }}
                                 type="number"
                                 step="0.01"
                                 id="edit-valor"
@@ -136,7 +143,7 @@ export default function ModalEditarDespesa({ show, onClose, editingItem, atualiz
                         </div>
                     </div>
 
-                    <div className="form-row" id="div_para_checkbox_edit">
+                    <div className="form-row_Davidson" id="div_para_checkbox_edit">
                         <label className="pagamento-label">Pago?</label>
                         <div id="switch_edit" className="switch-row">
                             <span className="switch-text off">Não</span>
@@ -153,7 +160,7 @@ export default function ModalEditarDespesa({ show, onClose, editingItem, atualiz
                         </div>
                     </div>
 
-                    <div id="div_para_botao">
+                    <div  style={{transform: "translateY(-10%)"}} id="div_para_botao">
                         <button type="submit" className="modal-add-btn_save">
                             Salvar
                         </button>

@@ -73,7 +73,7 @@ function ModalCriarFuncionario({ isModalOpen, closeModalCriar, atualizarLista, F
 
     return (
         <div id="modalCriar" className="modal" style={{ display: "flex" }}>
-            <div className="modal-content">
+            <div className="modal-content_Painel">
                 <div id="div_para_titulo">
                     <span className="close" onClick={closeModalCriar}>
                         <img src={FecharIcone} alt="Fechar" />

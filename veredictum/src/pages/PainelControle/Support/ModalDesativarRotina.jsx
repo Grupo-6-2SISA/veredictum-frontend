@@ -32,7 +32,7 @@ function ModalConfirmarRotina({
     return (
         <div id="modal-delete-rotina" className="modal-delete" style={{ display: 'flex' }}>
             <div className="modal-content-rotinas">
-                <div className="modal-header">
+                <div className="modal-header" style={{ backgroundColor: '#edeaef', borderBottom: 'none' }}>
                     <h2>Desativar Rotina</h2>
                     <button className="modal-close-delete-btn" onClick={closeModalConfirmarRotina}>
                         <img src={CloseBlackIcon} alt="Fechar" />

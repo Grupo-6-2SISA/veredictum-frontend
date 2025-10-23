@@ -182,7 +182,7 @@ export default function GestaoDespesas() {
     <div className="container">
       <Sidebar />
 
-      <main className="main-content">
+      <main className="main-content_GestaoDespesas">
         <header className="header">
           <h1>Gestão de Despesas</h1>
           <button className="add-expense-btn" onClick={openModal}>
@@ -202,7 +202,7 @@ export default function GestaoDespesas() {
           </div>
 
           {showMonthPicker && (
-            <div id="month-picker" className="month-picker-popup">
+            <div id="month-picker" className="month-picker-popup_Despesas">
               <div className="month-header">
                 <div id="current-month-display">Selecione um mês</div>
               </div>

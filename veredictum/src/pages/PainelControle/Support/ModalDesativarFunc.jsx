@@ -33,7 +33,7 @@ function ModalConfirmarDesativacao({
   return (
     <div id="modalConfirmar" className="modal-delete-rotinas" style={{ display: "flex" }}>
       <div className="modal-content-rotinas">
-        <div className="modal-header">
+        <div className="modal-header"  style={{backgroundColor: '#edeaef', borderBottom: 'none'}}>
           <h2>Desativar Funcionário</h2>
           <button className="modal-close-delete-btn" onClick={closeModalConfirmar}>
             <img src={CloseBlackIcon} alt="Fechar" />
