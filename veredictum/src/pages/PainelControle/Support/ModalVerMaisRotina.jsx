@@ -6,7 +6,7 @@ function ModalVerMaisRotina({ isModalOpen, closeModalVerMaisRotina, rotinaData, 
 
     return (
         <div id="modalVerMaisRotina" className="modal" style={{ display: 'flex' }}>
-            <div className="modal-content">
+            <div className="modal-content_Painel">
                 <div id="div_para_titulo">
                     <span className="close" onClick={closeModalVerMaisRotina}>
                         <img src={FecharIcone} alt="Fechar" />

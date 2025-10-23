@@ -19,7 +19,7 @@ export default function ModalInfoDespesa({ show, onClose, infoItem }) {
 
                 <form>
                     {/* Primeira linha de inputs */}
-                    <div className="form-row">
+                    <div className="form-row_Davidson">
                         <div className="form-group">
                             <label>Etiqueta</label>
                             <input type="text" value={infoItem.etiqueta} readOnly />
@@ -31,7 +31,7 @@ export default function ModalInfoDespesa({ show, onClose, infoItem }) {
                     </div>
 
                     {/* Segunda linha de inputs */}
-                    <div className="form-row">
+                    <div className="form-row_Davidson">
                         <div className="form-group">
                             <label>Data de Vencimento</label>
                             <input type="date" value={infoItem.dataVencimento} readOnly />
@@ -43,7 +43,7 @@ export default function ModalInfoDespesa({ show, onClose, infoItem }) {
                     </div>
 
                     {/* Terceira linha de inputs */}
-                    <div className="form-row">
+                    <div className="form-row_Davidson">
 
                         <div className="form-group">
                             <label style={{ transform: "translateX(-1%)"}}
@@ -55,7 +55,7 @@ export default function ModalInfoDespesa({ show, onClose, infoItem }) {
                         </div>
                     </div>
 
-                    <div className="form-row" id="div_para_checkbox_info">
+                    <div className="form-row_Davidson" id="div_para_checkbox_info">
                         <label className="pagamento-label">Pago?</label>
 
                         <div id="swithc_info" className="switch-row">

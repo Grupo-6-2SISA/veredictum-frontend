@@ -8,6 +8,7 @@
 
 }
 
+
 /* .container {
     background-color: var(--white-light);
     width: 100%;
@@ -20,7 +21,13 @@
 
 } */
 
-.page-title {
+.main-content_Davidson {
+    margin-left: 120px;
+    flex: 1;
+    padding: 30px;
+}
+
+.page-title_Davidson {
     font-size: 50px;
     font-weight: bold;
     margin-bottom: 30px;
@@ -202,7 +209,7 @@
     /* background-color: red; */
 }
 
-.modal-content {
+.modal-content_Painel {
     background: #414141;
     color: #fff;
     padding: 32px;
@@ -307,7 +314,7 @@
     width: 100%;
 }
 
-.modal-content h2 {
+.modal-content_Painel h2 {
     display: flex;
     justify-content: center;
     font-size: 40px;
@@ -607,7 +614,8 @@ table {
 
 .senha-wrapper input {
     width: 100%;
-    padding-right: 40px; /* espaço pro botão do olho */
+    padding-right: 40px;
+    /* espaço pro botão do olho */
 }
 
 .toggle-senha {

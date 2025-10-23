@@ -108,7 +108,7 @@ function ModalEditarFuncionario({
 
     return (
         <div id="modalEditar" className="modal" style={{ display: "flex" }}>
-            <div className="modal-content">
+            <div className="modal-content_Painel">
                 <div id="div_para_titulo">
                     <span className="close" onClick={closeModalEditar}>
                         <img src={FecharIcone} alt="Fechar" />

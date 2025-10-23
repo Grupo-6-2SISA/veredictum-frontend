@@ -85,7 +85,7 @@ function ModalEditarRotina({ isModalOpen, closeModalEditarRotina, rotinaData, Fe
 
     return (
         <div id="modal-editar-rotina" className="modal" style={{ display: 'flex' }}>
-            <div className="modal-content" id="modal-editar-rotina-content">
+            <div className="modal-content_Painel" id="modal-editar-rotina-content">
                 <div id="div_para_titulo">
                     <span className="close" onClick={closeModalEditarRotina}>
                         <img src={FecharIcone} alt="Fechar" />

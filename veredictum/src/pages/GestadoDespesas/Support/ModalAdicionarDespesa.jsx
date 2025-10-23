@@ -88,16 +88,16 @@ export default function ModalAdicionarDespesa({ show, onClose, atualizarLista })
     return (
         <div id="ModalAdicionarDespesa" className="modal">
             <div className="modal_add_despesas">
-                <div className="modal-header">
+                <div className="modal-header" style={{ backgroundColor: '#424242', borderBottom: 'none' }}>
                     <h2>Adicionar Despesa</h2>
-                    <button className="modal-close-btn" onClick={onClose}>
+                    <button className="modal-close-btn_Despesas" onClick={onClose}>
                         <img src={FecharIcon} alt="Fechar" />
                     </button>
                 </div>
 
                 <form id="expenseForm" onSubmit={handleSubmit}>
                     {/* Primeira linha */}
-                    <div className="form-row">
+                    <div className="form-row_Davidson">
                         <div className="form-group">
                             <label htmlFor="etiqueta">Etiqueta</label>
                             <input type="text" id="etiqueta" name="etiqueta" required />
@@ -110,7 +110,7 @@ export default function ModalAdicionarDespesa({ show, onClose, atualizarLista })
                     </div>
 
                     {/* Segunda linha */}
-                    <div className="form-row">
+                    <div className="form-row_Davidson">
                         <div className="form-group">
                             <label htmlFor="dataVencimento">Data de Vencimento</label>
                             <input type="date" id="dataVencimento" name="dataVencimento" required />
@@ -123,12 +123,13 @@ export default function ModalAdicionarDespesa({ show, onClose, atualizarLista })
                     </div>
 
                     {/* Valor */}
-                    <div className="form-row">
+                    <div className="form-row_Davidson">
                         <div className="form-group">
-                            <label style={{ transform: "translateX(-1%)" }}
+                            <label 
+                            // style={{ transform: "translateX(-1%)" }}
                                 htmlFor="valor">Valor</label>
                             <input
-                                style={{ transform: "translateX(-3%)", width: "47%" }}
+                                // style={{ transform: "translateX(-3%)", width: "47%" }}
 
                                 type="number"
                                 step="0.01"
