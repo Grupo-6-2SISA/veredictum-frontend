@@ -1,13 +1,8 @@
-<<<<<<< HEAD
-// src/components/Card/Card.jsx
-=======
 // src/components/Card/Card.jsx 
 
->>>>>>> f584f6d9c8a7af748bf6e026de6fd51c61d87dd6
 import React from 'react';
-import './Card.css'; 
-// Supondo que você use uma biblioteca de ícones como react-icons
-// import { FaRegCalendarAlt } from 'react-icons/fa'; 
+import './Card.css';
+import '../../index.css';
 
 // 1. ADICIONAR 'onClick' nas props
 const Card = ({ titulo, iconePath, children, className = 'card', alt, onClick }) => (

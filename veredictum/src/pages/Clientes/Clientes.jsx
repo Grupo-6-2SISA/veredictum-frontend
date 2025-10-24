@@ -5,12 +5,12 @@ import './Clientes.css';
 import Sidebar from '../../components/Sidebar/Sidebar.jsx';
 import btnIcon from '../../assets/svg/btn.svg';
 import editIcon from '../../assets/svg/edit.svg';
-import Toggle from '../../components/Toggle/Toggle_G.jsx';
-import Modal from '../../components/Modal/Modal_G.jsx';
-import Button from '../../components/Button/Button_G.jsx';
-import Listagem from '../../components/Listagem/Listagem.jsx';
-import Card from '../../components/Card/Card_G.jsx';
-import '../../index.css';
+import Toggle from '../../components/Toggle/ToggleClientes.jsx';
+import Modal from '../../components/ModalClientes/ModalClientes.jsx';
+import Button from '../../components/ButtonClientes/ButtonClientes.jsx';
+import Listagem from '../../components/ListagemClientes/ListagemClientes.jsx';
+import Card from '../../components/CardClientes/CardClientes.jsx';
+import '../../components/Css/Main.css';
 
 import { getClientes, createCliente, updateCliente, activateCliente, deactivateCliente } from './Clientes.js';
 
@@ -85,28 +85,21 @@ const CLIENT_FORM_COLUMNS = (clientList = []) => {
 
 
 
-const isEmptyValue = (value) => (
-    value === null
-    || value === undefined
-    || (typeof value === 'string' && !value.trim())
-);
-
 const validateClientData = (clientData) => {
     const errors = [];
     const pushError = (message) => errors.push(message);
 
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    const missingRequired = [];
 
-    if (isEmptyValue(clientData.nome)) {
-        missingRequired.push('Nome');
+    if (!clientData.nome) {
+        pushError('Nome é obrigatório.');
     } else {
         if (clientData.nome.length < 2) pushError('Nome deve ter pelo menos 2 caracteres.');
         if (clientData.nome.length > 255) pushError('Nome deve ter no máximo 255 caracteres.');
     }
     
-    if (isEmptyValue(clientData.email)) {
-        missingRequired.push('E-mail');
+    if (!clientData.email) {
+        pushError('E-mail é obrigatório.');
     } else {
         if (clientData.email.length > 255) pushError('E-mail deve ter no máximo 255 caracteres.');
         if (!emailRegex.test(clientData.email)) pushError('Formato de e-mail inválido.');
@@ -128,8 +121,8 @@ const validateClientData = (clientData) => {
         if (!/^\+55\d{10,11}$/.test(clientData.telefone)) pushError('Telefone deve estar no formato +55 seguido de DDD e número (ex: +5511999999999).');
     }
 
-    if (isEmptyValue(clientData.dataNascimento)) {
-        missingRequired.push('Data de Nascimento');
+    if (!clientData.dataNascimento) {
+        pushError('Data de Nascimento é obrigatória.');
     } else {
         const dataNascimento = new Date(clientData.dataNascimento);
         const hoje = new Date();
@@ -141,8 +134,8 @@ const validateClientData = (clientData) => {
         }
     }
 
-    if (isEmptyValue(clientData.dataInicio)) {
-        missingRequired.push('Data de Início');
+    if (!clientData.dataInicio) {
+        pushError('Data de Início é obrigatória.');
     } else {
         const dataInicio = new Date(clientData.dataInicio);
         if (Number.isNaN(dataInicio.getTime())) {
@@ -156,11 +149,6 @@ const validateClientData = (clientData) => {
 
     if (clientData.inscricaoEstadual) {
         if (!/^\d{9}$/.test(clientData.inscricaoEstadual)) pushError('Inscrição Estadual deve conter exatamente 9 dígitos numéricos.');
-    }
-
-    if (missingRequired.length) {
-        const formattedList = missingRequired.join(', ');
-        errors.unshift(`Preencha os campos obrigatórios: ${formattedList}.`);
     }
 
     return errors;
@@ -264,10 +252,10 @@ const renderFormColumns = (mode, clientData, clientList) => (
 );
 
 const TABLE_COLUMNS = [
-    { key: 'nome', titulo: 'Nome', className: 'col-name' },
-    { key: 'editar', titulo: 'Editar', className: 'col-edit' },
-    { key: 'informacoes', titulo: 'Informações', className: 'col-info' },
-    { key: 'status', titulo: 'Status', className: 'col-status' },
+    { key: 'nome', titulo: 'Nome', className: 'clientes-col-name' },
+    { key: 'editar', titulo: 'Editar', className: 'clientes-col-edit' },
+    { key: 'informacoes', titulo: 'Informações', className: 'clientes-col-info' },
+    { key: 'status', titulo: 'Status', className: 'clientes-col-status' },
 ];
 
 function Clientes() {
@@ -305,7 +293,7 @@ function Clientes() {
         return ({
             nome: (
                 <div
-                    className={`client-list-name ${isDeactivating ? 'client-list-name--deactivating' : ''}`.trim()}
+                    className={`clientes-list-name ${isDeactivating ? 'clientes-list-name--deactivating' : ''}`.trim()}
                     data-client-id={client.idCliente}
                     data-row-state={isDeactivating ? 'deactivating' : 'stable'}
                 >
@@ -318,15 +306,15 @@ function Clientes() {
                 </Button>
             ),
             informacoes: (
-                <Button className="btn-link" type="button" onClick={() => handleOpenView(client)}>Ver mais</Button>
+                <Button className="clientes-btn-link" type="button" onClick={() => handleOpenView(client)}>Ver mais</Button>
             ),
             status: (
                 <Toggle
                     label=""
                     checked={isDeactivating ? false : client.isAtivo}
                     onChange={() => handleToggleStatus(client)}
-                    id={`toggle-status-${client.idCliente}`}
-                    name={`toggle-status-${client.idCliente}`}
+                    id={`clientes-toggle-status-${client.idCliente}`}
+                    name={`clientes-toggle-status-${client.idCliente}`}
                     disabled={isDeactivating}
                 />
             ),
@@ -485,22 +473,22 @@ function Clientes() {
         <div className="container clientes-page">
             <Sidebar />
             <main className="main-content clientes-main">
-                <div className="header-top">
-                    <div className="head-description">
+                <div className="clientes-header-top">
+                    <div className="clientes-head-description">
                         <h1>Gestão de Clientes</h1>
                         <p className="description">Acesse, altere e mantenha as informações dos clientes<br /> sempre atualizadas.</p>
                     </div>
-                    <Button className="btn-new-appointment" onClick={handleOpenAdd}>
+                    <Button className="clientes-btn-new-appointment" onClick={handleOpenAdd}>
                         Cadastrar Cliente
                         <img src={btnIcon} alt="Cadastrar novo cliente" />
                     </Button>
                 </div>
-                <section className="client-management-section">
-                    <Card className="client-table-card" variant="clientes" headerContent={null}>
+                <section className="clientes-management-section">
+                    <Card className="clientes-table-card" variant="clientes" headerContent={null}>
                         {clients.length > 0 ? (
                             <Listagem dados={tableData} colunas={TABLE_COLUMNS} variant="clientes" />
                         ) : (
-                            <p className="listagem-vazia">Nenhum cliente cadastrado.</p>
+                            <p className="clientes-listagem-vazia">Nenhum cliente cadastrado.</p>
                         )}
                     </Card>
                 </section>
@@ -510,15 +498,16 @@ function Clientes() {
                     isOpen={isAddOpen}
                     variant="add"
                     title="Cadastrar Clientes"
+                    modalId="clientes-new-appointment-modal-add-client"
                     onClose={handleCloseAdd}
-                    modalId="new-appointment-modal-add-client"
-                    formProps={{ id: 'formCadastrarCliente', onSubmit: handleSubmitAdd, className: 'appointment-form' }}
+               
+                    formProps={{ id: 'formCadastrarCliente', onSubmit: handleSubmitAdd, className: 'clientes-appointment-form' }}
                     footer={(
-                        <div className="form-footer-client">
-                            <Button className="btn-new-appointment" type="submit">Cadastrar</Button>
+                        <div className="clientes-form-footer-client">
+                            <Button className="clientes-btn-new-appointment" type="submit">Cadastrar</Button>
                         </div>
                     )}>
-                    <div className="form-row form-grid">{renderFormColumns('add', null, clients)}</div>
+                    <div className="clientes-form-row clientes-form-grid">{renderFormColumns('add', null, clients)}</div>
                 </Modal>
 
                 
@@ -527,14 +516,14 @@ function Clientes() {
                     variant="edit"
                     title="Editar Clientes"
                     onClose={handleCloseEdit}
-                    modalId="new-appointment-modal-edit-client"
-                    formProps={{ id: 'formEditarCliente', onSubmit: handleSubmitEdit, className: 'appointment-form' }}
+                    modalId="clientes-new-appointment-modal-edit-client"
+                    formProps={{ id: 'formEditarCliente', onSubmit: handleSubmitEdit, className: 'clientes-appointment-form' }}
                     footer={(
-                        <div className="form-footer-client">
-                            <Button className="btn-new-appointment" type="submit">Salvar Alterações</Button>
+                        <div className="clientes-form-footer-client">
+                            <Button className="clientes-btn-new-appointment" type="submit">Salvar Alterações</Button>
                         </div>
                     )}>
-                    <div className="form-row form-grid">{selectedClient && renderFormColumns('edit', selectedClient, clients)}</div>
+                    <div className="clientes-form-row clientes-form-grid">{selectedClient && renderFormColumns('edit', selectedClient, clients)}</div>
                 </Modal>
 
               
@@ -543,9 +532,9 @@ function Clientes() {
                     variant="view"
                     title="Informações sobre o Cliente"
                     onClose={handleCloseView}
-                    modalId="new-appointment-modal-view-client">
-                    <form action="" className="appointment-form">
-                        <div className="form-row form-grid">{selectedClient && renderFormColumns('view', selectedClient, clients)}</div>
+                    modalId="clientes-new-appointment-modal-view-client">
+                    <form action="" className="clientes-appointment-form">
+                        <div className="clientes-form-row clientes-form-grid">{selectedClient && renderFormColumns('view', selectedClient, clients)}</div>
                     </form>
                 </Modal>
                 
@@ -554,11 +543,11 @@ function Clientes() {
                     variant="delete"
                     title="Desativar Cliente"
                     onClose={handleCloseDelete}
-                    modalId="modal-delete-schedule"
+                    modalId="clientes-modal-delete-schedule"
                     footer={(
                         <>
-                            <Button className="btn-cancel-delete" onClick={handleCloseDelete}>Não</Button>
-                            <Button className="btn-confirm-delete" onClick={handleConfirmDelete}>Sim</Button>
+                            <Button className="clientes-btn-cancel-delete" onClick={handleCloseDelete}>Não</Button>
+                            <Button className="clientes-btn-confirm-delete" onClick={handleConfirmDelete}>Sim</Button>
                         </>
                     )}>
                     <p>Deseja desativar <span className="client-name">{selectedClient?.nome}</span>?</p>

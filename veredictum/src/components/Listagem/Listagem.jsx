@@ -1,6 +1,7 @@
 // Listagem.js
 import React from 'react';
-import './Listagem.css'; 
+import './Listagem.css';
+import '../../index.css';
 
 // ADICIONADA A PROPRIEDADE isHeaderless com valor padrão false
 const Listagem = ({ dados = [], colunas = [], classNamePrefix = 'listagem', id, isFullTable = false, gridTemplateCustom, isHeaderless = false }) => {

@@ -1,12 +1,12 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import './Modal_G.css';
-import '../../index.css';
+import './ModalClientes.css';
+import '../Css/Main.css';
 import closeIcon from '../../assets/svg/close.svg';
 import closeBlackIcon from '../../assets/svg/close_black.svg';
 
-function Modal({
-  isOpen,
+function ModalClientes({
+   isOpen,
   variant = 'default',
   title,
   onClose,
@@ -20,21 +20,21 @@ function Modal({
   }
 
   const isDelete = variant === 'delete';
-  const containerClass = isDelete ? 'modal-delete' : 'modal';
+  const containerClass = isDelete ? 'clientes-modal-delete' : 'clientes-modal';
   const hasSpecificBackdrop = ['add', 'edit', 'view', 'delete', 'default'].includes(variant);
-  const backdropClass = hasSpecificBackdrop ? `modal-backdrop-${variant}` : 'modal-backdrop';
+  const backdropClass = hasSpecificBackdrop ? `clientes-modal-backdrop-${variant}` : 'clientes-modal-backdrop';
   const CloseButtonIcon = isDelete ? closeBlackIcon : closeIcon;
 
   const Wrapper = formProps ? 'form' : 'div';
   const wrapperClassName = formProps?.className
-    ? `${formProps.className} modal-body-wrapper`.trim()
-    : 'modal-body-wrapper';
+    ? `${formProps.className} clientes-modal-body-wrapper`.trim()
+    : 'clientes-modal-body-wrapper';
   const wrapperProps = formProps
     ? { ...formProps, className: wrapperClassName }
     : { className: wrapperClassName };
 
   const footerContent = footer ? (
-    <div className="modal-footer">
+    <div className="clientes-modal-footer">
       {footer}
     </div>
   ) : null;
@@ -43,16 +43,16 @@ function Modal({
     <>
       <div className={backdropClass} onClick={onClose}></div>
       <div id={modalId} className={containerClass}>
-        <div className="modal-content">
-          <div className="modal-header">
+        <div className="clientes-modal-content">
+          <div className="clientes-modal-header">
             <h2>{title}</h2>
-            <button type="button" className={isDelete ? 'modal-close-delete-btn' : 'modal-close-btn'} onClick={onClose}>
+            <button type="button" className={isDelete ? 'clientes-modal-close-delete-btn' : 'clientes-modal-close-btn'} onClick={onClose}>
               <img src={CloseButtonIcon} alt="Fechar" />
             </button>
           </div>
 
           <Wrapper {...wrapperProps}>
-            <div className="modal-body">
+            <div className="clientes-modal-body">
               {children}
             </div>
             {formProps ? footerContent : null}
@@ -65,7 +65,7 @@ function Modal({
   );
 }
 
-Modal.propTypes = {
+ModalClientes.propTypes = {
   isOpen: PropTypes.bool.isRequired,
   variant: PropTypes.oneOf(['default', 'add', 'edit', 'view', 'delete']),
   title: PropTypes.string.isRequired,
@@ -80,4 +80,4 @@ Modal.propTypes = {
   modalId: PropTypes.string,
 };
 
-export default Modal;
+export default ModalClientes;

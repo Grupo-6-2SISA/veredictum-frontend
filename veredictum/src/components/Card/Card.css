@@ -1,9 +1,10 @@
-/* Estilo base do Card */
+@import url('../Css/Main.css');
+
+/* Estilo do Card (Bloco Branco) */
 .card-box {
     background-color: #fff;
-    border-radius: 12px;
-    padding: 25px;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05); /* Sombra suave */
+    border-radius: 8px;
+    padding: 20px;
     display: flex;
     flex-direction: column;
     box-shadow: 0 1px 3px #4242425e;
@@ -33,7 +34,7 @@
     color: #0c0c0c;
 }
 
-/* Wrapper para controlar a altura e a barra de rolagem (scroll) */
+
 .card-content-wrapper {
     flex: 1 1 auto;
     overflow-y: auto;
@@ -75,4 +76,3 @@
     height: 280px;     
     max-height: 280px; 
 }
-
