@@ -53,3 +53,16 @@ export const excluirAtendimento = (id) => {
         .then(res => res)
         .catch(err => { throw err; });
 };
+
+export const excluirAtendimentoLote = (ids) => {
+    const arr = (ids || []).map(Number).filter(n => Number.isInteger(n));
+    if (!arr.length) return Promise.reject(new Error('Nenhum ID válido informado.'));
+    const idsPath = arr.join(','); // PathVariable aceita lista separada por vírgula
+    return apiClient.delete(`/atendimentos/excluir-lote/${idsPath}`)
+        .then(res => res)
+        .catch(err => { throw err; });
+};
+
+export const listarClientes = () => {
+    return apiClient.get('/clientes');
+};

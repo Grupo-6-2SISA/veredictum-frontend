@@ -1,20 +1,34 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import './ConfirmacaoExclusao.css'; // Importa os estilos dedicados
 
 function ConfirmacaoExclusao({ message = 'Confirmar exclusão?', onConfirm, onCancel }) {
+
+  // O texto da imagem de cancelamento é "Deseja cancelar o atendimento de às do dia ?"
+
   return (
-    <div style={{ padding: 12 }}>
-      <p style={{ margin: '8px 0 16px' }}>{message}</p>
-      <div style={{ display: 'flex', gap: 12, justifyContent: 'flex-end' }}>
-        <button type="button" onClick={onCancel} style={{ padding: '8px 14px', borderRadius: 8 }}>
-          Cancelar
+    <div className="confirmacao-container">
+      <p className="confirmacao-message">
+        {message}
+      </p>
+
+      <div className="confirmacao-buttons">
+        {/* Botão 'Não' */}
+        <button
+          type="button"
+          onClick={onCancel}
+          className="btn-confirmacao-cancel"
+        >
+          Não
         </button>
+
+        {/* Botão 'Sim' */}
         <button
           type="button"
           onClick={onConfirm}
-          style={{ padding: '8px 14px', borderRadius: 8, background: '#c62828', color: '#fff', border: 'none' }}
+          className="btn-confirmacao-sim"
         >
-          Excluir
+          Sim
         </button>
       </div>
     </div>

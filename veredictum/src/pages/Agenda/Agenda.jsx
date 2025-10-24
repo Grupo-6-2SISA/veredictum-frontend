@@ -12,7 +12,9 @@ import {
     listarAniversariantesDoMes,
     criarAtendimento,
     editarAtendimento,
-    excluirAtendimento
+    excluirAtendimento,
+    listarClientes,
+    excluirAtendimentoLote // Importado para exclusão em lote
 } from './Agenda.js';
 
 import ModalContainer from './Support/ModalContainer';
@@ -23,7 +25,8 @@ import ConfirmacaoExclusao from './Support/ConfirmacaoExclusao';
 // ===================================================================
 // DADOS / COLUNAS
 // ===================================================================
-const colunasAtendimentoAgenda = [
+// Definição base das colunas. O cabeçalho do 'checkbox' será populado dinamicamente.
+const baseColunasAtendimentoAgenda = [
     { key: 'checkbox', titulo: '' },
     { key: 'nome', titulo: 'Nome' },
     { key: 'dia', titulo: 'Dia' },
@@ -58,32 +61,46 @@ const formatarDataHora = (isoString) => {
         console.error("Erro ao formatar data:", isoString, e);
         return { dia: 'Erro', horario: 'Erro', dataCompleta: null };
     }
-}
-
+};
 
 export default function Agenda() {
-    // ATENDIMENTOS
+    // ESTADOS
     const [atendimentosBrutos, setAtendimentosBrutos] = useState([]);
     const [loadingAtendimentos, setLoadingAtendimentos] = useState(false);
     const [erroAtendimentos, setErroAtendimentos] = useState(null);
 
-    // ANIVERSARIANTES
     const [aniversariantesBrutos, setAniversariantesBrutos] = useState([]);
     const [loadingAniversariantes, setLoadingAniversariantes] = useState(false);
     const [erroAniversariantes, setErroAniversariantes] = useState(null);
 
-    // filtro de mês/ano
+    const [clientes, setClientes] = useState([]);
+
+    // FILTRO
     const [currentFilterDate, setCurrentFilterDate] = useState(new Date());
     const handleMonthChange = (newDate) => setCurrentFilterDate(newDate);
 
-    // MODAL / CRUD
+    // SELEÇÃO E MODAL
+    const [selectedIds, setSelectedIds] = useState(new Set());
+    const [deleteMode, setDeleteMode] = useState('single'); // 'single' | 'bulk'
+
     const [showAddModal, setShowAddModal] = useState(false);
     const [showEditModal, setShowEditModal] = useState(false);
     const [showDeleteModal, setShowDeleteModal] = useState(false);
     const [editingItem, setEditingItem] = useState(null);
     const [deletingItem, setDeletingItem] = useState(null);
 
-    // fetch atendimentos (centralizado)
+    // ===================================================================
+    // FETCHERS (BUSCA DE DADOS)
+    // ===================================================================
+    const fetchClientes = useCallback(async () => {
+        try {
+            const res = await listarClientes();
+            setClientes(res?.data || []);
+        } catch (err) {
+            console.error('Erro ao carregar clientes:', err);
+        }
+    }, []);
+
     const fetchAtendimentos = useCallback(async () => {
         setLoadingAtendimentos(true);
         setErroAtendimentos(null);
@@ -99,121 +116,153 @@ export default function Agenda() {
         }
     }, [currentFilterDate]);
 
-    // ===================================================================
-    // EFEITO 1: CARREGAMENTO DOS ATENDIMENTOS
-    // ===================================================================
+    // Efeitos: Carregar dados iniciais e ao mudar o mês
     useEffect(() => {
-        // usa a função fetchAtendimentos definida acima
+        fetchClientes();
         fetchAtendimentos();
-    }, [fetchAtendimentos]);
+    }, [fetchClientes, fetchAtendimentos]);
 
-
-    // ===================================================================
-    // EFEITO 2: CARREGAMENTO DOS ANIVERSARIANTES
-    // ===================================================================
     useEffect(() => {
         const fetchAniversariantes = async () => {
             setLoadingAniversariantes(true);
             setErroAniversariantes(null);
-
             try {
-                const res = await listarAniversariantesDoMes(); // GET /clientes/aniversariantes-do-mes
-                if (res.status === 204) {
-                    setAniversariantesBrutos([]);
-                } else {
-                    setAniversariantesBrutos(res.data || []);
-                }
+                const res = await listarAniversariantesDoMes();
+                setAniversariantesBrutos(res.status === 204 ? [] : res.data || []);
             } catch (error) {
-                const message = error.response?.data?.message || "Falha ao carregar aniversariantes do mês.";
-                setErroAniversariantes(message);
-                console.error("Erro ao carregar aniversariantes:", error);
+                setErroAniversariantes(error.response?.data?.message || "Falha ao carregar aniversariantes do mês.");
             } finally {
                 setLoadingAniversariantes(false);
             }
         };
-
         fetchAniversariantes();
     }, [currentFilterDate]);
 
+    // Efeito: Limpa seleção ao trocar mês/lista
+    useEffect(() => {
+        setSelectedIds(new Set());
+    }, [currentFilterDate, atendimentosBrutos]);
+
 
     // ===================================================================
-    // FUNÇÕES DE MANIPULAÇÃO DE MODAL / CRUD
+    // LÓGICA DE SELEÇÃO E EXCLUSÃO (NOVO)
+    // ===================================================================
+
+    // Alterna a seleção de um único item
+    const toggleSelect = useCallback((id, checked) => {
+        console.log(`Tentando ${checked ? 'adicionar' : 'remover'} ID: ${id} (Tipo: ${typeof id})`);
+        setSelectedIds(prev => {
+            const next = new Set(prev);
+            if (checked) next.add(id);
+            else next.delete(id);
+            console.log('Novo tamanho do Set:', next.size); // <--- Verifique este log
+            return next;
+        });
+    }, []);
+
+    // Define se todos os itens visíveis estão selecionados
+    const isAllSelected = useMemo(() => {
+        if (!atendimentosBrutos || atendimentosBrutos.length === 0) return false;
+        return selectedIds.size > 0 && selectedIds.size === atendimentosBrutos.length;
+    }, [selectedIds, atendimentosBrutos]);
+
+
+    // Seleciona ou deseleciona todos os itens visíveis
+    const toggleSelectAll = useCallback((checked) => {
+        if (checked) {
+            // Mapeia para pegar todos os IDs da lista bruta (garantindo que são números)
+            const allIds = new Set(atendimentosBrutos.map(item =>
+                Number(item.idAtendimento ?? item.idAgendamento ?? item.id)
+            ).filter(id => id > 0)); // Filtra IDs válidos
+            setSelectedIds(allIds);
+        } else {
+            setSelectedIds(new Set());
+        }
+    }, [atendimentosBrutos]);
+
+    // Abre o modal de exclusão em lote
+    const handleBulkDeleteClick = useCallback(() => {
+        console.log('IDs selecionados ao clicar no botão:', selectedIds, 'Tamanho:', selectedIds.size); // <--- Verifique este log
+        if (selectedIds.size === 0) {
+            alert('Selecione ao menos um atendimento para excluir.');
+            return;
+        }
+        setDeleteMode('bulk');
+        setDeletingItem(null);
+        setShowDeleteModal(true);
+    }, [selectedIds]);
+
+    // Executa a exclusão (individual ou lote)
+    const handleDeleteConfirm = async () => {
+        try {
+            if (deleteMode === 'bulk') {
+                const ids = Array.from(selectedIds);
+                await excluirAtendimentoLote(ids);
+                alert(`Foram excluídos ${ids.length} atendimentos.`);
+            } else if (deletingItem) {
+                await excluirAtendimento(deletingItem.idAtendimento ?? deletingItem.idAgendamento ?? deletingItem.id);
+                alert('Atendimento excluído!');
+            }
+
+            // Finaliza e atualiza
+            closeModalDelete();
+            setSelectedIds(new Set());
+            await fetchAtendimentos();
+
+        } catch (err) {
+            console.error('Erro ao excluir:', err);
+            alert('Erro ao excluir: ' + (err?.response?.data?.message || err?.message));
+        }
+    };
+
+    // ===================================================================
+    // FUNÇÕES DE MODAL / CRUD INDIVIDUAL
     // ===================================================================
     const openAddModal = () => setShowAddModal(true);
     const closeModalAdd = () => setShowAddModal(false);
 
     const openEditModal = (item) => {
-        console.log('--- ABRINDO MODAL DE EDIÇÃO ---');
-        console.log('Item recebido:', item);
-
-        // 1. Tenta pegar o ID, usando idAtendimento ou id
         const id = item?.idAtendimento ?? item?.idAgendamento ?? item?.id;
         if (id == null) {
-            console.warn('openEditModal: id is null, aborting', item);
             alert('Não foi possível identificar o ID do atendimento para edição.');
             return;
         }
-
-        // 2. Busca o item completo e atualizado no estado (atendimentosBrutos)
-        const itemToEdit = atendimentosBrutos.find((a) =>
-            (a.idAtendimento ?? a.idAgendamento ?? a.id) === id // <--- ADICIONADO idAgendamento
-        );
-
-        if (!itemToEdit) {
-            console.warn(`Item com ID ${id} não encontrado no estado. Usando o item passado...`);
-        }
-
-        // 3. Define o item de edição e abre o modal
-        setEditingItem(itemToEdit || item); // Usa o do estado ou o passado, se não achou
+        const itemToEdit = atendimentosBrutos.find(a => (a.idAtendimento ?? a.idAgendamento ?? a.id) === id);
+        setEditingItem(itemToEdit || item);
         setShowEditModal(true);
-        console.log('showEditModal setado para true');
     };
-
-
-    // Agenda.js
 
     const closeModalEdit = () => {
         setShowEditModal(false);
-        setEditingItem(null); // <-- ESSA LINHA É CRUCIAL
+        setEditingItem(null);
     };
 
     const openDeleteModal = (item) => {
-        // Tenta encontrar o ID usando as chaves mais prováveis
         const id = item?.idAtendimento ?? item?.idAgendamento ?? item?.id;
-
-        if (id == null) {
-            console.warn('openDeleteModal: ID nulo, abortando.', item);
-            return;
-        }
-
-        // NOVO: Define diretamente o item para deleção e abre o modal.
-        // O item que chega aqui já foi processado no useMemo e contém o ID consolidado.
+        if (id == null) return;
+        setDeleteMode('single');
         setDeletingItem(item);
         setShowDeleteModal(true);
-        console.log('Modal de Exclusão Aberto para ID:', id);
     };
+
     const closeModalDelete = () => {
         setShowDeleteModal(false);
         setDeletingItem(null);
+        setDeleteMode('single');
     };
 
-    // create
+    // ... handleCreateSubmit e handleEditSubmit (mantidos iguais, sem alterações)
     const handleCreateSubmit = async (atendimentoDTO) => {
         try {
-            console.debug('Agenda - creating atendimento:', atendimentoDTO);
-            await criarAtendimento(atendimentoDTO, 1); // statusInicialId = 1 por padrão
+            await criarAtendimento(atendimentoDTO, 1);
             closeModalAdd();
             await fetchAtendimentos();
             alert('Atendimento criado com sucesso!');
         } catch (err) {
-            console.error('Erro criarAtendimento ->', err);
-            // mostra payload de resposta do backend (detalhes)
-            console.error('Resposta do servidor:', err.response?.data);
             alert('Erro ao criar atendimento: ' + (err?.response?.data?.message || err?.message || 'Erro de conexão.'));
         }
     };
 
-    // edit
     const handleEditSubmit = async (atendimentoDTO) => {
         if (!editingItem) return;
         try {
@@ -222,99 +271,95 @@ export default function Agenda() {
             await fetchAtendimentos();
             alert('Atendimento atualizado!');
         } catch (err) {
-            console.error(err);
             alert('Erro ao atualizar atendimento: ' + (err?.response?.data?.message || err?.message));
         }
     };
 
-    // delete
-    const handleDeleteConfirm = async () => {
-        if (!deletingItem) return;
-        try {
-            // Usa idAtendimento, idAgendamento ou id como fallback, garantindo que o ID é encontrado
-            await excluirAtendimento(deletingItem.idAtendimento ?? deletingItem.idAgendamento ?? deletingItem.id);
-            closeModalDelete();
-            await fetchAtendimentos();
-            alert('Atendimento excluído!');
-        } catch (err) {
-            console.error(err);
-            alert('Erro ao excluir atendimento: ' + (err?.response?.data?.message || err?.message));
-        }
-    };
-
 
     // ===================================================================
-    // MEMO: MAPEAR ATENDIMENTOS (render buttons para editar/excluir)
+    // MEMO: MAPEAR ATENDIMENTOS (Renderização da Lista)
     // ===================================================================
     const atendimentosFiltrados = useMemo(() => {
-        return (atendimentosBrutos || []).map(item => {
-            const { dia, horario } = formatarDataHora(item.dataInicio || item.data);
+        return (atendimentosBrutos || [])
+            .map(item => {
+                const { dia, horario } = formatarDataHora(item.dataInicio || item.data);
 
-            // ATUALIZAÇÃO: Use idAgendamento se idAtendimento for nulo/indefinido
-            const idAtendimento = item.idAtendimento ?? item.idAgendamento ?? item.id;
-            const itemComId = { ...item, idAtendimento };
+                // CORREÇÃO: Garante que o ID é um NÚMERO e verifica se é > 0
+                const rawId = item.idAtendimento ?? item.idAgendamento ?? item.id;
+                const idAtendimento = Number.isInteger(rawId) && rawId > 0 ? rawId : parseInt(rawId, 10);
 
-            return {
-                checkbox: idAtendimento,
-                nome: item.nomeCliente || item.nome || 'Desconhecido',
-                dia,
-                horario,
-                status: item.status || 'Agendado',
-                editar: (
-                    <button
-                        type="button"
-                        onClick={() => openEditModal(itemComId)}
-                        aria-label="Editar atendimento"
-                        className="btn-icon-plain"
-                    >
-                        <img src={EditIcon} alt="Editar" />
-                    </button>
-                ),
-                excluir: (
-                    <button
-                        type="button"
-                        onClick={() => openDeleteModal(itemComId)} // <--- Chamando a função openDeleteModal
-                        aria-label="Excluir atendimento"
-                        className="btn-icon-plain"
-                    >
-                        <img src={TrashIcon} alt="Excluir" />
-                    </button>
-                ),
-                ...itemComId
-            };
-        });
-    }, [atendimentosBrutos]);
+                if (isNaN(idAtendimento) || idAtendimento <= 0) {
+                    // console.warn('Item ignorado devido a ID inválido:', item, idAtendimento);
+                    return null; // Será filtrado
+                }
 
+                // ... Lógica de Nome do cliente (mantida) ...
+                let nomeCliente = 'Cliente não informado';
+                // ... (lógica de nome mantida) ...
+                if (item.fkCliente && clientes.length > 0) {
+                    const cliente = clientes.find(c => c.idCliente === item.fkCliente || c.id === item.fkCliente);
+                    if (cliente) {
+                        nomeCliente = cliente.nome || cliente.nomeCliente || 'Cliente não informado';
+                    }
+                } else {
+                    nomeCliente = item.nomeCliente || item.nome || item.cliente?.nome || item.cliente?.nomeCliente || item.clienteNome || 'Cliente não informado';
+                }
+
+                const itemComId = { ...item, idAtendimento, nomeCliente };
+
+                return {
+                    // Checkbox reativo
+                    checkbox: (
+                        <input
+                            type="checkbox"
+                            aria-label={`Selecionar atendimento ${nomeCliente}`}
+                            checked={selectedIds.has(idAtendimento)}
+                            onChange={(e) => toggleSelect(idAtendimento, e.target.checked)}
+                        />
+                    ),
+                    // ... outras colunas ...
+                    nome: nomeCliente,
+                    dia,
+                    horario,
+                    status: item.status || 'Agendado',
+                    editar: (
+                        <button type="button" onClick={() => openEditModal(itemComId)} aria-label="Editar atendimento" className="btn-icon-plain">
+                            <img src={EditIcon} alt="Editar" />
+                        </button>
+                    ),
+                    excluir: (
+                        <button type="button" onClick={() => openDeleteModal(itemComId)} aria-label="Excluir atendimento" className="btn-icon-plain">
+                            <img src={TrashIcon} alt="Excluir" />
+                        </button>
+                    ),
+                    ...itemComId
+                };
+            })
+            .filter(item => item !== null); // Remove itens com ID inválido
+    }, [atendimentosBrutos, clientes, selectedIds, toggleSelect]);
 
     // ===================================================================
-    // MEMO: MAPEAR ANIVERSARIANTES
+    // MEMO: MAPEAR ANIVERSARIANTES (Lógica mantida)
     // ===================================================================
     const aniversariantesFiltrados = useMemo(() => {
+        // ... Lógica dos Aniversariantes mantida inalterada ...
         const filterMonth = currentFilterDate.getMonth();
 
         const isPessoaFisica = (item) => {
-            // Normaliza campos de documento (cpf/cnpj/documento)
             const rawDoc = String(item.cpf || item.cnpj || item.documento || item.documentoFiscal || '').replace(/\D/g, '');
-            // Se existir campo tipoPessoa use-o (PF = pessoa física, PJ = pessoa jurídica)
             if (item.tipoPessoa) {
                 const t = String(item.tipoPessoa).toLowerCase();
                 if (t === 'j' || t === 'pj') return false;
                 if (t === 'f' || t === 'pf') return true;
             }
-            // CNPJ tem 14 dígitos => empresa (excluir)
             if (rawDoc.length === 14) return false;
-            // CPF tem 11 dígitos => pessoa física (incluir)
             if (rawDoc.length === 11) return true;
-            // Fallback: se existir campo 'cnpj' explicitamente, trata como empresa
             if (item.cnpj) return false;
-            // Caso não seja possível determinar, assume pessoa física
             return true;
         };
 
         const mapped = (aniversariantesBrutos || [])
-            // 1) Excluir empresas (CNPJ) e manter apenas pessoas físicas (CPF)
             .filter(isPessoaFisica)
-            // 2) Mapear para o formato esperado pela Listagem
             .map(item => {
                 const dataAniversario = item.dataNascimento || item.dataAniversario || item.dataCriacao || null;
                 const date = dataAniversario ? new Date(dataAniversario) : null;
@@ -328,12 +373,7 @@ export default function Agenda() {
                     ...item
                 };
             })
-            // 3) Filtrar pelo mês selecionado (se a API não retornar já filtrado)
-            .filter(aniversariante => {
-                if (!aniversariante.dataObj) return false;
-                return aniversariante.dataObj.getMonth() === filterMonth;
-            })
-            // 4) Ordenar por dia do mês
+            .filter(aniversariante => aniversariante.dataObj && aniversariante.dataObj.getMonth() === filterMonth)
             .sort((a, b) => {
                 const [dA] = a.dia.split('/').map(Number);
                 const [dB] = b.dia.split('/').map(Number);
@@ -342,7 +382,6 @@ export default function Agenda() {
 
         return mapped;
     }, [aniversariantesBrutos, currentFilterDate]);
-
 
 
     // Render helpers
@@ -354,10 +393,29 @@ export default function Agenda() {
             return <p className="no-data-message">Nenhum atendimento agendado para {nomeMes}.</p>;
         }
 
+        // NOVO: Mapeia as colunas para injetar o checkbox mestre no cabeçalho
+        const colunasComSelecao = baseColunasAtendimentoAgenda.map(col => {
+            if (col.key === 'checkbox') {
+                return {
+                    ...col,
+                    titulo: (
+                        <input
+                            type="checkbox"
+                            checked={isAllSelected}
+                            onChange={(e) => toggleSelectAll(e.target.checked)}
+                            aria-label="Selecionar todos"
+                        />
+                    )
+                };
+            }
+            return col;
+        });
+
+
         return (
             <Listagem
                 dados={atendimentosFiltrados}
-                colunas={colunasAtendimentoAgenda}
+                colunas={colunasComSelecao} // Usa as colunas dinâmicas
                 id="atendimento-list"
                 isFullTable
             />
@@ -384,7 +442,6 @@ export default function Agenda() {
 
     return (
         <div className="agenda-container">
-            {/* <Sidebar nomeCompleto="Lismara Ribeiro" /> */}
             <main className="main-content agenda-page">
                 <header className="agenda-header">
                     <h1>Agenda & Relacionamento</h1>
@@ -405,6 +462,8 @@ export default function Agenda() {
                                     type="button"
                                     className="agenda-card-action-btn"
                                     aria-label="Excluir atendimentos"
+                                    onClick={handleBulkDeleteClick}
+                                    title={selectedIds.size === 0 ? 'Selecione itens para excluir' : 'Excluir selecionados'}
                                 >
                                     <img src={TrashIcon} alt="Excluir" className="agenda-card-action-icon" />
                                 </button>
@@ -440,13 +499,28 @@ export default function Agenda() {
                 editingItem={editingItem}
                 atualizarLista={fetchAtendimentos}
             />
-            <ModalContainer show={showDeleteModal} onClose={closeModalDelete} title="Confirmar Exclusão" variant="delete" modalId="modal-delete-atendimento">
-                {deletingItem && (
+
+            <ModalContainer
+                show={showDeleteModal}
+                onClose={closeModalDelete}
+                title="Confirmar Exclusão"
+                variant="delete" // Aplica o estilo de modal de exclusão (fundo claro/tamanho menor)
+                modalId="modal-delete-atendimento"
+            >
+                {deleteMode === 'bulk' ? (
                     <ConfirmacaoExclusao
-                        message={`Tem certeza que deseja excluir o atendimento de ${deletingItem.nomeCliente || deletingItem.nome}?`}
-                        onConfirm={handleDeleteConfirm} // <--- Chamando a função de exclusão
+                        message={`Excluir ${selectedIds.size} atendimento(s) selecionado(s)? Esta ação é irreversível.`}
+                        onConfirm={handleDeleteConfirm}
                         onCancel={closeModalDelete}
                     />
+                ) : (
+                    deletingItem && (
+                        <ConfirmacaoExclusao
+                            message={`Tem certeza que deseja excluir o atendimento de ${deletingItem.nomeCliente || deletingItem.nome}? Esta ação é irreversível.`}
+                            onConfirm={handleDeleteConfirm}
+                            onCancel={closeModalDelete}
+                        />
+                    )
                 )}
             </ModalContainer>
         </div>

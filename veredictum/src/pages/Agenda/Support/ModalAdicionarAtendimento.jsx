@@ -36,11 +36,13 @@ export default function ModalAdicionarAtendimento({ show, onClose, atualizarList
     e.preventDefault();
 
     const etiqueta = e.target.etiqueta.value.trim();
-    const valorRaw = e.target.valor?.value; // O valor não está na imagem, mas mantemos a lógica
-    const valor = valorRaw === "" || valorRaw === undefined ? null : parseFloat(valorRaw);
+    // Campo 'valor' não está mais na UI, deve ser removido ou tratado como null
+    const valor = null;
+    // const valorRaw = e.target.valor?.value; 
+    // const valor = valorRaw === "" || valorRaw === undefined ? null : parseFloat(valorRaw);
+
     const descricao = e.target.descricao.value.trim();
     const fkCliente = e.target.fkCliente?.value || "";
-    // REMOVIDO: const nomeClienteManual = e.target.nomeCliente?.value?.trim() || "";
     const fkUsuario = e.target.fkUsuario?.value || "";
     const nota = e.target.nota?.value?.trim() || null; // Campo Nota adicionado
     const status = e.target.status?.value || "Agendado"; // Campo Status
@@ -68,10 +70,6 @@ export default function ModalAdicionarAtendimento({ show, onClose, atualizarList
       alert("Descrição muito curta.");
       return;
     }
-    if (valor !== null && (isNaN(valor) || valor < 0)) {
-      // Esta validação pode ser ignorada se o campo valor for removido da UI
-    }
-    // REMOVIDO: Validação de nomeClienteManual
     // -----------------------------------------------------------
 
     const dataInicioISO = `${data}T${hora}:00`;
@@ -130,9 +128,12 @@ export default function ModalAdicionarAtendimento({ show, onClose, atualizarList
       modalId="ModalAdicionarAtendimento"
       variant="add"
     >
-      <form id="appointmentForm" className="appointment-form_P" onSubmit={handleSubmit} style={{
-        display: 'contents'
-      }}>
+      <form
+        id="appointmentForm"
+        className="appointment-form-agenda" // <-- CLASSE DO FORMULÁRIO AJUSTADA
+        onSubmit={handleSubmit}
+        style={{ display: 'contents' }}
+      >
 
         {/* LINHA 1: Cliente e Responsável */}
         <div className="form-group">
@@ -169,7 +170,7 @@ export default function ModalAdicionarAtendimento({ show, onClose, atualizarList
           <input type="text" id="nota" name="nota" placeholder="NF-e 1287364672828382998" />
         </div>
 
-        {/* LINHA 3: Status e Descrição */}
+        {/* LINHA 3: Status e Descrição (Textarea) */}
         <div className="form-group">
           <label htmlFor="status">Status</label>
           <select id="status" name="status" defaultValue="Agendado">
@@ -188,6 +189,12 @@ export default function ModalAdicionarAtendimento({ show, onClose, atualizarList
             placeholder="Pensão alimentícia de 3 filhos e 1 cachorro"
           />
         </div>
+
+        {/*
+          // NOVO: Para manter o design de textarea em 2 colunas como no 'Editar', 
+          // adicione a textarea na próxima linha ocupando 2 colunas, se necessário.
+          // Por enquanto, vou manter a estrutura de 2 colunas de cima, e 2 colunas para o resto.
+        */}
 
         {/* LINHA 4: Hora e Data */}
         <div className="form-group">
@@ -211,31 +218,47 @@ export default function ModalAdicionarAtendimento({ show, onClose, atualizarList
           />
         </div>
 
-        {/* LINHA 5: Checkbox (Coluna 1) e Espaço Vazio (Coluna 2) */}
+        {/* LINHA 5: Checkbox (Coluna 1) e Botão Adicionar (Coluna 2) */}
+        {/* Coluna 1: Checkbox */}
         <div className="form-group" style={{
-          marginTop: '10px'
+          marginTop: '15px', /* Espaçamento superior para alinhar a altura */
+          /* Reseta o gap do form-group para alinhar o checkbox */
+          gap: '0',
+          flexDirection: 'row',
+          alignItems: 'center',
+          paddingBottom: '30px' /* Simula o espaço do rodapé */
         }}>
-          <label style={{
-            flexDirection: 'row',
-            alignItems: 'center',
-            gap: '8px',
-            fontWeight: 'normal',
-            fontSize: '14px',
-            color: '#e9e9e9'
-          }}>
-            <input type="checkbox" id="shouldEnviarEmail" name="shouldEnviarEmail" />
+          <input
+            type="checkbox"
+            id="shouldEnviarEmail"
+            name="shouldEnviarEmail"
+            style={{ width: '16px', height: '16px', margin: 0 }}
+          />
+          <label
+            htmlFor="shouldEnviarEmail"
+            style={{
+              fontWeight: 'normal',
+              fontSize: '14px',
+              color: '#e9e9e9',
+              margin: 0,
+              cursor: 'pointer'
+            }}
+          >
             Enviar e-mail de lembrete?
           </label>
         </div>
 
-        {/* Div Vazia para preencher a Coluna 2 da última linha de inputs/checkbox */}
-        <div style={{ /* Coluna 2 vazia */ }}></div>
-
-
-        {/* RODAPÉ: Botão Adicionar (Centralizado) */}
-        <div className="form-footer-agenda">
-          <button type="submit" className="btn-new-appointment">Adicionar</button>
+         {/* Coluna 2: Botão Adicionar (Alinhado à direita) */}
+        <div className="form-group" style={{
+          marginTop: '15px', /* Espaçamento superior para alinhar a altura */
+          /* Alinha o botão à direita na coluna e ao fundo da linha */
+          alignItems: 'flex-end',
+          justifyContent: 'flex-end',
+          paddingBottom: '30px' /* Simula o espaço do rodapé */
+        }}>
+          <button type="submit" className="btn-new-appointment_agenda">Adicionar</button>
         </div>
+
       </form>
     </ModalContainer>
   );

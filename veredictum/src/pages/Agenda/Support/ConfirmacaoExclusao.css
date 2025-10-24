@@ -1,0 +1,112 @@
+/* =================================================================== */
+/* VARIÁVEIS DE COR E ESTILOS PARA O MODAL DE CONFIRMAÇÃO (FUNDO CLARO) */
+/* =================================================================== */
+
+/* Definição de cores (podem ser globais ou só para o bloco de confirmação) */
+:root {
+    --confirm-modal-bg: #ffffff;
+    /* Fundo branco do modal de confirmação */
+    --confirm-modal-text: #222222;
+    /* Texto preto para a mensagem/título */
+    --btn-cancel-bg: #ffffff;
+    --btn-cancel-border: #c8c8c8;
+    /* Borda sutil do botão "Não" */
+    --btn-sim-bg: #ff5c5c;
+    /* Vermelho vibrante do botão "Sim" */
+}
+
+
+/* 1. SOBRESCREVER ESTILO DO MODAL CONTAINER (A classe .modal_P-delete deve ser aplicada no componente ModalContainer) */
+/* Força o modal de exclusão para o visual CLARO e ajusta o tamanho menor */
+.modal_P-delete {
+    background: var(--confirm-modal-bg) !important;
+    color: var(--confirm-modal-text) !important;
+    max-width: 480px !important;
+    max-height: 40vh !important;
+    display: flex !important;
+    flex-direction: column !important;
+    grid-template-rows: unset !important;
+}
+
+/* Garante que o TÍTULO e o 'X' sejam pretos no modal de confirmação/delete */
+.modal_P-delete .modal-header h2,
+.modal_P-delete .modal-close-btn {
+    color: var(--confirm-modal-text) !important;
+    border: none !important;
+}
+
+.modal_P-delete .modal-close-btn:hover {
+    background-color: rgba(0, 0, 0, 0.05) !important;
+}
+
+/* O corpo do modal de confirmação não precisa do layout de grid do agendamento */
+.modal_P-delete .modal-body_P-agenda {
+    padding: 0 !important;
+    display: block !important;
+    overflow: hidden !important;
+}
+
+
+/* =================================================================== */
+/* ESTILOS DO COMPONENTE ConfirmacaoExclusao.jsx */
+/* =================================================================== */
+
+/* 2. Container Principal da Confirmação (div principal do componente) */
+.confirmacao-container {
+    display: flex;
+    flex-direction: column;
+    padding: 0;
+    width: 100%;
+}
+
+/* 3. Mensagem de Confirmação */
+.confirmacao-container p.confirmacao-message {
+    font-size: 18px;
+    font-weight: 500;
+    text-align: left;
+    color: var(--confirm-modal-text);
+    /* Texto preto */
+    /* Margem interna para alinhar com o título do ModalContainer */
+    margin: 32px 28px;
+}
+
+/* 4. Container dos Botões */
+.confirmacao-container .confirmacao-buttons {
+    display: flex;
+    gap: 12px;
+    justify-content: flex-end;
+    padding: 0 28px 24px;
+    /* Padding inferior final e lateral */
+}
+
+/* 5. Botão 'Não' / Cancelar (Estilo branco com borda) */
+.btn-confirmacao-cancel {
+    padding: 10px 20px;
+    border-radius: 8px;
+    background: var(--btn-cancel-bg);
+    color: #000000;
+    border: 1px solid var(--btn-cancel-border);
+    font-weight: 600;
+    min-width: 80px;
+    cursor: pointer;
+    transition: background-color 0.2s, border-color 0.2s;
+    /* font-family: var(--font-family); Se a fonte não for global, adicione a variável aqui */
+}
+
+/* 6. Botão 'Sim' / Confirmar (Estilo vermelho principal) */
+.btn-confirmacao-sim {
+    padding: 10px 20px;
+    border-radius: 8px;
+    background: var(--btn-sim-bg);
+    color: #fff;
+    border: none;
+    font-weight: 600;
+    min-width: 80px;
+    cursor: pointer;
+    transition: background-color 0.2s;
+    /* font-family: var(--font-family); Se a fonte não for global, adicione a variável aqui */
+}
+
+.btn-confirmacao-sim:hover {
+    background: #e54d4d;
+}
