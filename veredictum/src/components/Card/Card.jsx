@@ -1,46 +1,37 @@
+<<<<<<< HEAD
 // src/components/Card/Card.jsx
+=======
+// src/components/Card/Card.jsx 
+
+>>>>>>> f584f6d9c8a7af748bf6e026de6fd51c61d87dd6
 import React from 'react';
 import './Card.css'; 
 // Supondo que você use uma biblioteca de ícones como react-icons
 // import { FaRegCalendarAlt } from 'react-icons/fa'; 
 
-const variantConfigs = {
-    clientes: {
-        boxId: 'clientes-card-box',
-        headerId: 'clientes-card-header',
-        containerClass: 'card-clientes',
-    },
-};
+// 1. ADICIONAR 'onClick' nas props
+const Card = ({ titulo, iconePath, children, className = 'card', alt, onClick }) => (
 
-const Card = ({ titulo, icone, children, className, variant }) => {
-    const variantConfig = variant ? variantConfigs[variant] : undefined;
-    const boxClassNames = ['card-box'];
-
-    if (className) {
-        boxClassNames.push(className);
-    }
-
-    if (variantConfig?.containerClass) {
-        boxClassNames.push(variantConfig.containerClass);
-    }
-
-    return (
-        <div
-            className={boxClassNames.join(' ')}
-            id={variantConfig?.boxId}
-            data-variant={variant}
-        >
-            <div className="card-header" id={variantConfig?.headerId}>
-                {/* Aqui você usaria o ícone da biblioteca, ou o 'icone' passado como prop */}
-                <span className="card-icon">{icone}</span> 
-                <h2>{titulo}</h2>
-            </div>
-            <div className="card-content-wrapper">
-                 {/* O conteúdo (sua Listagem) vai aqui */}
-                {children} 
-            </div>
-        </div>
-    );
-};
+  // 2. APLICAR o onClick na div principal (card-box)
+  <div
+    className={`card-box ${className}`}
+    onClick={onClick} // <--- APLICAÇÃO DO EVENTO DE CLIQUE
+  >
+    <div className="card-header">
+      {iconePath && (
+        <img
+          src={iconePath}
+          alt={alt || 'Ícone'}
+          className="card-icon"
+          style={{ width: 20, height: 20 }}
+        />
+      )}
+      <h2>{titulo}</h2>
+    </div>
+    <div className="card-content-wrapper">
+      {children}
+    </div>
+  </div>
+);
 
 export default Card;

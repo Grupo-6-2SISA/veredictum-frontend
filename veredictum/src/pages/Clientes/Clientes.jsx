@@ -1,14 +1,17 @@
 import React, { useState, useEffect, useRef } from 'react';
 import './Clientes.css';
-import Sidebar from '../../components/Sidebar/Sidebar';
+
+// componentes (caminhos ajustados para os arquivos reais)
+import Sidebar from '../../components/Sidebar/Sidebar.jsx';
 import btnIcon from '../../assets/svg/btn.svg';
 import editIcon from '../../assets/svg/edit.svg';
-import Toggle from '../../components/Toggle/Toggle';
-import Modal from '../../components/Modal/Modal';
-import Button from '../../components/Button/Button';
-import Listagem from '../../components/Listagem/Listagem';
-import Card from '../../components/Card/Card';
-import '../../components/Css/Main.css';
+import Toggle from '../../components/Toggle/Toggle_G.jsx';
+import Modal from '../../components/Modal/Modal_G.jsx';
+import Button from '../../components/Button/Button_G.jsx';
+import Listagem from '../../components/Listagem/Listagem.jsx';
+import Card from '../../components/Card/Card_G.jsx';
+import '../../index.css';
+
 import { getClientes, createCliente, updateCliente, activateCliente, deactivateCliente } from './Clientes.js';
 
 const DEACTIVATION_ANIMATION_MS = 1000;
