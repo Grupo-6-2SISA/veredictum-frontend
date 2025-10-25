@@ -14,7 +14,7 @@ IF %ERRORLEVEL% NEQ 0 (
 REM Instalar dependências principais
 echo.
 echo Instalando axios, prop-types, chart.js e date-fns...
-npm install axios prop-types chart.js date-fns
+npm install axios prop-types chart.js date-fns variant
 
 REM Instalar dependências de desenvolvimento do Tailwind CSS
 echo.

@@ -1,6 +1,6 @@
 // src/components/Card/Card.jsx
 import React from 'react';
-import './Card.css'; 
+import './CardClientes.css'; 
 // Supondo que você use uma biblioteca de ícones como react-icons
 // import { FaRegCalendarAlt } from 'react-icons/fa'; 
 
@@ -12,7 +12,7 @@ const variantConfigs = {
     },
 };
 
-const Card = ({ titulo, icone, children, className, variant }) => {
+const CardClientes = ({ titulo, icone, children, className, variant }) => {
     const variantConfig = variant ? variantConfigs[variant] : undefined;
     const boxClassNames = ['card-box'];
 
@@ -30,12 +30,12 @@ const Card = ({ titulo, icone, children, className, variant }) => {
             id={variantConfig?.boxId}
             data-variant={variant}
         >
-            <div className="card-header" id={variantConfig?.headerId}>
+            <div className="clientes-card-header" id={variantConfig?.headerId}>
                 {/* Aqui você usaria o ícone da biblioteca, ou o 'icone' passado como prop */}
-                <span className="card-icon">{icone}</span> 
+                <span className="clientes-card-icon">{icone}</span> 
                 <h2>{titulo}</h2>
             </div>
-            <div className="card-content-wrapper">
+            <div className="clientes-card-content-wrapper">
                  {/* O conteúdo (sua Listagem) vai aqui */}
                 {children} 
             </div>
@@ -43,4 +43,4 @@ const Card = ({ titulo, icone, children, className, variant }) => {
     );
 };
 
-export default Card;
+export default CardClientes;

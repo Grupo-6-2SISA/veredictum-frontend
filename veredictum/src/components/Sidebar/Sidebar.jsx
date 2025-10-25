@@ -11,7 +11,7 @@ const navItems = [
     { name: 'Agenda & Relacionamento', iconPath: 'src/assets/svg/agenda.svg', path: '/Agenda', iconClass: 'icon_agenda' },
     { name: 'Gestão de Despesas', iconPath: 'src/assets/svg/despezas.svg', path: '/GestaoDespesas', iconClass: 'icon_notas' },
     { name: 'Gestão de Notas Fiscais', iconPath: 'src/assets/svg/notas_fiscais.svg', path: '/NotasFiscais', iconClass: 'icon_notas' },
-    { name: 'Gestão de Logs', iconPath: 'src/assets/svg/logs.svg', path: '/logs', iconClass: 'icon_logs' },
+    { name: 'Gestão de Logs', iconPath: 'src/assets/svg/logs.svg', path: '/LogEnvioEmail', iconClass: 'icon_logs' },
 ];
 
 const Sidebar = () => {

@@ -1,10 +1,10 @@
 import PropTypes from 'prop-types';
-import '../../index.css';
-import './Toggle_G.css';
+import '../Css/Main.css';
+import './ToggleClientes.css';
 
-const Toggle = ({ checked, onChange, label, id, name, disabled }) => {
+const ToggleClientes = ({ checked, onChange, label, id, name, disabled }) => {
   return (
-    <label className="toggle-switch">
+    <label className="clientes-toggle-switch">
       {label}
       <input
         type="checkbox"
@@ -14,12 +14,12 @@ const Toggle = ({ checked, onChange, label, id, name, disabled }) => {
         name={name}
         disabled={disabled}
       />
-      <span className="slider"></span>
+      <span className="clientes-slider"></span>
     </label>
   );
 };
 
-Toggle.propTypes = {
+ToggleClientes.propTypes = {
   label: PropTypes.string.isRequired,
   checked: PropTypes.bool.isRequired,
   onChange: PropTypes.func.isRequired,
@@ -28,7 +28,7 @@ Toggle.propTypes = {
   disabled: PropTypes.bool,
 };
 
-export default Toggle;
+export default ToggleClientes;
 
 
  
