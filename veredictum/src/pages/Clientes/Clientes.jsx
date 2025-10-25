@@ -5,12 +5,12 @@ import './Clientes.css';
 import Sidebar from '../../components/Sidebar/Sidebar.jsx';
 import btnIcon from '../../assets/svg/btn.svg';
 import editIcon from '../../assets/svg/edit.svg';
-import Toggle from '../../components/Toggle/Toggle_G.jsx';
-import Modal from '../../components/Modal/Modal_G.jsx';
-import Button from '../../components/Button/Button_G.jsx';
-import Listagem from '../../components/Listagem/Listagem.jsx';
-import Card from '../../components/Card/Card_G.jsx';
-import '../../index.css';
+import Toggle from '../../components/Toggle/ToggleClientes.jsx';
+import Modal from '../../components/ModalClientes/ModalClientes.jsx';
+import Button from '../../components/ButtonClientes/ButtonClientes.jsx';
+import Listagem from '../../components/ListagemClientes/ListagemClientes.jsx';
+import Card from '../../components/CardClientes/CardClientes.jsx';
+import '../../components/Css/Main.css';
 
 import { getClientes, createCliente, updateCliente, activateCliente, deactivateCliente } from './Clientes.js';
 
@@ -20,24 +20,24 @@ const DEACTIVATION_ANIMATION_MS = 1000;
 const CLIENT_FORM_COLUMNS = (clientList = []) => {
     const columns = [
         [
-            { name: 'nome', label: 'Nome', type: 'text', required: true },
-            { name: 'dataNascimento', label: 'Data de Nascimento', type: 'date' },
-            { name: 'email', label: 'E-mail', type: 'email', required: true },
-            { name: 'rg', label: 'RG', type: 'text', required: true },
-            { name: 'cpf', label: 'CPF', type: 'text' },
+            { name: 'nome', label: 'Nome', type: 'text', required: true, minLength: 2, maxLength: 255 },
+            { name: 'dataNascimento', label: 'Data de Nascimento', type: 'date', required: true },
+            { name: 'email', label: 'E-mail', type: 'email', required: true, maxLength: 255 },
+            { name: 'rg', label: 'RG', type: 'text', maxLength: 10 },
+            { name: 'cpf', label: 'CPF', type: 'text', maxLength: 11, minLength: 11, pattern: "\\d{11}" },
         ],
         [
-            { name: 'cnpj', label: 'CNPJ', type: 'text' },
-            { name: 'telefone', label: 'Telefone', type: 'text', required: true, placeholder: '+5511999999999' },
-            { name: 'cep', label: 'CEP', type: 'text', required: true },
-            { name: 'logradouro', label: 'Logradouro', type: 'text', required: true },
-            { name: 'bairro', label: 'Bairro', type: 'text', required: true },
+            { name: 'cnpj', label: 'CNPJ', type: 'text', maxLength: 14, minLength: 14, pattern: "\\d{14}" },
+            { name: 'telefone', label: 'Telefone', type: 'text', placeholder: '+5511999999999', pattern: "^\\+55\\d{10,11}$"},
+            { name: 'cep', label: 'CEP', type: 'text', maxLength: 8, minLength: 8, pattern: "\\d{8}" },
+            { name: 'logradouro', label: 'Logradouro', type: 'text' },
+            { name: 'bairro', label: 'Bairro', type: 'text' },
         ],
         [
             { name: 'complemento', label: 'Complemento', type: 'text' },
             { name: 'localidade', label: 'Localidade', type: 'text' },
-            { name: 'numero', label: 'Número', type: 'text', required: true },
-            { name: 'inscricaoEstadual', label: 'Inscrição Estadual', type: 'text' },
+            { name: 'numero', label: 'Número', type: 'text' },
+            { name: 'inscricaoEstadual', label: 'Inscrição Estadual', type: 'text', maxLength: 9, minLength: 9, pattern: "\\d{9}" },
             {
                 name: 'isProBono',
                 label: 'Pro-Bono?',
@@ -85,6 +85,110 @@ const CLIENT_FORM_COLUMNS = (clientList = []) => {
 
 
 
+const validateClientData = (clientData) => {
+    const errors = [];
+    const pushError = (message) => errors.push(message);
+
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+    if (!clientData.nome) {
+        pushError('Nome é obrigatório.');
+    } else {
+        if (clientData.nome.length < 2) pushError('Nome deve ter pelo menos 2 caracteres.');
+        if (clientData.nome.length > 255) pushError('Nome deve ter no máximo 255 caracteres.');
+    }
+    
+    if (!clientData.email) {
+        pushError('E-mail é obrigatório.');
+    } else {
+        if (clientData.email.length > 255) pushError('E-mail deve ter no máximo 255 caracteres.');
+        if (!emailRegex.test(clientData.email)) pushError('Formato de e-mail inválido.');
+    }
+
+    if (clientData.rg && clientData.rg.length > 10) {
+        pushError('RG deve ter no máximo 10 caracteres.');
+    }
+
+    if (clientData.cpf) {
+        if (!/^\d{11}$/.test(clientData.cpf)) pushError('CPF deve conter exatamente 11 dígitos numéricos.');
+    }
+
+    if (clientData.cnpj) {
+        if (!/^\d{14}$/.test(clientData.cnpj)) pushError('CNPJ deve conter exatamente 14 dígitos numéricos.');
+    }
+
+    if (clientData.telefone) {
+        if (!/^\+55\d{10,11}$/.test(clientData.telefone)) pushError('Telefone deve estar no formato +55 seguido de DDD e número (ex: +5511999999999).');
+    }
+
+    if (!clientData.dataNascimento) {
+        pushError('Data de Nascimento é obrigatória.');
+    } else {
+        const dataNascimento = new Date(clientData.dataNascimento);
+        const hoje = new Date();
+        hoje.setHours(0, 0, 0, 0);
+        if (Number.isNaN(dataNascimento.getTime())) {
+            pushError('Data de Nascimento inválida.');
+        } else if (dataNascimento >= hoje) {
+            pushError('Data de Nascimento deve estar no passado.');
+        }
+    }
+
+    if (!clientData.dataInicio) {
+        pushError('Data de Início é obrigatória.');
+    } else {
+        const dataInicio = new Date(clientData.dataInicio);
+        if (Number.isNaN(dataInicio.getTime())) {
+            pushError('Data de Início inválida.');
+        }
+    }
+
+    if (clientData.cep) {
+        if (!/^\d{8}$/.test(clientData.cep)) pushError('CEP deve conter exatamente 8 dígitos numéricos.');
+    }
+
+    if (clientData.inscricaoEstadual) {
+        if (!/^\d{9}$/.test(clientData.inscricaoEstadual)) pushError('Inscrição Estadual deve conter exatamente 9 dígitos numéricos.');
+    }
+
+    return errors;
+};
+
+
+const extractBackendErrorMessage = (error, fallbackMessage) => {
+    const data = error?.response?.data;
+    if (!data) return fallbackMessage;
+
+    const messages = [];
+
+    if (Array.isArray(data)) {
+        messages.push(...data);
+    } else if (typeof data === 'string') {
+        messages.push(data);
+    } else if (typeof data === 'object') {
+        if (Array.isArray(data.errors)) {
+            messages.push(...data.errors);
+        }
+        if (Array.isArray(data.violations)) {
+            messages.push(...data.violations.map((violation) => (
+                typeof violation === 'string'
+                    ? violation
+                    : `${violation.field ? `${violation.field}: ` : ''}${violation.message ?? ''}`.trim()
+            )));
+        }
+        if (data.message) messages.push(data.message);
+        if (data.details && data.details !== data.message) messages.push(data.details);
+    }
+
+    const filteredMessages = messages
+        .map((msg) => (typeof msg === 'string' ? msg.trim() : ''))
+        .filter(Boolean);
+
+    return filteredMessages.length ? filteredMessages.join('\n') : fallbackMessage;
+};
+
+
+
 const getFieldValue = (clientData, field) => {
     if (!clientData) return field.defaultValue ?? '';
     if (field.name === 'isProBono') return String(clientData.isProBono);
@@ -111,6 +215,10 @@ const renderFormColumns = (mode, clientData, clientList) => (
                     disabled: mode === 'view',
                     placeholder: field.placeholder || '',
                 };
+
+                if (field.maxLength) baseProps.maxLength = field.maxLength;
+                if (field.minLength) baseProps.minLength = field.minLength;
+                if (field.pattern) baseProps.pattern = field.pattern;
                 const defaultValue = getFieldValue(clientData, field);
                 if (field.type === 'select') {
                     return (
@@ -144,10 +252,10 @@ const renderFormColumns = (mode, clientData, clientList) => (
 );
 
 const TABLE_COLUMNS = [
-    { key: 'nome', titulo: 'Nome', className: 'col-name' },
-    { key: 'editar', titulo: 'Editar', className: 'col-edit' },
-    { key: 'informacoes', titulo: 'Informações', className: 'col-info' },
-    { key: 'status', titulo: 'Status', className: 'col-status' },
+    { key: 'nome', titulo: 'Nome', className: 'clientes-col-name' },
+    { key: 'editar', titulo: 'Editar', className: 'clientes-col-edit' },
+    { key: 'informacoes', titulo: 'Informações', className: 'clientes-col-info' },
+    { key: 'status', titulo: 'Status', className: 'clientes-col-status' },
 ];
 
 function Clientes() {
@@ -185,7 +293,7 @@ function Clientes() {
         return ({
             nome: (
                 <div
-                    className={`client-list-name ${isDeactivating ? 'client-list-name--deactivating' : ''}`.trim()}
+                    className={`clientes-list-name ${isDeactivating ? 'clientes-list-name--deactivating' : ''}`.trim()}
                     data-client-id={client.idCliente}
                     data-row-state={isDeactivating ? 'deactivating' : 'stable'}
                 >
@@ -198,15 +306,15 @@ function Clientes() {
                 </Button>
             ),
             informacoes: (
-                <Button className="btn-link" type="button" onClick={() => handleOpenView(client)}>Ver mais</Button>
+                <Button className="clientes-btn-link" type="button" onClick={() => handleOpenView(client)}>Ver mais</Button>
             ),
             status: (
                 <Toggle
                     label=""
                     checked={isDeactivating ? false : client.isAtivo}
                     onChange={() => handleToggleStatus(client)}
-                    id={`toggle-status-${client.idCliente}`}
-                    name={`toggle-status-${client.idCliente}`}
+                    id={`clientes-toggle-status-${client.idCliente}`}
+                    name={`clientes-toggle-status-${client.idCliente}`}
                     disabled={isDeactivating}
                 />
             ),
@@ -274,49 +382,42 @@ function Clientes() {
 
     
     const getClientDataFromForm = (formData) => {
+        const getOptionalText = (fieldName) => {
+            const rawValue = formData.get(fieldName);
+            if (typeof rawValue !== 'string') return rawValue ?? null;
+            const trimmed = rawValue.trim();
+            return trimmed.length ? trimmed : null;
+        };
+
         const fkIndicadorValue = formData.get('fkIndicador');
-
-        const rawCpf = formData.get('cpf') || '';
-        const sanitizedCpf = rawCpf.replace(/\D/g, '');
-        if (sanitizedCpf.length > 11) {
-            throw new Error('O CPF deve ter no máximo 11 dígitos.');
-        }
-
-        const rawInscricao = formData.get('inscricaoEstadual') || '';
-        const sanitizedInscricao = rawInscricao.replace(/\D/g, '');
-        if (sanitizedInscricao.length > 0 && sanitizedInscricao.length !== 9) {
-            throw new Error('A inscrição estadual deve ter exatamente 9 dígitos.');
-        }
+        const dataInicioValue = formData.get('dataInicio');
+        const dataNascimentoValue = formData.get('dataNascimento');
+        const cnpjValue = getOptionalText('cnpj');
 
         const data = {
-            nome: formData.get('nome'),
-            email: formData.get('email'),
-            rg: formData.get('rg'),
-            cpf: sanitizedCpf || null,
-            cnpj: formData.get('cnpj') || null,
-            telefone: formData.get('telefone'),
-            dataNascimento: formData.get('dataNascimento') || null,
-            dataInicio: formData.get('dataInicio') || null,
-            cep: formData.get('cep'),
-            logradouro: formData.get('logradouro'),
-            bairro: formData.get('bairro'),
-            localidade: formData.get('localidade'),
-            numero: formData.get('numero'),
-            complemento: formData.get('complemento'),
-            descricao: formData.get('descricao'),
-            inscricaoEstadual: sanitizedInscricao || null,
+            nome: getOptionalText('nome'),
+            email: getOptionalText('email'),
+            rg: getOptionalText('rg'),
+            cpf: getOptionalText('cpf'),
+            cnpj: cnpjValue,
+            telefone: getOptionalText('telefone'),
+            dataNascimento: dataNascimentoValue || null,
+            dataInicio: dataInicioValue || null,
+            cep: getOptionalText('cep'),
+            logradouro: getOptionalText('logradouro'),
+            bairro: getOptionalText('bairro'),
+            localidade: getOptionalText('localidade'),
+            numero: getOptionalText('numero'),
+            complemento: getOptionalText('complemento'),
+            descricao: getOptionalText('descricao'),
+            inscricaoEstadual: getOptionalText('inscricaoEstadual'),
             isProBono: formData.get('isProBono') === 'true',
-            isJuridico: !!formData.get('cnpj'),
+            isJuridico: Boolean(cnpjValue),
             fkIndicador: fkIndicadorValue ? parseInt(fkIndicadorValue, 10) : null,
         };
 
-        
         const isAtivoValue = formData.get('isAtivo');
-        if (isAtivoValue !== null) {
-            data.isAtivo = isAtivoValue === 'true';
-        } else if (typeof data.isAtivo === 'undefined') {
-            data.isAtivo = true;
-        }
+        data.isAtivo = isAtivoValue === 'false' ? false : true;
 
         return data;
     };
@@ -325,12 +426,10 @@ function Clientes() {
     async function handleSubmitAdd(event) {
         event.preventDefault();
         const formData = new FormData(event.currentTarget);
-        let newClient;
-
-        try {
-            newClient = getClientDataFromForm(formData);
-        } catch (validationError) {
-            window.alert(validationError.message);
+        const newClient = getClientDataFromForm(formData);
+        const validationErrors = validateClientData(newClient);
+        if (validationErrors.length) {
+            window.alert(validationErrors.join('\n'));
             return;
         }
         
@@ -340,22 +439,24 @@ function Clientes() {
             handleCloseAdd();
         } catch (error) {
             console.error("Erro ao cadastrar cliente:", error.response?.data || error);
+            const backendMessage = extractBackendErrorMessage(error, 'Não foi possível cadastrar o cliente.');
+            window.alert(backendMessage);
         }
     }
 
     async function handleSubmitEdit(event) {
         event.preventDefault();
         const formData = new FormData(event.currentTarget);
-        const updatedData = {
-            ...selectedClient,
-        };
-        
-        try {
-            Object.assign(updatedData, getClientDataFromForm(formData));
-        } catch (validationError) {
-            window.alert(validationError.message);
+        const sanitizedData = getClientDataFromForm(formData);
+        const validationErrors = validateClientData({ ...selectedClient, ...sanitizedData });
+        if (validationErrors.length) {
+            window.alert(validationErrors.join('\n'));
             return;
         }
+        const updatedData = {
+            ...selectedClient,
+            ...sanitizedData,
+        };
         
         try {
             await updateCliente(selectedClient.idCliente, updatedData);
@@ -363,6 +464,8 @@ function Clientes() {
             handleCloseEdit();
         } catch (error) {
             console.error("Erro ao editar cliente:", error.response?.data || error);
+            const backendMessage = extractBackendErrorMessage(error, 'Não foi possível editar o cliente.');
+            window.alert(backendMessage);
         }
     }
 
@@ -370,22 +473,22 @@ function Clientes() {
         <div className="container clientes-page">
             <Sidebar />
             <main className="main-content clientes-main">
-                <div className="header-top">
-                    <div className="head-description">
+                <div className="clientes-header-top">
+                    <div className="clientes-head-description">
                         <h1>Gestão de Clientes</h1>
                         <p className="description">Acesse, altere e mantenha as informações dos clientes<br /> sempre atualizadas.</p>
                     </div>
-                    <Button className="btn-new-appointment" onClick={handleOpenAdd}>
+                    <Button className="clientes-btn-new-appointment" onClick={handleOpenAdd}>
                         Cadastrar Cliente
                         <img src={btnIcon} alt="Cadastrar novo cliente" />
                     </Button>
                 </div>
-                <section className="client-management-section">
-                    <Card className="client-table-card" variant="clientes" headerContent={null}>
+                <section className="clientes-management-section">
+                    <Card className="clientes-table-card" variant="clientes" headerContent={null}>
                         {clients.length > 0 ? (
                             <Listagem dados={tableData} colunas={TABLE_COLUMNS} variant="clientes" />
                         ) : (
-                            <p className="listagem-vazia">Nenhum cliente cadastrado.</p>
+                            <p className="clientes-listagem-vazia">Nenhum cliente cadastrado.</p>
                         )}
                     </Card>
                 </section>
@@ -395,15 +498,16 @@ function Clientes() {
                     isOpen={isAddOpen}
                     variant="add"
                     title="Cadastrar Clientes"
+                    modalId="clientes-new-appointment-modal-add-client"
                     onClose={handleCloseAdd}
-                    modalId="new-appointment-modal-add-client"
-                    formProps={{ id: 'formCadastrarCliente', onSubmit: handleSubmitAdd, className: 'appointment-form' }}
+               
+                    formProps={{ id: 'formCadastrarCliente', onSubmit: handleSubmitAdd, className: 'clientes-appointment-form' }}
                     footer={(
-                        <div className="form-footer-client">
-                            <Button className="btn-new-appointment" type="submit">Cadastrar</Button>
+                        <div className="clientes-form-footer-client">
+                            <Button className="clientes-btn-new-appointment" type="submit">Cadastrar</Button>
                         </div>
                     )}>
-                    <div className="form-row form-grid">{renderFormColumns('add', null, clients)}</div>
+                    <div className="clientes-form-row clientes-form-grid">{renderFormColumns('add', null, clients)}</div>
                 </Modal>
 
                 
@@ -412,14 +516,14 @@ function Clientes() {
                     variant="edit"
                     title="Editar Clientes"
                     onClose={handleCloseEdit}
-                    modalId="new-appointment-modal-edit-client"
-                    formProps={{ id: 'formEditarCliente', onSubmit: handleSubmitEdit, className: 'appointment-form' }}
+                    modalId="clientes-new-appointment-modal-edit-client"
+                    formProps={{ id: 'formEditarCliente', onSubmit: handleSubmitEdit, className: 'clientes-appointment-form' }}
                     footer={(
-                        <div className="form-footer-client">
-                            <Button className="btn-new-appointment" type="submit">Salvar Alterações</Button>
+                        <div className="clientes-form-footer-client">
+                            <Button className="clientes-btn-new-appointment" type="submit">Salvar Alterações</Button>
                         </div>
                     )}>
-                    <div className="form-row form-grid">{selectedClient && renderFormColumns('edit', selectedClient, clients)}</div>
+                    <div className="clientes-form-row clientes-form-grid">{selectedClient && renderFormColumns('edit', selectedClient, clients)}</div>
                 </Modal>
 
               
@@ -428,9 +532,9 @@ function Clientes() {
                     variant="view"
                     title="Informações sobre o Cliente"
                     onClose={handleCloseView}
-                    modalId="new-appointment-modal-view-client">
-                    <form action="" className="appointment-form">
-                        <div className="form-row form-grid">{selectedClient && renderFormColumns('view', selectedClient, clients)}</div>
+                    modalId="clientes-new-appointment-modal-view-client">
+                    <form action="" className="clientes-appointment-form">
+                        <div className="clientes-form-row clientes-form-grid">{selectedClient && renderFormColumns('view', selectedClient, clients)}</div>
                     </form>
                 </Modal>
                 
@@ -439,11 +543,11 @@ function Clientes() {
                     variant="delete"
                     title="Desativar Cliente"
                     onClose={handleCloseDelete}
-                    modalId="modal-delete-schedule"
+                    modalId="clientes-modal-delete-schedule"
                     footer={(
                         <>
-                            <Button className="btn-cancel-delete" onClick={handleCloseDelete}>Não</Button>
-                            <Button className="btn-confirm-delete" onClick={handleConfirmDelete}>Sim</Button>
+                            <Button className="clientes-btn-cancel-delete" onClick={handleCloseDelete}>Não</Button>
+                            <Button className="clientes-btn-confirm-delete" onClick={handleConfirmDelete}>Sim</Button>
                         </>
                     )}>
                     <p>Deseja desativar <span className="client-name">{selectedClient?.nome}</span>?</p>

@@ -2,7 +2,7 @@
 
 
 /* Fundo escuro que cobre a tela */
-.modal-backdrop {
+.clientes-modal-backdrop {
     position: fixed;
     top: 0;
     left: 0;
@@ -12,7 +12,7 @@
     z-index: 999;
 }
 /* Modal Adicionar Agendamento */
-#new-appointment-modal-add {
+#clientes-new-appointment-modal-add {
     position: fixed;
     top: 50%;
     left: 50%;
@@ -27,7 +27,7 @@
     
 }
 /* Modal Editar Agendamento */
-#new-appointment-modal-edit {
+#clientes-new-appointment-modal-edit {
     position: fixed;
     top: 50%;
     left: 50%;
@@ -42,56 +42,56 @@
 }
 
 /* Esconde o modal e o fundo */
-.modal.hidden, .modal-backdrop.hidden {
+.clientes-modal.hidden, .clientes-modal-backdrop.hidden {
     display: none;
 }
 /* Cabeçalho do modal */
-.modal-header {
+.clientes-modal-header {
     display: flex;
     justify-content: center;
     align-items: center;
     padding: 20px 25px;   
 }
-.modal-header h2 {
+.clientes-modal-header h2 {
     margin: auto;
     font-size: 2.5rem;
     font-weight: bold;
     color: var(--white-normal);
 }
-.modal-close-btn {
+.clientes-modal-close-btn {
     background: none;
     border: none;
     font-size: 2rem;
     cursor: pointer;
 }
 /* Corpo do formulário */
-.appointment-form {
+.clientes-appointment-form {
     padding: 25px;
     display: flex;
     flex-direction: column;
     gap: 20px;
 }
-.form-row {
+.clientes-form-row {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
     gap: 20px;
 }
-.form-group {
+.clientes-form-group {
     flex: 1;
     display: flex;
     flex-direction: column;
 }
-.form-group.description {
+.clientes-form-group.description {
     flex-grow: 1;
 }
-.form-group label {
+.clientes-form-group label {
     font-size: 1rem;
     color: var(--white-normal);
     margin-bottom: 15px;
     font-weight: 600;
     margin-left: 3%;
 }
-.form-group input, .form-group select, .form-group textarea {
+.clientes-form-group input, .clientes-form-group select, .clientes-form-group textarea {
     padding: 10px;
     max-width: 450px;
     border: 1px solid #ddd;
@@ -100,41 +100,41 @@
     background-color: #f9f9f9;
     margin-left: 3%;
 }
-.form-group input:focus, .form-group select:focus, .form-group textarea:focus {
+.clientes-form-group input:focus, .clientes-form-group select:focus, .clientes-form-group textarea:focus {
     outline: none;
     border-color: var(--gray-3);
     box-shadow: 0 0 0 2px rgba(147, 147, 147, 0.25);
 }
-.form-group textarea {
+.clientes-form-group textarea {
     min-height: 80px;
     resize: vertical;
 }
 
 /* Rodapé do formulário */
-.form-footer {
+.clientes-form-footer {
     display: flex;
     justify-content: center;
     align-items: center;
     margin-top: -5px;
 }
 
-.form-footer .btn-new-appointment {
+.clientes-form-footer .clientes-btn-new-appointment {
     margin-right: 42%;
 }
 
-.reminder-label {
+.clientes-reminder-label {
     display: flex;
     align-items: center;
     font-size: 1rem;
     color: var(--white-normal);
     margin-right: 18%;
 }
-.reminder-label input {
+.clientes-reminder-label input {
     margin-right: 10px;
 }
 
 /* Modal Editar Agendamento*/
-.modal-edit{
+.clientes-modal-edit{
     position: fixed;
     top: 50%;
     left: 50%;
@@ -151,8 +151,8 @@
 /* MODAL DELETE  */
 
 /* Estilos compartilhados para todos os modais */
-.modal-delete,
-.modal-mass-delete {
+.clientes-modal-delete,
+.clientes-modal-mass-delete {
     position: fixed;
     top: 50%;
     left: 50%;
@@ -166,8 +166,8 @@
 }
 
 /* Estilos compartilhados para todos os fundos de modal */
-.modal-backdrop-delete,
-.modal-backdrop-mass-delete {
+.clientes-modal-backdrop-delete,
+.clientes-modal-backdrop-mass-delete {
     position: fixed;
     top: 0;
     left: 0;
@@ -178,16 +178,16 @@
 }
 
 /* Estilos para esconder os modais e fundos */
-.modal-delete.hidden,
-.modal-backdrop-delete.hidden,
-.modal-mass-delete.hidden,
-.modal-backdrop-mass-delete.hidden {
+.clientes-modal-delete.hidden,
+.clientes-modal-backdrop-delete.hidden,
+.clientes-modal-mass-delete.hidden,
+.clientes-modal-backdrop-mass-delete.hidden {
     display: none;
 }
 
 /* Estilos para o cabeçalho dos modais */
-.modal-delete .modal-header,
-.modal-mass-delete .modal-header {
+.clientes-modal-delete .clientes-modal-header,
+.clientes-modal-mass-delete .clientes-modal-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -195,36 +195,36 @@
     
 }
 
-.modal-delete .modal-header h2,
-.modal-mass-delete .modal-header h2 {
+.clientes-modal-delete .clientes-modal-header h2,
+.clientes-modal-mass-delete .clientes-modal-header h2 {
     margin: 0;
     font-size: 1.5rem;
     color: var(--darkness-black);
 }
 
-.modal-delete .modal-close-delete-btn,
-.modal-mass-delete .modal-close-mass-delete-btn {
+.clientes-modal-delete .clientes-modal-close-delete-btn,
+.clientes-modal-mass-delete .clientes-modal-close-mass-delete-btn {
     background: none;
     border: none;
     cursor: pointer;
 }
 
 /* Estilos para o corpo do modal */
-.modal-delete .modal-body,
-.modal-mass-delete .modal-body {
+.clientes-modal-delete .clientes-modal-body,
+.clientes-modal-mass-delete .clientes-modal-body {
     padding: 25px;
     font-size: 1.2rem;
     color: var(--darkness-black);
 }
 
-.modal-delete .modal-body p,
-.modal-mass-delete .modal-body p {
+.clientes-modal-delete .clientes-modal-body p,
+.clientes-modal-mass-delete .clientes-modal-body p {
     margin: 0;
 }
 
 /* Estilos para o rodapé do modal */
-.modal-delete .modal-footer,
-.modal-mass-delete .modal-footer {
+.clientes-modal-delete .clientes-modal-footer,
+.clientes-modal-mass-delete .clientes-modal-footer {
     display: flex;
     justify-content: flex-end;
     gap: 10px;
@@ -232,25 +232,25 @@
 }
 
 /* Estilos para os botões de ação */
-.modal-delete .btn-cancel-delete,
-.modal-delete .btn-confirm-delete,
-.modal-mass-delete .btn-cancel-mass-delete,
-.modal-mass-delete .btn-confirm-mass-delete {
+.clientes-modal-delete .clientes-btn-cancel-delete,
+.clientes-modal-delete .clientes-btn-confirm-delete,
+.clientes-modal-mass-delete .clientes-btn-cancel-mass-delete,
+.clientes-modal-mass-delete .clientes-btn-confirm-mass-delete {
     padding: 8px 15px;
     border-radius: 5px;
     cursor: pointer;
     font-weight: bold;
 }
 
-.modal-delete .btn-cancel-delete,
-.modal-mass-delete .btn-cancel-mass-delete {
+.clientes-modal-delete .clientes-btn-cancel-delete,
+.clientes-modal-mass-delete .clientes-btn-cancel-mass-delete {
     background-color: transparent;
     border: 1px solid var(--darkness-black);
     color: var(--darkness-black);
 }
 
-.modal-delete .btn-confirm-delete,
-.modal-mass-delete .btn-confirm-mass-delete {
+.clientes-modal-delete .clientes-btn-confirm-delete,
+.clientes-modal-delete .clientes-btn-confirm-delete {
     background-color: #f44336; /* Cor vermelha para exclusão */
     border: none;
     color: var(--white-normal);
@@ -260,7 +260,7 @@
 /* MODAIS (CLIENTES) */
 /* ============================================= */
 
-#new-appointment-modal-add-client{
+#clientes-new-appointment-modal-add-client{
     position: fixed;
     top: 50%;
     left: 54%;
@@ -270,11 +270,11 @@
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.373);
     width: 1500px; /* Ajuste a largura conforme o protótipo */
     max-width: 90%; /* Garante que ele seja responsivo */
-    height: 80%;
+    height: 84%;
     z-index: 5;
 }
 
-#new-appointment-modal-edit-client{
+#clientes-new-appointment-modal-edit-client{
     position: fixed;
     top: 50%;
     left: 54%;
@@ -284,10 +284,10 @@
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.373);
     width: 1500px; /* Ajuste a largura conforme o protótipo */
     max-width: 90%; /* Garante que ele seja responsivo */
-    height: 80%;
+    height: 84%;
     z-index: 5;
 }
-#new-appointment-modal-view-client{
+#clientes-new-appointment-modal-view-client{
     position: fixed;
     top: 50%;
     left: 54%;
@@ -301,16 +301,16 @@
     z-index: 5;
 }
 
-.form-group-client {
+.clientes-form-group-client {
     flex: 1;
     display: flex;
     flex-direction: column;
 }
 
-.form-group-client .description {
+.clientes-form-group-client .description {
     flex-grow: 1;
 }
-.form-group-client label {
+.clientes-form-group-client label {
     font-size: 1rem;
     color: var(--white-normal);
     /* color: #f44336; */
@@ -318,7 +318,7 @@
     font-weight: 600;
     margin-left: 3%;
 }
-.form-group-client input, .form-group-client select, .form-group-client textarea {
+.clientes-form-group-client input, .clientes-form-group-client select, .clientes-form-group-client textarea {
     padding: 10px;
     max-width: 450px;
     border: 1px solid #ddd;
@@ -328,153 +328,19 @@
     margin-left: 3%;
     margin-bottom: 10px;
 }
-.form-group-client input:focus, .form-group-client select:focus, .form-group-client textarea:focus {
+.clientes-form-group-client input:focus, .clientes-form-group-client select:focus, .clientes-form-group-client textarea:focus {
     outline: none;
     border-color: var(--gray-3);
     box-shadow: 0 0 0 2px rgba(147, 147, 147, 0.25);
     /* margin-bottom: 20px; */
 }
-.form-group-client textarea {
+.clientes-form-group-client textarea {
     min-height: 100px;
     resize: vertical;
 }
 
 /* Rodapé do formulário */
-.form-footer-client {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    margin-top: 5px;
-    gap: 15px;
-}
-
-/* ============================================= */
-/* MODAIS (NOTAS) */
-/* ============================================= */
-
-/* Estilos para o modal de Adicionar Nota Fiscal */
-#new-appointment-modal-add-note {
-    position: fixed;
-    top: 50%;
-    left: 53%;
-    transform: translate(-50%, -50%);
-    background-color: var(--light-black);
-    border-radius: 12px;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.373);
-    width: 1000px;
-    max-width: 90%;
-    height: 75%;
-    z-index: 5;
-}
-
-/* Estilos para o modal de Editar Nota Fiscal */
-#new-appointment-modal-edit-note {
-    position: fixed;
-    top: 50%;
-    left: 53%;
-    transform: translate(-50%, -50%);
-    background-color: var(--light-black);
-    border-radius: 12px;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.373);
-    width: 1000px;
-    max-width: 90%;
-    height: 75%;
-    z-index: 5;
-}
-
-/* Estilos para o modal de Informações da Nota Fiscal */
-#new-appointment-modal-view-note {
-    position: fixed;
-    top: 50%;
-    left: 53%;
-    transform: translate(-50%, -50%);
-    background-color: var(--light-black);
-    border-radius: 12px;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.373);
-    width: 1000px;
-    max-width: 90%;
-    height: 70%;
-    z-index: 5;
-}
-
-/* Estilos para o modal de confirmação de exclusão */
-#modal-delete-note {
-    position: fixed;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    background-color: var(--white-dark);
-    border-radius: 12px;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.373);
-    width: 500px;
-    max-width: 90%;
-    z-index: 1000;
-}
-
-/* Fundo escuro que cobre a tela */
-.modal-backdrop-add.hidden,
-.modal-backdrop-edit.hidden,
-.modal-backdrop-view.hidden,
-.modal-backdrop-delete.hidden,
-.modal-delete.hidden,
-.modal.hidden {
-    display: none;
-}
-
-/* Adaptação dos estilos de clientes para notas fiscais */
-.modal-backdrop-add,
-.modal-backdrop-edit,
-.modal-backdrop-view,
-.modal-backdrop-delete {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(0, 0, 0, 0.5);
-    z-index: 4; /* Nível de z-index menor para ficar atrás dos modais */
-}
-
-.form-group-notas {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-}
-
-.form-group-notas .description {
-    flex-grow: 1;
-}
-.form-group-notas label {
-    font-size: 1rem;
-    color: var(--white-normal);
-    /* color: #f44336; */
-    margin-bottom: 5px;
-    font-weight: 600;
-    margin-left: 3%;
-}
-.form-group-notas input, .form-group-notas select, .form-group-notas textarea {
-    padding: 10px;
-    width: 400px;
-    border: 1px solid #ddd;
-    border-radius: 8px;
-    font-size: 1rem;
-    background-color: #f9f9f9;
-    margin-left: 3%;
-    margin-bottom: 10px;
-}
-.form-group-notas input:focus, .form-group-notas select:focus, .form-group-notas textarea:focus {
-    outline: none;
-    border-color: var(--gray-3);
-    box-shadow: 0 0 0 2px rgba(147, 147, 147, 0.25);
-    /* margin-bottom: 20px; */
-}
-.form-group-notas textarea {
-    min-height: 100px;
-    resize: vertical;
-}
-
-/* Rodapé do formulário */
-.form-footer-notas {
+.clientes-form-footer-client {
     display: flex;
     justify-content: center;
     align-items: center;
@@ -483,105 +349,10 @@
 }
 
 
-.modal-delete-note {
-    display: flex;
-    align-items: center;
-    justify-content: end;
-    position: fixed;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    background-color: var(--white-dark);
-    border-radius: 12px;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.373);
-    width: 480px;
-    max-width: 90%;
-    z-index: 500;
-}
-
-/* Estilos compartilhados para todos os fundos de modal */
-.modal-backdrop-delete {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(0, 0, 0, 0.5);
-    z-index: 999;
-}
-
-/* Estilos para esconder os modais e fundos */
-.modal-delete-note.hidden,
-.modal-backdrop-delete.hidden {
-    display: none;
-}
-
-/* Estilos para o cabeçalho dos modais */
-.modal-delete-note .modal-header{
-    display: flex;
-    gap: 70px;
-    justify-content: space-between;
-    align-items: center;
-    padding: 20px 25px;
-      
-    
-}
-
-.modal-delete-note .modal-header h2{
-    margin: 0;
-    font-size: 1.5rem;
-    color: var(--darkness-black);
-}
-
-.modal-delete-note .modal-close-delete-btn {
-    background: none;
-    border: none;
-    cursor: pointer;
-}
-
-/* Estilos para o corpo do modal */
-.modal-delete-note .modal-body {
-    padding: 25px;
-    font-size: 1.2rem;
-    color: var(--darkness-black);
-}
-
-.modal-delete-note .modal-body p {
-    margin-left: -70px;
-}
-
-/* Estilos para o rodapé do modal */
-.modal-delete-note .modal-footer {
-    display: flex;
-    justify-content: flex-end;
-    gap: 10px;
-    padding: 20px 25px;
-}
-
-/* Estilos para os botões de ação */
-.modal-delete-note .btn-cancel-delete,
-.modal-delete-note .btn-confirm-delete {
-    padding: 8px 15px;
-    border-radius: 5px;
-    cursor: pointer;
-    font-weight: bold;
-}
-
-.modal-delete-note .btn-cancel-delete{
-    background-color: transparent;
-    border: 1px solid var(--darkness-black);
-    color: var(--darkness-black);
-}
-
-.modal-delete-note .btn-confirm-delete {
-    background-color: #f44336; /* Cor vermelha para exclusão */
-    border: none;
-    color: var(--white-normal);
-}
 
 /* Modal rotinas */
 
-.modal-delete-rotinas {
+.clientes-modal-delete-rotinas {
     display: flex;
     align-items: center;
     justify-content: end;
@@ -598,7 +369,7 @@
 }
 
 /* Estilos compartilhados para todos os fundos de modal */
-.modal-backdrop-delete {
+.clientes-modal-backdrop-delete {
     position: fixed;
     top: 0;
     left: 0;
@@ -609,13 +380,13 @@
 }
 
 /* Estilos para esconder os modais e fundos */
-.modal-delete-rotinas.hidden,
-.modal-backdrop-delete.hidden {
+.clientes-modal-delete.hidden,
+.clientes-modal-backdrop-delete.hidden {
     display: none;
 }
 
 /* Estilos para o cabeçalho dos modais */
-.modal-delete-rotinas .modal-header{
+.clientes-modal-delete .clientes-modal-header{
     display: flex;
     gap: 70px;
     justify-content: space-between;
@@ -625,31 +396,34 @@
     
 }
 
-.modal-delete-rotinas .modal-header h2{
+.clientes-modal-delete .clientes-modal-header h2{
     margin: 0;
     font-size: 1.5rem;
     color: var(--darkness-black);
 }
 
-.modal-delete-rotinas .modal-close-delete-btn {
+.clientes-modal-delete .clientes-modal-close-delete-btn {
     background: none;
     border: none;
     cursor: pointer;
 }
 
 /* Estilos para o corpo do modal */
-.modal-delete-rotinas .modal-body {
+.clientes-modal-delete .clientes-modal-body {
     padding: 25px;
     font-size: 1.2rem;
     color: var(--darkness-black);
 }
 
-.modal-delete-rotinas .modal-body p {
-    margin-left: -30px;
+.clientes-modal-delete .clientes-modal-body p {
+    display: flex;
+    margin: 0;
+    gap: 5px;
+    align-items: center;
 }
 
 /* Estilos para o rodapé do modal */
-.modal-delete-rotinas .modal-footer {
+.clientes-modal-delete .clientes-modal-footer {
     display: flex;
     justify-content: flex-end;
     gap: 10px;
@@ -657,21 +431,21 @@
 }
 
 /* Estilos para os botões de ação */
-.modal-delete-rotinas .btn-cancel-delete,
-.modal-delete-rotinas .btn-confirm-delete {
+.clientes-modal-delete .clientes-btn-cancel-delete,
+.clientes-modal-delete .clientes-btn-confirm-delete {
     padding: 8px 15px;
     border-radius: 5px;
     cursor: pointer;
     font-weight: bold;
 }
 
-.modal-delete-rotinas .btn-cancel-delete{
+.clientes-modal-delete .clientes-btn-cancel-delete{
     background-color: transparent;
     border: 1px solid var(--darkness-black);
     color: var(--darkness-black);
 }
 
-.modal-delete-rotinas .btn-confirm-delete {
+.clientes-modal-delete .clientes-btn-confirm-delete {
     background-color: #f44336; /* Cor vermelha para exclusão */
     border: none;
     color: var(--white-normal);

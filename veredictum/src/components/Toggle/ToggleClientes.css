@@ -1,18 +1,19 @@
+@import url('../Css/Main.css');
 
-.toggle-switch {
+.clientes-toggle-switch {
     position: relative;
     display: inline-block;
     width: 50px;
     height: 28px;
 }
 
-.toggle-switch input {
+.clientes-toggle-switch input {
     opacity: 0;
     width: 0;
     height: 0;
 }
 
-.toggle-switch .slider {
+.clientes-toggle-switch .clientes-slider {
     position: absolute;
     cursor: pointer;
     top: 0;
@@ -24,7 +25,7 @@
     border-radius: 28px;
 }
 
-.toggle-switch .slider:before {
+.clientes-toggle-switch .clientes-slider:before {
     position: absolute;
     content: "";
     height: 20px;
@@ -36,14 +37,14 @@
     border-radius: 50%;
 }
 
-.toggle-switch input:checked + .slider {
+.clientes-toggle-switch input:checked + .clientes-slider {
     background-color: var(--green-normal);
 }
 
-.toggle-switch input:focus + .slider {
+.clientes-toggle-switch input:focus + .clientes-slider {
     box-shadow: 0 0 1px #007bff;
 }
 
-.toggle-switch input:checked + .slider:before {
+.clientes-toggle-switch input:checked + .clientes-slider:before {
     transform: translateX(22px);
 }
