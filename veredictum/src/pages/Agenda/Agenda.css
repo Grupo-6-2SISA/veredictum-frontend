@@ -77,18 +77,20 @@ ESTILOS ESPECÍFICOS DA PÁGINA AGENDA
     padding: 20px;
     justify-content: space-between;
     gap: 35px;
-    height: 75vh;
+    /* Remova a altura fixa ou alta: height: 75vh; */
+    /* Remova o overflow, ele deve estar no container da lista: overflow-y: hidden; */
     width: 90vw;
     border-radius: 10px;
-    overflow-y: hidden; /* Mantém o scroll dentro da listagem */
-    /* margin-bottom: 40%; */
 }
 
+/* MANTENHA O ESSENCIAL */
 .agenda-card-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 10px;
+    margin-bottom: 0; /* Remove a margem inferior para a lista começar logo abaixo */
+    flex-shrink: 0; /* Impede que o cabeçalho seja "espremido" */
+    padding-bottom: 10px; /* Adiciona espaçamento após o título */
 }
 
 /* Card principal do atendimento */
@@ -100,9 +102,12 @@ ESTILOS ESPECÍFICOS DA PÁGINA AGENDA
     box-shadow: 0 4px 12px rgba(0,0,0,0.08);
     padding: 24px;
     display: flex;
-    flex-direction: column;
-    overflow: hidden;
-
+    flex-direction: column; /* Essencial: Organiza o conteúdo em coluna */
+    overflow: hidden; /* Garante que nada saia do card */
+    
+    /* Defina uma altura para o card, se quiser que ele ocupe uma porção da tela */
+    height: 100%; /* Permite que ele cresça dentro do pai */
+    min-height: 500px; /* Altura mínima para não sumir */
 }
 
 .agenda-card-action-btn {
@@ -154,15 +159,17 @@ ESTILOS ESPECÍFICOS DA PÁGINA AGENDA
 }
 
 
-/* Listagem dentro do card */
+/* AJUSTE CRUCIAL AQUI */
 .agenda-listagem-container {
-    margin-top: 10px;
     width: 100%;
-    margin-top: 10px;
-    overflow-y: auto;
-    max-height: 60vh;
-    padding-right: 10px;
-    margin-left: -18px;
+    flex-grow: 1; /* Essencial: Ocupa todo o espaço vertical restante */
+    
+    /* Remova max-height: 60vh; */
+    /* Remova margin-top: 10px; e margin-left: -18px; (para centralizar e deixar o flexbox gerenciar) */
+    
+    overflow-y: auto; /* Ativa o scroll vertical */
+    padding-right: 10px; /* Mantém o espaçamento para a barra de scroll customizada */
+    margin-top: 10px; /* Adicione o espaçamento superior aqui, se necessário */
 }
 
 /* Cabeçalho da tabela */

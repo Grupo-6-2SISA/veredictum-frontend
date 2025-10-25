@@ -1,6 +1,6 @@
 import React, { useState, useMemo, useEffect, useCallback } from 'react';
 import Listagem from '../../components/Listagem/Listagem';
-import Button from '../../components/Button/Button';
+import ButtonAgenda from '../../components/ButtonAgenda/ButtonAgenda';
 import MonthPickerButton from '../../components/MonthPicker/MonthPickerButton';
 import './Agenda.css';
 import '../../index.css';
@@ -182,22 +182,22 @@ export default function Agenda() {
 
     // Abre o modal de exclusão em lote
     const handleBulkDeleteClick = useCallback(() => {
-        console.log('IDs selecionados ao clicar no botão:', selectedIds, 'Tamanho:', selectedIds.size); // <--- Verifique este log
+        // Apenas verifica se há algum item selecionado
         if (selectedIds.size === 0) {
             alert('Selecione ao menos um atendimento para excluir.');
             return;
         }
-        setDeleteMode('bulk');
+        setDeleteMode('bulk'); // Define o modo de exclusão em lote
         setDeletingItem(null);
         setShowDeleteModal(true);
-    }, [selectedIds]);
+    }, [selectedIds]); // Depende do estado atual de selectedIds
 
     // Executa a exclusão (individual ou lote)
     const handleDeleteConfirm = async () => {
         try {
             if (deleteMode === 'bulk') {
-                const ids = Array.from(selectedIds);
-                await excluirAtendimentoLote(ids);
+                const ids = Array.from(selectedIds); // Pega todos os IDs selecionados
+                await excluirAtendimentoLote(ids); // Envia a lista para o backend
                 alert(`Foram excluídos ${ids.length} atendimentos.`);
             } else if (deletingItem) {
                 await excluirAtendimento(deletingItem.idAtendimento ?? deletingItem.idAgendamento ?? deletingItem.id);
@@ -286,13 +286,12 @@ export default function Agenda() {
 
                 // CORREÇÃO: Garante que o ID é um NÚMERO e verifica se é > 0
                 const rawId = item.idAtendimento ?? item.idAgendamento ?? item.id;
-                const idAtendimento = Number.isInteger(rawId) && rawId > 0 ? rawId : parseInt(rawId, 10);
+                // Usa parseInt e verifica se o resultado é válido.
+                const idAtendimento = parseInt(rawId, 10);
 
                 if (isNaN(idAtendimento) || idAtendimento <= 0) {
-                    // console.warn('Item ignorado devido a ID inválido:', item, idAtendimento);
-                    return null; // Será filtrado
+                    return null;
                 }
-
                 // ... Lógica de Nome do cliente (mantida) ...
                 let nomeCliente = 'Cliente não informado';
                 // ... (lógica de nome mantida) ...
@@ -313,7 +312,9 @@ export default function Agenda() {
                         <input
                             type="checkbox"
                             aria-label={`Selecionar atendimento ${nomeCliente}`}
+                            // O Set armazena Números, então verifique com o Número
                             checked={selectedIds.has(idAtendimento)}
+                            // Passa o ID como Number para o toggleSelect
                             onChange={(e) => toggleSelect(idAtendimento, e.target.checked)}
                         />
                     ),
@@ -445,7 +446,7 @@ export default function Agenda() {
             <main className="main-content agenda-page">
                 <header className="agenda-header">
                     <h1>Agenda & Relacionamento</h1>
-                    <Button onClick={openAddModal} text="Novo Agendamento" />
+                    <ButtonAgenda onClick={openAddModal} text="Novo Agendamento" />
                 </header>
 
                 <div className="agenda-layout-grid">

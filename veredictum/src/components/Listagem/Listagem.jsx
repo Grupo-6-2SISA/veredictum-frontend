@@ -42,28 +42,19 @@ const Listagem = ({ dados = [], colunas = [], classNamePrefix = 'listagem', id, 
                     >
                         {colunas.map(col => {
                             const key = col.key;
-                            const value = item[key]; // O valor é o caminho do SVG passado pelo componente pai
+                            const value = item[key];
 
-                            if (key === 'checkbox') {
+                            // === NOVO AJUSTE: Trate o checkbox como um elemento React, assim como editar/excluir ===
+                            if (key === 'checkbox' || key === 'editar' || key === 'excluir') {
                                 return (
                                     <div className={`${prefix}-data`} key={key}>
-                                        <input type="checkbox" aria-label={`select-row-${idx}`} />
+                                        {value} {/* Renderiza o elemento React passado (o input reativo ou o botão) */}
                                     </div>
                                 );
                             }
+                            // === FIM DO NOVO AJUSTE ===
 
-                            // === AJUSTE PARA RENDERIZAR COMPONENTES REACT/ELEMENTOS ===
-                            if (key === 'editar' || key === 'excluir') {
-                                return (
-                                    <div className={`${prefix}-data`} key={key}>
-                                        {/* Simplesmente renderiza o botão/elemento que veio do componente pai */}
-                                        {value}
-                                    </div>
-                                );
-                            }
-                            // === FIM DO AJUSTE ===
-
-                            // Renderização padrão para outros dados (nome, dia, horario, status, etc.)
+                            // Renderização padrão para outros dados
                             return (
                                 <div className={`${prefix}-data`} key={key}>
                                     {value}

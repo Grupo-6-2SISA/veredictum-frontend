@@ -3,8 +3,19 @@ import ModalContainer from './ModalContainer';
 import { criarAtendimento, apiClient } from "../Agenda.js";
 import PropTypes from 'prop-types';
 
+// Helpers: data e hora local no formato dos inputs
+const pad2 = (n) => String(n).padStart(2, '0');
+const nowLocalDate = () => {
+  const d = new Date();
+  return `${d.getFullYear()}-${pad2(d.getMonth() + 1)}-${pad2(d.getDate())}`;
+};
+const nowLocalTime = () => {
+  const d = new Date();
+  return `${pad2(d.getHours())}:${pad2(d.getMinutes())}`;
+};
+
 export default function ModalAdicionarAtendimento({ show, onClose, atualizarLista }) {
-  // Mantendo states para lógica de agendamento (incluindo isPago, mesmo que não esteja na UI da imagem)
+  // Mantendo states para lógica de agendamento (inclui isPago p/ compatibilidade)
   const [isPago, setIsPago] = useState(false);
   const [clientes, setClientes] = useState([]);
   const [usuarios, setUsuarios] = useState([]);
@@ -14,7 +25,6 @@ export default function ModalAdicionarAtendimento({ show, onClose, atualizarList
     let mounted = true;
     const fetchLists = async () => {
       try {
-        // Busca REAL dos clientes e usuários, mantendo a estrutura original
         const [cRes, uRes] = await Promise.all([
           apiClient.get('/clientes').catch(() => ({ data: [] })),
           apiClient.get('/usuarios').catch(() => ({ data: [] })),
@@ -36,24 +46,17 @@ export default function ModalAdicionarAtendimento({ show, onClose, atualizarList
     e.preventDefault();
 
     const etiqueta = e.target.etiqueta.value.trim();
-    // Campo 'valor' não está mais na UI, deve ser removido ou tratado como null
-    const valor = null;
-    // const valorRaw = e.target.valor?.value; 
-    // const valor = valorRaw === "" || valorRaw === undefined ? null : parseFloat(valorRaw);
-
+    const valor = null; // sem campo 'valor' na UI
     const descricao = e.target.descricao.value.trim();
     const fkCliente = e.target.fkCliente?.value || "";
     const fkUsuario = e.target.fkUsuario?.value || "";
-    const nota = e.target.nota?.value?.trim() || null; // Campo Nota adicionado
-    const status = e.target.status?.value || "Agendado"; // Campo Status
+    const nota = e.target.nota?.value?.trim() || null;
+    const status = e.target.status?.value || "Agendado";
     const hora = e.target.hora.value;
     const data = e.target.data.value;
     const shouldEnviarEmail = !!e.target.shouldEnviarEmail.checked;
 
-    // --- Validações básicas ---
-    const somenteTexto = /^[A-Za-zÀ-ú0-9\s\-\.,()\/]+$/;
-
-    // NOVO: Exige apenas fkCliente
+    // Validações
     if (!fkCliente) {
       alert("Selecione o cliente.");
       return;
@@ -70,34 +73,30 @@ export default function ModalAdicionarAtendimento({ show, onClose, atualizarList
       alert("Descrição muito curta.");
       return;
     }
-    // -----------------------------------------------------------
 
     const dataInicioISO = `${data}T${hora}:00`;
     let dataFimISO = null;
     try {
       const d = new Date(dataInicioISO);
-      d.setHours(d.getHours() + 1); // Exemplo de 1h de duração
+      d.setHours(d.getHours() + 1); // duração padrão 1h
       dataFimISO = d.toISOString();
     } catch (err) {
       console.error('Erro ao calcular dataFim', err);
     }
 
-    // Encontra o nome do cliente no array (para preencher o DTO)
+    // Nome do cliente selecionado (para DTO)
     const clienteSelecionado = clientes.find(c => String(c.idCliente ?? c.id) === String(fkCliente));
     const nomeClienteParaDTO = clienteSelecionado?.nome || clienteSelecionado?.nomeCliente || null;
 
-
     const atendimentoDTO = {
       fkCliente: fkCliente ? Number(fkCliente) : null,
-      // NOVO: Apenas o nome do cliente selecionado (ou null)
       nomeCliente: nomeClienteParaDTO,
       fkUsuario: fkUsuario ? Number(fkUsuario) : null,
       etiqueta: etiqueta || null,
-      // Mantendo valor e isPago para compatibilidade com o DTO
       valor: valor === null ? null : Number(valor),
       descricao: descricao || null,
-      status: status, // Adicionado Status
-      nota: nota, // Adicionado Nota
+      status: status,
+      nota: nota,
       dataInicio: dataInicioISO,
       dataFim: dataFimISO,
       dataVencimento: dataInicioISO,
@@ -130,16 +129,16 @@ export default function ModalAdicionarAtendimento({ show, onClose, atualizarList
     >
       <form
         id="appointmentForm"
-        className="appointment-form-agenda" // <-- CLASSE DO FORMULÁRIO AJUSTADA
+        className="appointment-form-agenda"
         onSubmit={handleSubmit}
         style={{ display: 'contents' }}
+        autoComplete="off"
       >
 
         {/* LINHA 1: Cliente e Responsável */}
         <div className="form-group">
           <label htmlFor="fkCliente">Cliente</label>
-          {/* Simplificado para apenas o SELECT, removendo a lógica de input manual */}
-          <select id="fkCliente" name="fkCliente" defaultValue="" required={true}>
+          <select id="fkCliente" name="fkCliente" defaultValue="" required>
             <option value="">Selecione...</option>
             {clientes.map(c => (
               <option key={c.idCliente ?? c.id} value={c.idCliente ?? c.id}>
@@ -150,7 +149,7 @@ export default function ModalAdicionarAtendimento({ show, onClose, atualizarList
         </div>
         <div className="form-group">
           <label htmlFor="fkUsuario">Responsável</label>
-          <select id="fkUsuario" name="fkUsuario" defaultValue="" required={true}>
+          <select id="fkUsuario" name="fkUsuario" defaultValue="" required>
             <option value="">Selecione...</option>
             {usuarios.map(u => (
               <option key={u.idUsuario ?? u.id} value={u.idUsuario ?? u.id}>
@@ -170,7 +169,7 @@ export default function ModalAdicionarAtendimento({ show, onClose, atualizarList
           <input type="text" id="nota" name="nota" placeholder="NF-e 1287364672828382998" />
         </div>
 
-        {/* LINHA 3: Status e Descrição (Textarea) */}
+        {/* LINHA 3: Status e Descrição */}
         <div className="form-group">
           <label htmlFor="status">Status</label>
           <select id="status" name="status" defaultValue="Agendado">
@@ -190,13 +189,7 @@ export default function ModalAdicionarAtendimento({ show, onClose, atualizarList
           />
         </div>
 
-        {/*
-          // NOVO: Para manter o design de textarea em 2 colunas como no 'Editar', 
-          // adicione a textarea na próxima linha ocupando 2 colunas, se necessário.
-          // Por enquanto, vou manter a estrutura de 2 colunas de cima, e 2 colunas para o resto.
-        */}
-
-        {/* LINHA 4: Hora e Data */}
+        {/* LINHA 4: Hora e Data (pré-preenchidos com agora) */}
         <div className="form-group">
           <label htmlFor="hora">Selecione a hora de início</label>
           <input
@@ -204,7 +197,7 @@ export default function ModalAdicionarAtendimento({ show, onClose, atualizarList
             id="hora"
             name="hora"
             required
-            defaultValue="08:00"
+            defaultValue={nowLocalTime()}
           />
         </div>
         <div className="form-group">
@@ -214,19 +207,17 @@ export default function ModalAdicionarAtendimento({ show, onClose, atualizarList
             id="data"
             name="data"
             required
-            defaultValue="2025-09-06"
+            defaultValue={nowLocalDate()}
           />
         </div>
 
-        {/* LINHA 5: Checkbox (Coluna 1) e Botão Adicionar (Coluna 2) */}
-        {/* Coluna 1: Checkbox */}
+        {/* LINHA 5: Checkbox e Botão */}
         <div className="form-group" style={{
-          marginTop: '15px', /* Espaçamento superior para alinhar a altura */
-          /* Reseta o gap do form-group para alinhar o checkbox */
+          marginTop: '15px',
           gap: '0',
           flexDirection: 'row',
           alignItems: 'center',
-          paddingBottom: '30px' /* Simula o espaço do rodapé */
+          paddingBottom: '30px'
         }}>
           <input
             type="checkbox"
@@ -248,13 +239,11 @@ export default function ModalAdicionarAtendimento({ show, onClose, atualizarList
           </label>
         </div>
 
-         {/* Coluna 2: Botão Adicionar (Alinhado à direita) */}
         <div className="form-group" style={{
-          marginTop: '15px', /* Espaçamento superior para alinhar a altura */
-          /* Alinha o botão à direita na coluna e ao fundo da linha */
+          marginTop: '15px',
           alignItems: 'flex-end',
           justifyContent: 'flex-end',
-          paddingBottom: '30px' /* Simula o espaço do rodapé */
+          paddingBottom: '30px'
         }}>
           <button type="submit" className="btn-new-appointment_agenda">Adicionar</button>
         </div>

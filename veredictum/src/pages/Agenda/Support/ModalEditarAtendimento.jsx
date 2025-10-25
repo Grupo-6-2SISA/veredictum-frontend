@@ -25,13 +25,13 @@ export default function ModalEditarAtendimento({ show, onClose, atualizarLista, 
 
   const [formState, setFormState] = useState({
     fkCliente: '',
-    nomeCliente: '', // Mantido para compatibilidade, embora não visível na UI
+    nomeCliente: '',
     fkUsuario: '',
     etiqueta: '',
     nota: '',
     status: 'Agendado',
     descricao: '',
-    isPago: false, // Não visível na UI do editar, mas mantido no estado
+    isPago: false,
     shouldEnviarEmail: false,
     date: '',
     time: '',
@@ -45,8 +45,38 @@ export default function ModalEditarAtendimento({ show, onClose, atualizarLista, 
     }));
   };
 
-  // Removido handlePagoChange pois o switch 'Pago?' não está na UI de edição
+  // Inicializa o formulário ao abrir
+  useEffect(() => {
+    if (!show) return;
 
+    const baseDateIso = editingItem?.dataInicio || editingItem?.data || new Date().toISOString();
+    const { date, time } = formatDateTime(baseDateIso);
+
+    // Pega a nota de chaves alternativas, caso o backend use nomes diferentes
+    const notaFromItem =
+      editingItem?.nota ??
+      editingItem?.notaFiscal ??
+      editingItem?.observacao ??
+      editingItem?.obs ??
+      '';
+
+    setFormState(prev => ({
+      ...prev,
+      fkCliente: editingItem?.fkCliente ? String(editingItem.fkCliente) : '',
+      nomeCliente: editingItem?.fkCliente ? '' : (editingItem?.nomeCliente || ''),
+      fkUsuario: editingItem?.fkUsuario ? String(editingItem.fkUsuario) : '',
+      etiqueta: editingItem?.etiqueta || '',
+      nota: typeof notaFromItem === 'string' ? notaFromItem : String(notaFromItem ?? ''),
+      status: editingItem?.status || 'Agendado',
+      descricao: editingItem?.descricao || '',
+      isPago: !!editingItem?.isPago,
+      shouldEnviarEmail: !!editingItem?.shouldEnviarEmail,
+      date,
+      time
+    }));
+  }, [show, editingItem]);
+
+  // Busca listas (não altera o formState após carregar)
   useEffect(() => {
     if (!show) return;
     let mounted = true;
@@ -63,34 +93,14 @@ export default function ModalEditarAtendimento({ show, onClose, atualizarLista, 
         setUsuarios(uRes.data || []);
       } catch (e) {
         console.error('Erro ao buscar listas:', e);
+      } finally {
+        if (mounted) setLoading(false);
       }
-
-      if (editingItem) {
-        const { date, time } = formatDateTime(editingItem.dataInicio);
-        setFormState({
-          fkCliente: editingItem.fkCliente ? String(editingItem.fkCliente) : '',
-          nomeCliente: editingItem.fkCliente ? '' : (editingItem.nomeCliente || ''),
-          fkUsuario: String(editingItem.fkUsuario || ''),
-          etiqueta: editingItem.etiqueta || '',
-          nota: editingItem.nota || '',
-          status: editingItem.status || 'Agendado',
-          descricao: editingItem.descricao || '',
-          isPago: !!editingItem.isPago,
-          shouldEnviarEmail: !!editingItem.shouldEnviarEmail,
-          date: date,
-          time: time
-        });
-      } else {
-        console.warn("ModalEditarAtendimento aberto sem item para edição.");
-      }
-
-      setLoading(false);
     };
 
     fetchData();
-
     return () => { mounted = false; };
-  }, [show, editingItem]);
+  }, [show]);
 
   if (!show) return null;
 
@@ -148,15 +158,13 @@ export default function ModalEditarAtendimento({ show, onClose, atualizarLista, 
       etiqueta: etiqueta || null,
       descricao: descricao || null,
       status: status,
-      nota: nota || null,
+      nota: (nota ?? '').trim() || null,
       dataInicio: dataInicioISO,
       dataFim: dataFimISO,
       dataVencimento: dataInicioISO,
       isPago: isPago,
       shouldEnviarEmail: shouldEnviarEmail
     };
-
-    console.debug('ModalEditarAtendimento - payload ajustado (PUT):', atendimentoDTO);
 
     try {
       const res = await editarAtendimento(idToEdit, atendimentoDTO);
@@ -187,8 +195,8 @@ export default function ModalEditarAtendimento({ show, onClose, atualizarLista, 
           className="appointment-form-agenda"
           onSubmit={handleSubmit}
           style={{ display: 'contents' }}
+          autoComplete="off"
         >
-
           {/* LINHA 1: Cliente e Responsável */}
           <div className="form-group">
             <label htmlFor="fkCliente">Cliente</label>
@@ -197,7 +205,7 @@ export default function ModalEditarAtendimento({ show, onClose, atualizarLista, 
               name="fkCliente"
               value={formState.fkCliente}
               onChange={handleChange}
-              required={true}
+              required
             >
               <option value="">Selecione...</option>
               {clientes.map(c => (
@@ -232,7 +240,7 @@ export default function ModalEditarAtendimento({ show, onClose, atualizarLista, 
               type="text"
               id="etiqueta"
               name="etiqueta"
-              placeholder="Pensão alimentícia"
+              placeholder="Digite uma etiqueta"
               value={formState.etiqueta}
               onChange={handleChange}
             />
@@ -243,7 +251,7 @@ export default function ModalEditarAtendimento({ show, onClose, atualizarLista, 
               type="text"
               id="nota"
               name="nota"
-              placeholder="NF-e 1287364672828382998"
+              placeholder="Digite a nota"
               value={formState.nota}
               onChange={handleChange}
             />
@@ -270,7 +278,7 @@ export default function ModalEditarAtendimento({ show, onClose, atualizarLista, 
               id="descricao"
               name="descricao"
               rows="3"
-              placeholder="Pensão alimentícia de 3 filhos e 1 cachorro"
+              placeholder="Digite a descrição"
               value={formState.descricao}
               onChange={handleChange}
             />
@@ -301,7 +309,6 @@ export default function ModalEditarAtendimento({ show, onClose, atualizarLista, 
           </div>
 
           {/* LINHA FINAL: Checkbox e Botão Salvar */}
-          {/* Coluna 1: Checkbox */}
           <div className="form-group" style={{
             marginTop: '15px',
             gap: '0',
@@ -320,27 +327,24 @@ export default function ModalEditarAtendimento({ show, onClose, atualizarLista, 
             <label
               htmlFor="shouldEnviarEmail"
               style={{
-                fontWeight: 'normal',
-                fontSize: '14px',
-                color: '#e9e9e9',
-                margin: 0,
-                cursor: 'pointer'
-              }}
-            >
+              fontWeight: 'normal',
+              fontSize: '14px',
+              color: '#e9e9e9',
+              margin: 0,
+              cursor: 'pointer'
+            }}>
               Enviar e-mail de lembrete?
             </label>
           </div>
 
-          {/* Coluna 2: Botão Salvar (Alinhado à direita/fundo) */}
           <div className="form-group" style={{
             marginTop: '15px',
             alignItems: 'flex-end',
             justifyContent: 'flex-end',
             paddingBottom: '30px'
           }}>
-            <button type="submit" className="btn-new-appointment">Salvar Alterações</button>
+            <button type="submit" className="btn-new-appointment_agenda">Salvar Alterações</button>
           </div>
-
         </form>
       )}
     </ModalContainer>
