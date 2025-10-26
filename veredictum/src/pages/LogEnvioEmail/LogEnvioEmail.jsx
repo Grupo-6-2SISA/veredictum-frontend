@@ -13,34 +13,61 @@ const COLUNAS_LOG_EMAIL = [
   { key: 'acoes', titulo: 'Ações' },
 ];
 
-let nomeUsuario = localStorage.getItem('nomeUsuario');
-if (!nomeUsuario) {
-  nomeUsuario = 'PLACEHOLDER';
-}
-
-// Tipo (1fr) | Data de Envio (2fr - maior) | Mensagem (1.5fr) | Cliente (2fr) | Ações (1fr)
 const GRID_TEMPLATE_LOG_EMAIL = '1fr 2fr 1.5fr 2fr 1fr';
 
+const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:8080';
+
 const LogEnvioEmail = () => {
+  const [tiposLembrete, setTiposLembrete] = useState([]);
+  const [logs, setLogs] = useState([]);
+  const [filtroTipo, setFiltroTipo] = useState('');
+  const [filtroCliente, setFiltroCliente] = useState('');
+  const [carregando, setCarregando] = useState(false);
+  const [erro, setErro] = useState(null);
+
+  let nomeUsuario = localStorage.getItem('nomeUsuario') || 'PLACEHOLDER';
+
   useEffect(() => {
     buscarTiposLembrete();
     buscarLogs();
   }, []);
 
-  const [tiposLembrete, setTiposLembrete] = useState([]);
-  const [logs, setLogs] = useState([]);
-
   async function buscarTiposLembrete() {
-    const resposta = await axios.get('http://localhost:8080/tipo-lembrete');
-    console.log('resposta: ', resposta.data);
-    setTiposLembrete(resposta.data);
+    try {
+      setCarregando(true);
+      const resposta = await axios.get(`${API_BASE_URL}/tipo-lembrete`);
+      setTiposLembrete(resposta.data);
+    } catch (erro) {
+      console.error('Erro ao buscar tipos de lembrete:', erro);
+      setErro('Não foi possível carregar os tipos de lembrete.');
+    } finally {
+      setCarregando(false);
+    }
   }
 
   async function buscarLogs() {
-    const resposta = await axios.get('http://localhost:8080/log-envio-lembrete/listagem-logs');
-    console.log('resposta: ', resposta.data);
-    setLogs(resposta.data);
+    try {
+      setCarregando(true);
+      setErro(null);
+      const resposta = await axios.get(`${API_BASE_URL}/log-envio-lembrete/listagem-logs`);
+      setLogs(resposta.data);
+    } catch (erro) {
+      console.error('Erro ao buscar logs:', erro);
+      setErro('Não foi possível carregar os logs de envio.');
+    } finally {
+      setCarregando(false);
+    }
   }
+
+  const logsFiltrados = logs.filter((log) => {
+    const nomeCliente = log.clienteRelacionado?.toLowerCase() || '';
+    const buscaCliente = filtroCliente.toLowerCase();
+
+    const tipoOk = filtroTipo ? log.idTipo === parseInt(filtroTipo) : true;
+    const clienteOk = nomeCliente.includes(buscaCliente);
+
+    return tipoOk && clienteOk;
+  });
 
   return (
     <div className="container">
@@ -55,7 +82,11 @@ const LogEnvioEmail = () => {
           <div className="log-email-filtro-logs">
             <div className="log-email-filtro-group-logs">
               <label htmlFor="filtroTipo">Filtrar Por:</label>
-              <select id="filtroTipo">
+              <select
+                id="filtroTipo"
+                value={filtroTipo}
+                onChange={(e) => setFiltroTipo(e.target.value)}
+              >
                 <option value="">Todos</option>
                 {tiposLembrete.map((tipoLembrete) => (
                   <option key={tipoLembrete.idTipoLembrete} value={tipoLembrete.idTipoLembrete}>
@@ -67,16 +98,30 @@ const LogEnvioEmail = () => {
 
             <div className="log-email-filtro-group-logs">
               <label htmlFor="filtroCliente">Filtrar Por Cliente:</label>
-              <input type="text" id="filtroCliente" placeholder="Nome do Cliente" />
+              <input
+                type="text"
+                id="filtroCliente"
+                placeholder="Nome do Cliente"
+                value={filtroCliente}
+                onChange={(e) => setFiltroCliente(e.target.value)}
+              />
             </div>
           </div>
 
           <div className="card-box-logs" role="region" aria-label="Logs de Email">
-            <Listagem
-              colunas={COLUNAS_LOG_EMAIL}
-              dados={logs}
-              gridTemplateCustom={GRID_TEMPLATE_LOG_EMAIL}
-            />
+            {carregando ? (
+              <p>Carregando logs...</p>
+            ) : erro ? (
+              <p className="erro-text">{erro}</p>
+            ) : logsFiltrados.length > 0 ? (
+              <Listagem
+                colunas={COLUNAS_LOG_EMAIL}
+                dados={logsFiltrados}
+                gridTemplateCustom={GRID_TEMPLATE_LOG_EMAIL}
+              />
+            ) : (
+              <p>Nenhum log encontrado.</p>
+            )}
           </div>
         </div>
       </main>
