@@ -143,7 +143,7 @@ const VisaoGeral = () => {
 
                     return {
                         // Use a chave correta para o nome do cliente (se tiver feito a Opção A)
-                        nomeCliente: item.nomeCliente || 'Cliente Desconhecido',
+                        nomeCliente: item.nome || 'Cliente Desconhecido',
                         dia: dia,
                         horario: horario,
                     }
