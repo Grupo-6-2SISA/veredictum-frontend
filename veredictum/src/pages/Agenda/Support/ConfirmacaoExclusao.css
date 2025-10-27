@@ -1,0 +1,130 @@
+/* =================================================================== */
+/* VARIÁVEIS DE COR E ESTILOS PARA O MODAL DE CONFIRMAÇÃO (FUNDO CLARO) */
+/* =================================================================== */
+
+/* Definição de cores (podem ser globais ou só para o bloco de confirmação) */
+:root {
+    --confirm-modal-bg: #ffffff;
+    /* Fundo branco do modal de confirmação */
+    --confirm-modal-text: #222222;
+    /* Texto preto para a mensagem/título */
+    --btn-cancel-bg: #ffffff;
+    --btn-cancel-border: #c8c8c8;
+    /* Borda sutil do botão "Não" */
+    --btn-sim-bg: #ff5c5c;
+    /* Vermelho vibrante do botão "Sim" */
+}
+
+
+/* 1. SOBRESCREVER ESTILO DO MODAL CONTAINER (A classe .modal_P-delete deve ser aplicada no componente ModalContainer) */
+/* Força o modal de exclusão para o visual CLARO e ajusta o tamanho menor */
+.modal_P-delete {
+    background: var(--confirm-modal-bg) !important;
+    color: var(--confirm-modal-text) !important;
+    max-width: 480px !important;
+    max-height: 40vh !important;
+    display: flex !important;
+    flex-direction: column !important;
+    grid-template-rows: unset !important;
+}
+
+/* Garante que o TÍTULO e o 'X' sejam pretos no modal de confirmação/delete */
+.modal_P-delete .modal-header h2,
+.modal_P-delete .modal-close-btn {
+    color: var(--confirm-modal-text) !important;
+    border: none !important;
+}
+
+.modal_P-delete .modal-close-btn:hover {
+    background-color: rgba(0, 0, 0, 0.05) !important;
+}
+
+/* O corpo do modal de confirmação não precisa do layout de grid do agendamento */
+.modal_P-delete .modal-body_P-agenda {
+    padding: 0 !important;
+    display: block !important;
+    overflow: hidden !important;
+}
+
+
+/* =================================================================== */
+/* ESTILOS DO COMPONENTE ConfirmacaoExclusao.jsx */
+/* =================================================================== */
+
+/* Conteúdo interno do modal de exclusão (o container/overlay é do Modal pai) */
+
+.confirmacao-container {
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
+  padding: 4px 6px 0;
+  min-width: 420px;            /* aproximação do layout */
+  max-width: 560px;
+}
+
+.confirmacao-message {
+  margin: 0;
+  font-size: 1rem;
+  line-height: 1.5;
+  color: var(--text-muted, #6b7280); /* cinza claro como no mock */
+  text-align: left;
+}
+
+.confirmacao-buttons {
+  display: flex;
+  justify-content: flex-end;   /* botões alinhados à direita */
+  gap: 12px;
+}
+
+/* Base dos botões */
+.btn-confirmacao {
+  appearance: none;
+  border: 0;
+  border-radius: 10px;
+  padding: 10px 16px;
+  font-weight: 700;
+  font-size: 0.95rem;
+  cursor: pointer;
+  transition: filter .15s ease, background-color .15s ease, border-color .15s ease;
+  min-width: 64px;
+}
+
+/* Botão "Não" (outline claro) */
+.btn-confirmacao-cancel {
+  background: var(--white-normal, #fff);
+  color: var(--dark-black, #111);
+  border: 1px solid rgba(17,17,17,0.18);
+}
+.btn-confirmacao-cancel:hover {
+  background: #f9fafb;
+}
+.btn-confirmacao-cancel:active {
+  filter: brightness(.96);
+}
+
+/* Botão "Sim" (vermelho) */
+.btn-confirmacao-sim {
+  background: var(--red-normal, #ef4444);
+  color: var(--white-normal, #fff);
+  border: 1px solid transparent;
+}
+.btn-confirmacao-sim:hover {
+  filter: brightness(0.98);
+}
+.btn-confirmacao-sim:active {
+  filter: brightness(0.95);
+}
+
+/* Acessibilidade */
+.btn-confirmacao:focus-visible {
+  outline: 2px solid #000;
+  outline-offset: 2px;
+}
+
+/* Responsivo */
+@media (max-width: 480px) {
+  .confirmacao-container {
+    min-width: auto;
+    width: 100%;
+  }
+}

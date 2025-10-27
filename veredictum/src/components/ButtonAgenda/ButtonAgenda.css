@@ -1,0 +1,29 @@
+/* BotaoAgendamento.css */
+
+/* Classe principal do botão */
+.new-appointment-button-agenda {
+    background-color: var(--dark-black);
+    color: var(--white-normal);
+    border: solid 3px var(--dark-black);
+    border-radius: 8px;
+    padding: 10px 20px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    transition: background-color 0.2s;
+}
+
+.new-appointment-button-agenda:hover {
+    background-color: #555;
+}
+
+/* Ícone “+” */
+.new-appointment-button-agenda .plus-icon-agenda {
+    font-size: 20px;
+    font-weight: 700;
+    display: block;
+    filter: invert(1) brightness(2);
+}

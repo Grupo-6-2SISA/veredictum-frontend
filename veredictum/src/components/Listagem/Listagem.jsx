@@ -54,13 +54,15 @@ const Listagem = ({ dados = [], colunas = [], classNamePrefix = 'listagem', id, 
                             const key = col.key;
                             const value = item[key];
 
-                            if (key === 'checkbox') {
+                            // === NOVO AJUSTE: Trate o checkbox como um elemento React, assim como editar/excluir ===
+                            if (key === 'checkbox' || key === 'editar' || key === 'excluir') {
                                 return (
                                     <div className={`${prefix}-data`} key={key}>
-                                        <input type="checkbox" aria-label={`select-row-${idx}`} />
+                                        {value} {/* Renderiza o elemento React passado (o input reativo ou o botão) */}
                                     </div>
                                 );
                             }
+                            // === FIM DO NOVO AJUSTE ===
 
                             if (key === 'editar' || key === 'excluir' || (isLastColumn(colIndex) && col.titulo === 'Ações')) {
                                 if (key === 'editar' || key === 'excluir' || col.titulo === 'Ações') {

@@ -1,0 +1,369 @@
+/* Theme variables */
+:root {
+  --modal-bg: #3b3b3b;
+  --modal-text: #ffffff;
+  --input-bg: #ffffff;
+  --input-color: #222222;
+  --accent: #000000; /* Cor de fundo do botão 'Adicionar' (preto) */
+  --backdrop: rgba(0, 0, 0, 0.45);
+  --radius: 10px;
+
+  /* Cores auxiliares usadas nos botões */
+  --dark-black: var(--accent);
+  --white-normal: var(--modal-text);
+
+  /* 1. Fonte Global */
+  --font-family: "Montserrat", sans-serif;
+}
+
+/* Aplicação da nova fonte em toda a aplicação/componente */
+body,
+.modal_P-agenda,
+.modal-header_P-agenda,
+.modal-body_P-agenda {
+  font-family: var(--font-family);
+}
+
+/* Backdrop variants (mantido, pois é um elemento de nível superior) */
+.modal-backdrop_P-default,
+.modal-backdrop_P-add,
+.modal-backdrop_P-edit,
+.modal-backdrop_P-delete,
+.modal-backdrop_P-view {
+  position: fixed;
+  inset: 0;
+  background: var(--backdrop);
+  z-index: 1000;
+}
+
+/* 2. Generic modal container - Adicionado -agenda */
+.modal_P-agenda, /* Nova classe principal */
+.modal,
+/* Seletores existentes mantidos para compatibilidade */
+.modal_P, 
+#ModalAdicionarDespesa,
+#ModalEditarAtendimento,
+#ModalAdicionarAtendimento,
+#editExpenseModal,
+#infoExpenseModal {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 92%;
+  max-width: 980px;
+  background: var(--modal-bg);
+  color: var(--modal-text);
+  border-radius: var(--radius);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6);
+  z-index: 1001;
+  outline: none;
+  font-family: var(--font-family); /* Aplica a nova fonte */
+  max-height: 80vh;
+  /* Limite global de altura */
+  overflow: hidden;
+  /* Evita scroll no container */
+  display: grid;
+  /* Header + Body */
+  grid-template-rows: auto 1fr;
+}
+
+/* 2. Modal body layout - Adicionado -agenda */
+.modal-body_P-agenda, /* Nova classe principal */
+.modal-body,
+.modal-body_P,
+.modal-content-agenda,
+.modal_add_agenda {
+  padding: 22px 28px 30px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px 28px;
+  align-items: start;
+
+  /* Conteúdo interno rola, mas sem barra visível */
+  max-height: unset;
+  /* controlado pelo container */
+  overflow: auto;
+  /* rolagem do conteúdo */
+  -webkit-overflow-scrolling: touch;
+  /* rolagem suave */
+  overscroll-behavior: contain;
+  /* evita scroll no fundo */
+
+  /* Oculta barras de rolagem */
+  scrollbar-width: none;
+  /* Firefox */
+  -ms-overflow-style: none;
+  /* IE/Edge legado */
+}
+
+/* 2. Header - Adicionado -agenda */
+.modal-header_P-agenda, /* Nova classe principal */
+.modal-header,
+.modal-header_P,
+#modal-header-top {
+  position: relative;
+  padding: 18px 28px 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.modal-header_P-agenda h2, /* Nova classe principal */
+.modal-header h2,
+.modal-header_P h2,
+#modal-header-top h2 {
+  margin: 0;
+  font-size: 28px;
+  font-weight: 800;
+  color: var(--modal-text);
+  text-align: center;
+  font-family: var(--font-family); /* Garante a fonte no título */
+}
+
+/* 2. Close button - Adicionado -agenda */
+.modal-close-btn_P-agenda,
+.modal-close-btn_P,
+.modal-close-btn,
+.modal-close-delete-btn_P {
+  position: absolute;
+  right: 18px;
+  top: 12px;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  /* border: 2px solid rgba(255, 255, 255, 0.12); */
+  background: transparent;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  padding: 0;
+  font-size: 24px;
+  line-height: 1;
+  color: white;
+  font-weight: 300;
+  transition: background-color 0.2s, border-color 0.2s;
+}
+
+/* Removido (ou ajustado) scrollbar dos seletores antigos */
+.modal-body_P-agenda::-webkit-scrollbar,
+.modal-body::-webkit-scrollbar,
+.modal-content-agenda::-webkit-scrollbar,
+.modal_add_agenda::-webkit-scrollbar {
+  width: 0;
+  height: 0;
+}
+
+.modal-close-btn_P-agenda:hover,
+.modal-close-btn:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+  border-color: rgba(255, 255, 255, 0.2);
+}
+
+/* Exibir o ícone SVG corretamente */
+.modal-close-btn_P-agenda img,
+.modal-close-btn img {
+  display: block; /* Mudado de 'none' para 'block' */
+  width: 60px;
+  height: 60px;
+  /* filter: invert(1); Torna o ícone branco se for preto */
+}
+
+/* Form & inputs (mantidos, pois não são considerados "classes genéricas" para o modal) */
+.appointment-form_P,
+.appointment-form,
+form {
+  width: 100%;
+  display: block;
+}
+
+/* Ajuste para que o formulário use a estrutura de grid do .modal-body_P (display: contents) */
+.appointment-form_P {
+    display: contents; 
+}
+
+
+.form-row {
+  display: flex;
+  gap: 16px;
+  width: 100%;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  flex: 1;
+}
+
+.form-group label {
+  color: #e9e9e9;
+  font-weight: 600;
+  font-size: 16px;
+  font-family: var(--font-family); /* Garante a fonte nos labels */
+}
+
+/* Inputs */
+.form-group input[type="text"],
+.form-group input[type="date"],
+.form-group input[type="time"],
+.form-group input[type="number"],
+.form-group select,
+.form-group textarea {
+  background: var(--input-bg);
+  color: var(--input-color);
+  border: none;
+  padding: 10px 12px;
+  border-radius: 8px;
+  box-shadow: inset 0 1px 0 rgba(0, 0, 0, 0.06);
+  font-size: 14px;
+  outline: none;
+  height: 40px;
+  font-family: var(--font-family); /* Garante a fonte nos inputs */
+}
+
+.form-group select {
+  appearance: none;
+  /* Remove estilo nativo para melhor controle visual */
+  background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path fill="%239aa0a6" d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 6.757 7.586 5.343 9z"/></svg>');
+  background-repeat: no-repeat;
+  background-position: right 0.75rem center;
+  background-size: 1.25rem 1.25rem;
+  padding-right: 2.5rem;
+  /* Adiciona espaço para o ícone */
+}
+
+.form-group input[type="time"],
+.form-group input[type="date"] {
+  position: relative;
+  padding-right: 30px;
+  /* Espaço para o ícone nativo */
+}
+
+
+/* Placeholder color */
+.form-group input::placeholder,
+.form-group textarea::placeholder {
+  color: #9aa0a6;
+  font-family: var(--font-family);
+}
+
+/* Textarea */
+.form-group textarea {
+  min-height: 100px;
+  resize: vertical;
+  height: auto;
+  /* Permite que o textarea cresça/diminua com o conteúdo */
+  padding: 10px 12px;
+}
+
+
+/* Footer - Removido/Ajustado para o layout da imagem (botão na coluna 2) */
+.form-footer-notas,
+.form-footer-agenda {
+  /* Estas regras não serão usadas no novo layout do React para o botão */
+  grid-column: 1 / -1; 
+  display: none; /* Força a remoção para não interferir */
+}
+
+/* Buttons - Adicionado sufixo _agenda */
+.btn-confirm-delete_agenda,
+.btn-new-appointment_agenda,
+.modal-add-btn_agenda,
+.modal-add-btn_save_agenda,
+.btn-confirm-delete,
+.btn-new-appointment,
+.modal-add-btn,
+.modal-add-btn_save,
+button[type="submit"] {
+  background-color: var(--dark-black);
+  /* Cor escura do botão na imagem */
+  color: var(--white-normal);
+  border: 2px solid var(--dark-black);
+  border-radius: 8px;
+  padding: 10px 20px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center; /* Centraliza o texto no botão */
+  gap: 8px;
+  transition: background-color 0.2s;
+  font-family: var(--font-family); /* Garante a fonte no botão */
+}
+
+.btn-confirm-delete_agenda:hover,
+.btn-new-appointment_agenda:hover,
+.modal-add-btn_agenda:hover,
+.modal-add-btn_save_agenda:hover,
+.btn-confirm-delete:hover,
+.btn-new-appointment:hover,
+.modal-add-btn:hover,
+.modal-add-btn_save:hover,
+button[type="submit"]:hover {
+  background-color: rgba(0, 0, 0, 0.85);
+  border-color: rgba(0, 0, 0, 0.85);
+}
+/* Checkbox row helper (não será usado - layout manual no React) */
+.checkbox-row-full {
+  display: none;
+}
+
+/* Small screens: single column layout */
+@media (max-width: 820px) {
+
+  .modal_P-agenda, /* Ajustado */
+  .modal,
+  .modal_add_agenda,
+  .modal-content-agenda {
+    max-width: 92%;
+    width: 96%;
+    padding: 16px;
+  }
+
+  .modal-header_P-agenda h2 { /* Ajustado */
+    font-size: 22px;
+  }
+
+  .modal-body_P-agenda, /* Ajustado */
+  .modal-body,
+  .modal-content-agenda {
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+
+  .form-row {
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .modal-close-btn,
+  .modal-close-btn_P-agenda { /* Ajustado */
+    right: 12px;
+    top: 10px;
+  }
+
+  /* Ajuste para telas pequenas: força o botão 'Adicionar' para a linha inteira */
+  .form-group:last-of-type button[type="submit"] {
+    width: 100%;
+    margin-top: 10px;
+  }
+    /* Ajuste para telas pequenas: força o botão 'Adicionar' para a linha inteira */
+  .form-group:last-of-type button[type="submit"],
+  .form-group:last-of-type .btn-new-appointment_agenda,
+  .form-group:last-of-type .btn-confirm-delete_agenda {
+    width: 100%;
+    margin-top: 10px;
+  }
+}
+
+/* Accessibility: focus states */
+button:focus,
+input:focus,
+select:focus,
+textarea:focus {
+  outline: 3px solid rgba(255, 255, 255, 0.08);
+  outline-offset: 2px;
+}

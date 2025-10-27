@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import Sidebar from '../../components/Sidebar/Sidebar';
+// import Sidebar from '../../components/Sidebar/Sidebar';
 import Card from '../../components/Card/Card';
 import Listagem from '../../components/Listagem/Listagem';
 import './VisaoGeral.css';
@@ -19,7 +19,7 @@ import {
 // --- DEFINIÇÕES DE COLUNAS ---
 
 const colunasAtendimento = [
-    { key: 'nomeCliente', titulo: 'Nome' },
+    { key: 'nome', titulo: 'Nome' },
     { key: 'dia', titulo: 'Dia' },
     { key: 'horario', titulo: 'Horário' },
 ];
@@ -143,7 +143,7 @@ const VisaoGeral = () => {
 
                     return {
                         // Use a chave correta para o nome do cliente (se tiver feito a Opção A)
-                        nomeCliente: item.nome || 'Cliente Desconhecido',
+                        nome: item.nome || 'Cliente Desconhecido',
                         dia: dia,
                         horario: horario,
                     }
@@ -310,7 +310,7 @@ const VisaoGeral = () => {
 
     return (
         <div className="container">
-            <Sidebar nomeCompleto="Lismara Ribeiro" />
+            {/* <Sidebar nomeCompleto="Lismara Ribeiro" /> */}
             <main className="main-content">
                 <h1>Visão Geral</h1>
                 {content}
