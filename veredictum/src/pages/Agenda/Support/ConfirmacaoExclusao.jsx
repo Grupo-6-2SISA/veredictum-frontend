@@ -1,34 +1,33 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import './ConfirmacaoExclusao.css'; // Importa os estilos dedicados
+import './ConfirmacaoExclusao.css';
 
-function ConfirmacaoExclusao({ message = 'Confirmar exclusão?', onConfirm, onCancel }) {
-
-  // O texto da imagem de cancelamento é "Deseja cancelar o atendimento de às do dia ?"
-
+function ConfirmacaoExclusao({
+  message = 'Deseja cancelar o atendimento de às do dia ?',
+  onConfirm,
+  onCancel,
+  cancelText = 'Não',
+  confirmText = 'Sim'
+}) {
   return (
-    <div className="confirmacao-container">
-      <p className="confirmacao-message">
-        {message}
-      </p>
+    <div className="confirmacao-container" role="group" aria-label="Confirmação de exclusão">
+      <p className="confirmacao-message">{message}</p>
 
       <div className="confirmacao-buttons">
-        {/* Botão 'Não' */}
         <button
           type="button"
           onClick={onCancel}
-          className="btn-confirmacao-cancel"
+          className="btn-confirmacao btn-confirmacao-cancel"
         >
-          Não
+          {cancelText}
         </button>
 
-        {/* Botão 'Sim' */}
         <button
           type="button"
           onClick={onConfirm}
-          className="btn-confirmacao-sim"
+          className="btn-confirmacao btn-confirmacao-sim"
         >
-          Sim
+          {confirmText}
         </button>
       </div>
     </div>
@@ -38,7 +37,9 @@ function ConfirmacaoExclusao({ message = 'Confirmar exclusão?', onConfirm, onCa
 ConfirmacaoExclusao.propTypes = {
   message: PropTypes.string,
   onConfirm: PropTypes.func.isRequired,
-  onCancel: PropTypes.func.isRequired
+  onCancel: PropTypes.func.isRequired,
+  cancelText: PropTypes.string,
+  confirmText: PropTypes.string,
 };
 
 export default ConfirmacaoExclusao;

@@ -51,62 +51,80 @@
 /* ESTILOS DO COMPONENTE ConfirmacaoExclusao.jsx */
 /* =================================================================== */
 
-/* 2. Container Principal da Confirmação (div principal do componente) */
+/* Conteúdo interno do modal de exclusão (o container/overlay é do Modal pai) */
+
 .confirmacao-container {
-    display: flex;
-    flex-direction: column;
-    padding: 0;
-    width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
+  padding: 4px 6px 0;
+  min-width: 420px;            /* aproximação do layout */
+  max-width: 560px;
 }
 
-/* 3. Mensagem de Confirmação */
-.confirmacao-container p.confirmacao-message {
-    font-size: 18px;
-    font-weight: 500;
-    text-align: left;
-    color: var(--confirm-modal-text);
-    /* Texto preto */
-    /* Margem interna para alinhar com o título do ModalContainer */
-    margin: 32px 28px;
+.confirmacao-message {
+  margin: 0;
+  font-size: 1rem;
+  line-height: 1.5;
+  color: var(--text-muted, #6b7280); /* cinza claro como no mock */
+  text-align: left;
 }
 
-/* 4. Container dos Botões */
-.confirmacao-container .confirmacao-buttons {
-    display: flex;
-    gap: 12px;
-    justify-content: flex-end;
-    padding: 0 28px 24px;
-    /* Padding inferior final e lateral */
+.confirmacao-buttons {
+  display: flex;
+  justify-content: flex-end;   /* botões alinhados à direita */
+  gap: 12px;
 }
 
-/* 5. Botão 'Não' / Cancelar (Estilo branco com borda) */
+/* Base dos botões */
+.btn-confirmacao {
+  appearance: none;
+  border: 0;
+  border-radius: 10px;
+  padding: 10px 16px;
+  font-weight: 700;
+  font-size: 0.95rem;
+  cursor: pointer;
+  transition: filter .15s ease, background-color .15s ease, border-color .15s ease;
+  min-width: 64px;
+}
+
+/* Botão "Não" (outline claro) */
 .btn-confirmacao-cancel {
-    padding: 10px 20px;
-    border-radius: 8px;
-    background: var(--btn-cancel-bg);
-    color: #000000;
-    border: 1px solid var(--btn-cancel-border);
-    font-weight: 600;
-    min-width: 80px;
-    cursor: pointer;
-    transition: background-color 0.2s, border-color 0.2s;
-    /* font-family: var(--font-family); Se a fonte não for global, adicione a variável aqui */
+  background: var(--white-normal, #fff);
+  color: var(--dark-black, #111);
+  border: 1px solid rgba(17,17,17,0.18);
+}
+.btn-confirmacao-cancel:hover {
+  background: #f9fafb;
+}
+.btn-confirmacao-cancel:active {
+  filter: brightness(.96);
 }
 
-/* 6. Botão 'Sim' / Confirmar (Estilo vermelho principal) */
+/* Botão "Sim" (vermelho) */
 .btn-confirmacao-sim {
-    padding: 10px 20px;
-    border-radius: 8px;
-    background: var(--btn-sim-bg);
-    color: #fff;
-    border: none;
-    font-weight: 600;
-    min-width: 80px;
-    cursor: pointer;
-    transition: background-color 0.2s;
-    /* font-family: var(--font-family); Se a fonte não for global, adicione a variável aqui */
+  background: var(--red-normal, #ef4444);
+  color: var(--white-normal, #fff);
+  border: 1px solid transparent;
+}
+.btn-confirmacao-sim:hover {
+  filter: brightness(0.98);
+}
+.btn-confirmacao-sim:active {
+  filter: brightness(0.95);
 }
 
-.btn-confirmacao-sim:hover {
-    background: #e54d4d;
+/* Acessibilidade */
+.btn-confirmacao:focus-visible {
+  outline: 2px solid #000;
+  outline-offset: 2px;
+}
+
+/* Responsivo */
+@media (max-width: 480px) {
+  .confirmacao-container {
+    min-width: auto;
+    width: 100%;
+  }
 }

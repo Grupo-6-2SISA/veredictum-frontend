@@ -14,18 +14,18 @@ import {
     editarAtendimento,
     excluirAtendimento,
     listarClientes,
-    excluirAtendimentoLote // Importado para exclusão em lote
+    excluirAtendimentoLote
 } from './Agenda.js';
 
 import ModalContainer from './Support/ModalContainer';
 import ModalAdicionarAtendimento from './Support/ModalAdicionarAtendimento';
 import ModalEditarAtendimento from './Support/ModalEditarAtendimento';
 import ConfirmacaoExclusao from './Support/ConfirmacaoExclusao';
+import ModalExcluirAtendimento from './Support/ModalExcluirAtendimento';
 
 // ===================================================================
 // DADOS / COLUNAS
 // ===================================================================
-// Definição base das colunas. O cabeçalho do 'checkbox' será populado dinamicamente.
 const baseColunasAtendimentoAgenda = [
     { key: 'checkbox', titulo: '' },
     { key: 'nome', titulo: 'Nome' },
@@ -41,7 +41,7 @@ const colunasAniversarioAgenda = [
     { key: 'dia', titulo: 'Dia' },
 ];
 
-// Funções utilitárias
+// Utils
 const formatarDataHora = (isoString) => {
     if (!isoString) return { dia: '', horario: '' };
     try {
@@ -79,18 +79,18 @@ export default function Agenda() {
     const [currentFilterDate, setCurrentFilterDate] = useState(new Date());
     const handleMonthChange = (newDate) => setCurrentFilterDate(newDate);
 
-    // SELEÇÃO E MODAL
+    // SELEÇÃO / MODAIS
     const [selectedIds, setSelectedIds] = useState(new Set());
     const [deleteMode, setDeleteMode] = useState('single'); // 'single' | 'bulk'
 
     const [showAddModal, setShowAddModal] = useState(false);
     const [showEditModal, setShowEditModal] = useState(false);
-    const [showDeleteModal, setShowDeleteModal] = useState(false);
-    const [editingItem, setEditingItem] = useState(null);
-    const [deletingItem, setDeletingItem] = useState(null);
+
+    const [showDeleteModal, setShowDeleteModal] = useState(false); // para bulk
+    const [deletingItem, setDeletingItem] = useState(null);        // item para single
 
     // ===================================================================
-    // FETCHERS (BUSCA DE DADOS)
+    // FETCHERS
     // ===================================================================
     const fetchClientes = useCallback(async () => {
         try {
@@ -116,7 +116,6 @@ export default function Agenda() {
         }
     }, [currentFilterDate]);
 
-    // Efeitos: Carregar dados iniciais e ao mudar o mês
     useEffect(() => {
         fetchClientes();
         fetchAtendimentos();
@@ -138,85 +137,88 @@ export default function Agenda() {
         fetchAniversariantes();
     }, [currentFilterDate]);
 
-    // Efeito: Limpa seleção ao trocar mês/lista
     useEffect(() => {
         setSelectedIds(new Set());
     }, [currentFilterDate, atendimentosBrutos]);
 
-
     // ===================================================================
-    // LÓGICA DE SELEÇÃO E EXCLUSÃO (NOVO)
+    // SELEÇÃO
     // ===================================================================
-
-    // Alterna a seleção de um único item
     const toggleSelect = useCallback((id, checked) => {
-        console.log(`Tentando ${checked ? 'adicionar' : 'remover'} ID: ${id} (Tipo: ${typeof id})`);
         setSelectedIds(prev => {
             const next = new Set(prev);
             if (checked) next.add(id);
             else next.delete(id);
-            console.log('Novo tamanho do Set:', next.size); // <--- Verifique este log
             return next;
         });
     }, []);
 
-    // Define se todos os itens visíveis estão selecionados
     const isAllSelected = useMemo(() => {
         if (!atendimentosBrutos || atendimentosBrutos.length === 0) return false;
         return selectedIds.size > 0 && selectedIds.size === atendimentosBrutos.length;
     }, [selectedIds, atendimentosBrutos]);
 
-
-    // Seleciona ou deseleciona todos os itens visíveis
     const toggleSelectAll = useCallback((checked) => {
         if (checked) {
-            // Mapeia para pegar todos os IDs da lista bruta (garantindo que são números)
-            const allIds = new Set(atendimentosBrutos.map(item =>
-                Number(item.idAtendimento ?? item.idAgendamento ?? item.id)
-            ).filter(id => id > 0)); // Filtra IDs válidos
+            const allIds = new Set(
+                atendimentosBrutos
+                    .map(item => Number(item.idAtendimento ?? item.idAgendamento ?? item.id))
+                    .filter(id => id > 0)
+            );
             setSelectedIds(allIds);
         } else {
             setSelectedIds(new Set());
         }
     }, [atendimentosBrutos]);
 
-    // Abre o modal de exclusão em lote
+    // ===================================================================
+    // EXCLUSÃO
+    // ===================================================================
     const handleBulkDeleteClick = useCallback(() => {
-        // Apenas verifica se há algum item selecionado
         if (selectedIds.size === 0) {
             alert('Selecione ao menos um atendimento para excluir.');
             return;
         }
-        setDeleteMode('bulk'); // Define o modo de exclusão em lote
+        setDeleteMode('bulk');
         setDeletingItem(null);
         setShowDeleteModal(true);
-    }, [selectedIds]); // Depende do estado atual de selectedIds
+    }, [selectedIds]);
 
-    // Executa a exclusão (individual ou lote)
     const handleDeleteConfirm = async () => {
         try {
             if (deleteMode === 'bulk') {
-                const ids = Array.from(selectedIds); // Pega todos os IDs selecionados
-                await excluirAtendimentoLote(ids); // Envia a lista para o backend
+                const ids = Array.from(selectedIds);
+                await excluirAtendimentoLote(ids);
                 alert(`Foram excluídos ${ids.length} atendimentos.`);
             } else if (deletingItem) {
                 await excluirAtendimento(deletingItem.idAtendimento ?? deletingItem.idAgendamento ?? deletingItem.id);
                 alert('Atendimento excluído!');
             }
-
-            // Finaliza e atualiza
-            closeModalDelete();
+            // refresh
+            closeAllDelete();
             setSelectedIds(new Set());
             await fetchAtendimentos();
-
         } catch (err) {
             console.error('Erro ao excluir:', err);
             alert('Erro ao excluir: ' + (err?.response?.data?.message || err?.message));
         }
     };
 
+    const openDeleteModal = (item) => {
+        const id = item?.idAtendimento ?? item?.idAgendamento ?? item?.id;
+        if (id == null) return;
+        setDeleteMode('single');
+        setDeletingItem(item);
+    };
+
+    const closeAllDelete = () => {
+        setShowDeleteModal(false);
+        setDeletingItem(null);
+        setDeleteMode('single');
+    };
+
     // ===================================================================
-    // FUNÇÕES DE MODAL / CRUD INDIVIDUAL
+    // CRUD
     // ===================================================================
     const openAddModal = () => setShowAddModal(true);
     const closeModalAdd = () => setShowAddModal(false);
@@ -232,26 +234,12 @@ export default function Agenda() {
         setShowEditModal(true);
     };
 
+    const [editingItem, setEditingItem] = useState(null);
     const closeModalEdit = () => {
         setShowEditModal(false);
         setEditingItem(null);
     };
 
-    const openDeleteModal = (item) => {
-        const id = item?.idAtendimento ?? item?.idAgendamento ?? item?.id;
-        if (id == null) return;
-        setDeleteMode('single');
-        setDeletingItem(item);
-        setShowDeleteModal(true);
-    };
-
-    const closeModalDelete = () => {
-        setShowDeleteModal(false);
-        setDeletingItem(null);
-        setDeleteMode('single');
-    };
-
-    // ... handleCreateSubmit e handleEditSubmit (mantidos iguais, sem alterações)
     const handleCreateSubmit = async (atendimentoDTO) => {
         try {
             await criarAtendimento(atendimentoDTO, 1);
@@ -275,75 +263,67 @@ export default function Agenda() {
         }
     };
 
-
     // ===================================================================
-    // MEMO: MAPEAR ATENDIMENTOS (Renderização da Lista)
+    // MAPA DE LISTAGENS
     // ===================================================================
     const atendimentosFiltrados = useMemo(() => {
         return (atendimentosBrutos || [])
             .map(item => {
                 const { dia, horario } = formatarDataHora(item.dataInicio || item.data);
 
-                // CORREÇÃO: Garante que o ID é um NÚMERO e verifica se é > 0
                 const rawId = item.idAtendimento ?? item.idAgendamento ?? item.id;
-                // Usa parseInt e verifica se o resultado é válido.
                 const idAtendimento = parseInt(rawId, 10);
+                if (isNaN(idAtendimento) || idAtendimento <= 0) return null;
 
-                if (isNaN(idAtendimento) || idAtendimento <= 0) {
-                    return null;
-                }
-                // ... Lógica de Nome do cliente (mantida) ...
+                // Resolve nome
                 let nomeCliente = 'Cliente não informado';
-                // ... (lógica de nome mantida) ...
                 if (item.fkCliente && clientes.length > 0) {
                     const cliente = clientes.find(c => c.idCliente === item.fkCliente || c.id === item.fkCliente);
-                    if (cliente) {
-                        nomeCliente = cliente.nome || cliente.nomeCliente || 'Cliente não informado';
-                    }
+                    if (cliente) nomeCliente = cliente.nome || cliente.nomeCliente || 'Cliente não informado';
                 } else {
                     nomeCliente = item.nomeCliente || item.nome || item.cliente?.nome || item.cliente?.nomeCliente || item.clienteNome || 'Cliente não informado';
                 }
 
-                const itemComId = { ...item, idAtendimento, nomeCliente };
+                const base = { ...item, idAtendimento, nomeCliente };
 
-                return {
-                    // Checkbox reativo
+                const row = {
                     checkbox: (
                         <input
                             type="checkbox"
                             aria-label={`Selecionar atendimento ${nomeCliente}`}
-                            // O Set armazena Números, então verifique com o Número
                             checked={selectedIds.has(idAtendimento)}
-                            // Passa o ID como Number para o toggleSelect
                             onChange={(e) => toggleSelect(idAtendimento, e.target.checked)}
                         />
                     ),
-                    // ... outras colunas ...
                     nome: nomeCliente,
                     dia,
                     horario,
                     status: item.status || 'Agendado',
                     editar: (
-                        <button type="button" onClick={() => openEditModal(itemComId)} aria-label="Editar atendimento" className="btn-icon-plain">
+                        <button type="button" onClick={() => openEditModal(base)} aria-label="Editar atendimento" className="btn-icon-plain">
                             <img src={EditIcon} alt="Editar" />
                         </button>
                     ),
                     excluir: (
-                        <button type="button" onClick={() => openDeleteModal(itemComId)} aria-label="Excluir atendimento" className="btn-icon-plain">
+                        <button
+                            type="button"
+                            onClick={() => openDeleteModal({ ...base, dia, horario })}
+                            aria-label="Excluir atendimento"
+                            className="btn-icon-plain"
+                        >
                             <img src={TrashIcon} alt="Excluir" />
                         </button>
                     ),
-                    ...itemComId
+                    ...base,
+                    dia,
+                    horario
                 };
+                return row;
             })
-            .filter(item => item !== null); // Remove itens com ID inválido
+            .filter(Boolean);
     }, [atendimentosBrutos, clientes, selectedIds, toggleSelect]);
 
-    // ===================================================================
-    // MEMO: MAPEAR ANIVERSARIANTES (Lógica mantida)
-    // ===================================================================
     const aniversariantesFiltrados = useMemo(() => {
-        // ... Lógica dos Aniversariantes mantida inalterada ...
         const filterMonth = currentFilterDate.getMonth();
 
         const isPessoaFisica = (item) => {
@@ -384,8 +364,9 @@ export default function Agenda() {
         return mapped;
     }, [aniversariantesBrutos, currentFilterDate]);
 
-
-    // Render helpers
+    // ===================================================================
+    // RENDER
+    // ===================================================================
     const renderAtendimentosList = () => {
         if (loadingAtendimentos) return <p className="loading-message">Carregando atendimentos...</p>;
         if (erroAtendimentos) return <p className="error-message">{erroAtendimentos}</p>;
@@ -394,7 +375,6 @@ export default function Agenda() {
             return <p className="no-data-message">Nenhum atendimento agendado para {nomeMes}.</p>;
         }
 
-        // NOVO: Mapeia as colunas para injetar o checkbox mestre no cabeçalho
         const colunasComSelecao = baseColunasAtendimentoAgenda.map(col => {
             if (col.key === 'checkbox') {
                 return {
@@ -412,11 +392,10 @@ export default function Agenda() {
             return col;
         });
 
-
         return (
             <Listagem
                 dados={atendimentosFiltrados}
-                colunas={colunasComSelecao} // Usa as colunas dinâmicas
+                colunas={colunasComSelecao}
                 id="atendimento-list"
                 isFullTable
             />
@@ -439,7 +418,6 @@ export default function Agenda() {
             />
         );
     };
-
 
     return (
         <div className="agenda-container">
@@ -475,7 +453,7 @@ export default function Agenda() {
                             </div>
                         </div>
 
-                        {/* Bloco 2: Painel Lateral (Aniversariantes do Mês) */}
+                        {/* Bloco 2: Aniversariantes */}
                         <aside className="aniversariantes-panel">
                             <div className="agenda-card-container-birthdays" id="agenda-birthdays-card">
                                 <div className="agenda-card-header">
@@ -501,28 +479,35 @@ export default function Agenda() {
                 atualizarLista={fetchAtendimentos}
             />
 
+            {/* Modal de exclusão individual (visual padrão da imagem) */}
+            {deletingItem && (
+                <ModalExcluirAtendimento
+                    open={Boolean(deletingItem)}
+                    info={{
+                        nome: deletingItem.nomeCliente || deletingItem.nome,
+                        date: deletingItem.dia,    // dd/MM/yyyy
+                        time: deletingItem.horario // HH:mm
+                    }}
+                    onClose={closeAllDelete}
+                    onConfirm={handleDeleteConfirm}
+                />
+            )}
+
+            {/* Modal de exclusão em lote (mantém título/estilo do delete) */}
             <ModalContainer
                 show={showDeleteModal}
-                onClose={closeModalDelete}
-                title="Confirmar Exclusão"
-                variant="delete" // Aplica o estilo de modal de exclusão (fundo claro/tamanho menor)
-                modalId="modal-delete-atendimento"
+                onClose={closeAllDelete}
+                title="Cancelamento de atendimentos"
+                variant="delete"
+                modalId="modal-delete-atendimentos-lote"
             >
-                {deleteMode === 'bulk' ? (
-                    <ConfirmacaoExclusao
-                        message={`Excluir ${selectedIds.size} atendimento(s) selecionado(s)? Esta ação é irreversível.`}
-                        onConfirm={handleDeleteConfirm}
-                        onCancel={closeModalDelete}
-                    />
-                ) : (
-                    deletingItem && (
-                        <ConfirmacaoExclusao
-                            message={`Tem certeza que deseja excluir o atendimento de ${deletingItem.nomeCliente || deletingItem.nome}? Esta ação é irreversível.`}
-                            onConfirm={handleDeleteConfirm}
-                            onCancel={closeModalDelete}
-                        />
-                    )
-                )}
+                <ConfirmacaoExclusao
+                    message={`Deseja cancelar ${selectedIds.size} atendimento(s) selecionado(s)?`}
+                    onConfirm={handleDeleteConfirm}
+                    onCancel={closeAllDelete}
+                    cancelText="Não"
+                    confirmText="Sim"
+                />
             </ModalContainer>
         </div>
     );
