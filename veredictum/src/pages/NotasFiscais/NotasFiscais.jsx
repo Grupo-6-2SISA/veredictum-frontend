@@ -98,16 +98,18 @@ const NotasFiscais = () => {
       isEmitida: formData.get('emitida') === 'true' ? 1 : 0
     };
 
-    // Validação: não permitir número duplicado
+    // Validação: não permitir número duplicado — só valida se o número foi informado
     const novoNumero = (notaFiscalData.numero || '').toString().trim().toLowerCase();
-    const duplicada = notasFiscaisData.some(n => {
-      const existente = (n.numero || n.numeroNota || '').toString().trim().toLowerCase();
-      return existente && existente === novoNumero;
-    });
+    if (novoNumero) {
+      const duplicada = notasFiscaisData.some(n => {
+        const existente = (n.numero || n.numeroNota || '').toString().trim().toLowerCase();
+        return existente && existente === novoNumero;
+      });
 
-    if (duplicada) {
-      alert('Já existe uma nota fiscal cadastrada com este número. Escolha outro número.');
-      return;
+      if (duplicada) {
+        alert('Já existe uma nota fiscal cadastrada com este número. Escolha outro número.');
+        return;
+      }
     }
 
     try {
@@ -163,17 +165,19 @@ const NotasFiscais = () => {
       isEmitida: formData.get('emitida') === 'true' ? 1 : 0
     };
 
-    // Validação: não permitir número duplicado (exceto se for a própria nota)
+    // Validação: não permitir número duplicado (exceto se for a própria nota) — só valida se número informado
     const novoNumeroEdit = (updatedData.numero || '').toString().trim().toLowerCase();
-    const duplicadaEdit = notasFiscaisData.some(n => {
-      const existente = (n.numero || n.numeroNota || '').toString().trim().toLowerCase();
-      const idAtual = getNormalizedId(n);
-      return existente && existente === novoNumeroEdit && idAtual != notaId;
-    });
+    if (novoNumeroEdit) {
+      const duplicadaEdit = notasFiscaisData.some(n => {
+        const existente = (n.numero || n.numeroNota || '').toString().trim().toLowerCase();
+        const idAtual = getNormalizedId(n);
+        return existente && existente === novoNumeroEdit && idAtual != notaId;
+      });
 
-    if (duplicadaEdit) {
-      alert('Já existe outra nota fiscal com esse número.');
-      return;
+      if (duplicadaEdit) {
+        alert('Já existe outra nota fiscal com esse número.');
+        return;
+      }
     }
 
     try {
@@ -380,7 +384,7 @@ const NotasFiscais = () => {
         >
           <div className="form-row_P">
             <FormField label="Número da Nota" htmlFor="numeroNota">
-              <input type="text" id="numeroNota" name="numeroNota" placeholder="Ex: NF-001" required />
+              <input type="text" id="numeroNota" name="numeroNota" placeholder="Ex: NF-001" />
             </FormField>
             <FormField label="Cliente" htmlFor="cliente">
               <select id="cliente" name="cliente" required>
@@ -414,7 +418,7 @@ const NotasFiscais = () => {
 
           <div className="form-row_P">
             <FormField label="URL na Nuvem" htmlFor="urlCloud">
-              <input type="url" id="urlCloud" name="urlCloud" placeholder="https://..." />
+              <input type="text" id="urlCloud" name="urlCloud" placeholder="https://..." />
             </FormField>
             <FormField label="Descrição" htmlFor="descricao">
               <input type="text" id="descricao" name="descricao" placeholder="Descrição da nota" />
@@ -444,7 +448,7 @@ const NotasFiscais = () => {
             <>
               <div className="form-row_P">
                 <FormField label="Número da Nota" htmlFor="numeroNotaEdit">
-                  <input type="text" id="numeroNotaEdit" name="numeroNota" defaultValue={editingNota.numero || ''} required />
+                  <input type="text" id="numeroNotaEdit" name="numeroNota" defaultValue={editingNota.numero || ''} />
                 </FormField>
                 <FormField label="Cliente" htmlFor="clienteEdit">
                   <select id="clienteEdit" name="cliente" defaultValue={editingNota.fk_cliente || ''} required>
@@ -478,7 +482,7 @@ const NotasFiscais = () => {
 
               <div className="form-row_P">
                 <FormField label="URL na Nuvem" htmlFor="urlCloudEdit">
-                  <input type="url" id="urlCloudEdit" name="urlCloud" defaultValue={editingNota.url_nuvem || ''} />
+                  <input type="text" id="urlCloudEdit" name="urlCloud" defaultValue={editingNota.url_nuvem || ''} />
                 </FormField>
                 <FormField label="Descrição" htmlFor="descricaoEdit">
                   <input type="text" id="descricaoEdit" name="descricao" defaultValue={editingNota.descricao || ''} />
