@@ -1,9 +1,9 @@
 import React from 'react';
-import './Button.css';
+import './ButtonClientes.css';
 import '../Css/Main.css';
 
-function Button({ children, className = '', ...props }) {
-  const classes = ['btn-component'];
+function ButtonClientes({ children, className = '', ...props }) {
+  const classes = ['clientes-btn-component'];
   if (className) {
     classes.push(className);
   }
@@ -15,4 +15,4 @@ function Button({ children, className = '', ...props }) {
   );
 }
 
-export default Button;
+export default ButtonClientes;

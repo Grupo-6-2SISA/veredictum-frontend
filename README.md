@@ -29,45 +29,181 @@ Entre os recursos, estão:
 
 ## 📁 Estrutura de Pastas e Arquivos
 
-O projeto agora está organizado em uma estrutura padrão de aplicações React com **Vite**. Esta abordagem promove a modularização, a reutilização de código e a facilidade de manutenção.
+O projeto está organizado em uma estrutura padrão de aplicações React com **Vite**. Esta abordagem promove a modularização, a reutilização de código e a facilidade de manutenção.
 
 ```
-.
-├── node_modules/        # Módulos e dependências do projeto
-├── public/              # Arquivos estáticos que serão copiados diretamente (ex: index.html, favicons)
-├── src/                 # Código-fonte da aplicação React
-│   ├── assets/          # Mídia, imagens e SVGs (arquivos que serão importados no JS)
-│   ├── components/      # Componentes de UI reutilizáveis (botões, modais, cabeçalho)
-│   ├── pages/           # Componentes que representam as telas da aplicação
-│   ├── services/        # Funções de requisições para a API (ex: API de funcionários)
-│   ├── App.jsx          # Componente principal que define as rotas da aplicação
-│   ├── index.css        # Estilos CSS globais da aplicação
-│   └── main.jsx         # Ponto de entrada da aplicação (renderiza o App.jsx)
-├── .gitignore           # Arquivos e pastas a serem ignorados pelo Git
-├── package.json         # Metadados do projeto e lista de dependências
-├── vite.config.js       # Arquivo de configuração do Vite
-└── README.md            # Documentação do projeto
+veredictum-frontend/
+├── veredictum/                    # Diretório principal da aplicação
+│   ├── node_modules/              # Módulos e dependências (gerado após npm install)
+│   ├── public/                    # Arquivos estáticos servidos diretamente
+│   │
+│   ├── src/                       # Código-fonte da aplicação React
+│   │   ├── assets/                # Recursos estáticos
+│   │   │   ├── fonts/             # Fontes customizadas
+│   │   │   ├── images/            # Imagens (PNG, JPG, etc.)
+│   │   │   └── svg/               # Ícones e ilustrações SVG
+│   │   │
+│   │   ├── components/            # Componentes reutilizáveis
+│   │   │   ├── Button/
+│   │   │   ├── ButtonAgenda/
+│   │   │   ├── Listagem/
+│   │   │   ├── MonthPicker/
+│   │   │   └── Sidebar/
+│   │   │
+│   │   ├── pages/                 # Páginas/telas da aplicação
+│   │   │   ├── Agenda/
+│   │   │   │   └── Support/       # Modais e componentes auxiliares
+│   │   │   ├── Clientes/
+│   │   │   ├── Dashboard/
+│   │   │   ├── Despesas/
+│   │   │   ├── Funcionarios/
+│   │   │   ├── Login/
+│   │   │   └── NotaFiscal/
+│   │   │
+│   │   ├── services/              # Lógica de comunicação com API
+│   │   │
+│   │   ├── App.jsx                # Componente raiz com roteamento
+│   │   ├── App.css                # Estilos globais do App
+│   │   ├── index.css              # Estilos base + variáveis CSS
+│   │   └── main.jsx               # Ponto de entrada da aplicação
+│   │
+│   ├── .gitignore                 # Arquivos ignorados pelo Git
+│   ├── eslint.config.js           # Configuração do ESLint
+│   ├── index.html                 # HTML principal (entry point do Vite)
+│   ├── package.json               # Dependências e scripts NPM
+│   ├── package-lock.json          # Lock de versões das dependências
+│   ├── vite.config.js             # Configuração do Vite
+│   └── instalaDependencia.bat     # Script automatizado de instalação (Windows)
+│
+└── README.md                      # Documentação do projeto (este arquivo)
 ```
 
 ### Descrição Detalhada
 
-#### Diretórios Raiz
+#### 📂 Diretórios Principais
 
-  - **`node_modules/`**: Contém todos os pacotes e dependências instalados via npm.
-  - **`public/`**: Contém arquivos estáticos que não serão processados pelo Vite e serão servidos diretamente, como o `index.html` e o favicon.
-  - **`src/`**: O diretório central do projeto React.
-      - **`assets/`**: Onde os ativos estáticos como imagens, ícones e SVGs são armazenados. Eles podem ser importados diretamente nos componentes.
-      - **`components/`**: Contém os componentes menores e reutilizáveis, como modais, botões, formulários e o switch de ativação.
-      - **`pages/`**: Cada "tela" ou "página" do projeto é um componente React completo, como `FuncionariosPage.jsx` ou `Dashboard.jsx`.
-      - **`services/`**: Módulo para centralizar a lógica de comunicação com a API (funções de `fetch`).
+- **`veredictum/`**: Pasta raiz da aplicação React com Vite
+  - **`node_modules/`**: Dependências instaladas (não commitado no Git)
+  - **`public/`**: Arquivos públicos servidos estaticamente (favicon, etc.)
+  - **`src/`**: Todo o código-fonte React
+    - **`assets/`**: Recursos visuais organizados por tipo (fontes, imagens, SVGs)
+    - **`components/`**: Componentes UI reutilizáveis (botões, tabelas, modais, sidebar)
+    - **`pages/`**: Componentes de páginas completas organizados por módulo funcional
+      - Cada pasta representa um módulo completo da aplicação (Agenda, Clientes, Dashboard, etc.)
+      - Subpastas como `Support/` contêm componentes auxiliares específicos do módulo
+    - **`services/`**: Funções de integração com APIs e lógica de comunicação externa
+  
+#### 📄 Arquivos de Configuração
 
-#### Arquivos Raiz
+- **`App.jsx`**: Componente principal com definição de rotas
+- **`main.jsx`**: Entry point que renderiza o App no DOM
+- **`index.html`**: HTML base usado pelo Vite
+- **`vite.config.js`**: Configurações do build tool (aliases, plugins)
+- **`package.json`**: Metadados do projeto e gerenciamento de dependências
+- **`instalaDependencia.bat`**: Script automatizado para instalação (Windows)
+- **`.gitignore`**: Define o que o Git deve ignorar (node_modules, .env, etc.)
 
-  - **`App.jsx`**: É o componente principal que contém a estrutura base e a lógica de roteamento do aplicativo.
-  - **`main.jsx`**: O ponto de entrada da aplicação. Ele renderiza o componente `App` no elemento root do HTML.
-  - **`vite.config.js`**: Arquivo de configuração para o Vite, onde você pode definir aliases, plugins e outras configurações de build.
-  - **`package.json`**: Gerencia dependências e scripts de automação.
-  - **`README.md`**: Este documento.
+-----
+
+## 🛠️ Pré-requisitos e Instalação
+
+### Opção 1: Instalação Automatizada (Recomendado para Windows)
+
+**Execute o script `instalaDependencia.bat` na raiz do projeto:**
+
+1. Navegue até a pasta do projeto:
+```bash
+cd "c:\Users\DELL_GUUH\Downloads\veredictum-frontend\veredictum"
+```
+
+2. Execute o script de instalação:
+```bash
+instalaDependencia.bat
+```
+
+O script irá:
+- ✅ Verificar se o Node.js está instalado
+- ✅ Instalar todas as dependências principais (axios, prop-types, chart.js, date-fns)
+- ✅ Configurar Tailwind CSS, PostCSS e Autoprefixer
+- ✅ Gerar arquivos de configuração automaticamente
+
+3. Após a execução, adicione as diretivas do Tailwind em `src/index.css`:
+```css
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+```
+
+4. Inicie o servidor de desenvolvimento:
+```bash
+npm run dev
+```
+
+### Opção 2: Instalação Manual
+
+Recomenda-se executar os passos abaixo no terminal (PowerShell/CMD) a partir da pasta raiz do projeto:
+
+1. **Node.js**
+   - Instalar Node.js (recomenda-se versão LTS: 16.x ou 18.x).
+   - Verifique: `node -v && npm -v`
+
+2. **Instalar dependências do projeto**
+```bash
+cd "c:\Users\DELL_GUUH\Downloads\veredictum-frontend\veredictum"
+npm install
+```
+
+3. **Pacotes úteis (se não estiverem no package.json)**
+
+- **axios** (cliente HTTP)
+```bash
+npm install axios
+```
+
+- **prop-types** (validação de props em componentes React)
+```bash
+npm install prop-types
+```
+
+- **chart.js** (gráficos)
+```bash
+npm install chart.js
+```
+
+- **date-fns** (utilitários de data)
+```bash
+npm install date-fns
+```
+
+- **Tailwind CSS** (opcional, caso queira usar)
+```bash
+npm install -D tailwindcss postcss autoprefixer
+npx tailwindcss init -p
+```
+Após gerar o arquivo de configuração, adicione em `src/index.css`:
+```css
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+```
+
+4. **Configurar variáveis de ambiente / backend**
+- Certifique-se de que o backend (API) esteja rodando (por exemplo em `http://localhost:8080`).
+- Ajuste variáveis (se houver) em `.env.local` ou conforme a configuração do projeto.
+
+5. **Rodar o servidor de desenvolvimento**
+```bash
+npm run dev
+```
+
+6. **Verificações rápidas**
+- Abra DevTools → Network / Console para checar chamadas ao backend (rotas e CORS).
+- Confirme que `sessionStorage` contém chaves usadas pela aplicação (ex.: `isAdmin`, `userName`) após login.
+
+### 📝 Observações:
+- Se estiver usando **yarn** ou **pnpm**, substitua os comandos `npm` pelos equivalentes (`yarn` / `pnpm`).
+- Para produção, siga o processo padrão de build: `npm run build`.
+- **Linux/macOS:** Se não estiver no Windows, siga a **Opção 2 (Instalação Manual)** ou adapte o script `.bat` para `.sh`.
 
 -----
 
@@ -87,7 +223,7 @@ A sintaxe JSX permite usar HTML semântico dentro do JavaScript.
 
 A metodologia BEM ainda é adotada para a nomenclatura de classes, mas as classes são aplicadas nos componentes React.
 
-  - **Nomeclatura de Classes:** `className="nome-do-bloco__elemento--modificador"`
+  - **Nomenclatura de Classes:** `className="nome-do-bloco__elemento--modificador"`
   - **Arquivos:** Você pode usar arquivos de CSS específicos para cada componente, importando-os diretamente.
 
 ### ☕ JavaScript/React (`camelCase`)
@@ -100,6 +236,127 @@ O código JavaScript deve seguir o padrão `camelCase` e as convenções do Reac
 
 -----
 
-# 🚀 Padrões de Commits e GitHub
+## 🚀 Padrões de Commits e GitHub
 
 A seção de padrões de commits e branches se mantém **inalterada**, pois as boas práticas de versionamento são independentes da tecnologia utilizada no projeto.
+
+### 📌 Formato do Commit
+
+```bash
+<tipo>(<escopo opcional>): <descrição curta no presente e imperativo>
+
+[Corpo opcional explicando o motivo da mudança, o que foi alterado e impactos]
+
+[Issue relacionada, se houver]
+```
+
+### 📊 Tipos de Commits (Conventional Commits)
+
+| Prefixo        | Significado                                         |
+| -------------- | --------------------------------------------------- |
+| 🎉 `feat`      | Adição de nova funcionalidade                       |
+| 🐛 `fix`       | Correção de bugs                                    |
+| 🏗️ `refactor` | Refatoração do código (sem mudar funcionalidade)    |
+| 🛠️ `chore`    | Mudanças na configuração, dependências              |
+| 🎨 `style`     | Alterações de formatação, lint, espaços, indentação |
+| 🧪 `test`      | Adição ou correção de testes                        |
+| 📖 `docs`      | Alterações na documentação                          |
+| 🔧 `ci`        | Mudanças na configuração de CI/CD                   |
+| ⚡ `perf`       | Melhorias de performance                            |
+| ⏪ `revert`     | Reversão de commit                                  |
+
+### 🏆 Exemplos de Commits Bem Escritos
+
+#### ✅ Commit Simples
+
+```bash
+feat(user): adicionar validação de e-mail no cadastro
+```
+
+#### 📜 Commit com Corpo Explicativo
+
+```bash
+fix(auth): corrigir erro na geração de token JWT
+
+O erro acontecia porque o tempo de expiração estava sendo passado como string 
+ao invés de um número inteiro. Agora, a conversão para `Long` foi corrigida.
+
+Fixes #42
+```
+
+#### 🔄 Commit para Atualização de Dependências
+
+```bash
+chore(deps): atualizar Spring Boot para versão 3.1.0
+```
+
+### 🚦 Padrão de Branches
+
+| Branch                           | Descrição                               |
+| -------------------------------- | --------------------------------------- |
+| 🌍 `main`                        | versão estável do projeto.             |
+| ⚙️ `develop`                     | branch principal para desenvolvimento. |
+| 🔛 `feature/nome-da-feature`     | novas funcionalidades.                 |
+| 🐞 `bugfix/nome-do-bug`          | correções de bugs.                     |
+| 🔥 `hotfix/nome-do-hotfix`       | correções urgentes na produção.        |
+| 🔖 `release/versao`              | preparação de novas versões.          |
+
+#### Criar uma nova branch
+Para criar uma nova branch e mudar para ela, use o comando:
+```bash 
+git checkout -b nome-da-branch
+```
+Ou, se você estiver usando uma versão mais recente do Git, pode usar:
+```bash
+git switch -c nome-da-branch
+```
+Exemplo: Se você quiser criar uma branch chamada `feature/nova-funcionalidade`:
+```bash
+git checkout -b feature/nova-funcionalidade
+```
+Ou:
+```bash
+git switch -c feature/nova-funcionalidade
+```
+Isso cria a branch e muda automaticamente para ela.
+
+#### Dar push para o repositório remoto
+Depois de fazer o commit, envie (push) a nova branch para o repositório remoto com o comando:
+```bash
+git push -u origin nome-da-branch
+```
+Exemplo:
+```bash
+git push -u origin feature/nova-funcionalidade
+```
+O `-u` (ou `--set-upstream`) faz com que a branch local seja associada à branch remota, então nas próximas vezes, você pode apenas rodar `git push` ou `git pull` sem precisar especificar o nome da branch.
+
+-----
+
+## 📦 Scripts Disponíveis
+
+| Comando             | Descrição                                      |
+| ------------------- | ---------------------------------------------- |
+| `npm run dev`       | Inicia o servidor de desenvolvimento           |
+| `npm run build`     | Gera a build de produção                       |
+| `npm run preview`   | Visualiza a build de produção localmente       |
+| `npm run lint`      | Executa o linter (ESLint)                      |
+
+-----
+
+## 🤝 Contribuindo
+
+1. Crie uma branch para sua feature/bugfix
+2. Commit suas mudanças seguindo os padrões acima
+3. Faça push para o repositório remoto
+4. Abra um Pull Request para `develop`
+
+-----
+
+## 📄 Licença
+
+Este projeto é propriedade de **LAW & CODE** e destina-se ao uso interno do escritório Veredictum.
+
+-----
+
+**Desenvolvido com ❤️ pela equipe LAW & CODE**

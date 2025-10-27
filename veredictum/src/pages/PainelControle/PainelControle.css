@@ -1,0 +1,635 @@
+@import url('https://fonts.googleapis.com/css2?family=Fira+Sans:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Kanit:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap');
+
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+
+}
+
+
+/* .container {
+    background-color: var(--white-light);
+    width: 100%;
+    display: flex;
+    position: fixed;
+    flex-direction: row;
+    min-height: 100vh;
+    font-family: "Montserrat", sans-serif;
+    font-size: 20px;
+
+} */
+
+.main-content_Davidson {
+    margin-left: 120px;
+    flex: 1;
+    padding: 30px;
+}
+
+.page-title_Davidson {
+    font-size: 50px;
+    font-weight: bold;
+    margin-bottom: 30px;
+    margin-top: 40px;
+}
+
+.panels-container {
+    display: flex;
+    gap: 20px;
+    /* margin-left: 3%;
+    margin-top: 3%; */
+    /* border: #000 solid 2px; */
+
+
+}
+
+.panel {
+    border-radius: 12px;
+    box-shadow: 0 10px 24px 0 rgba(44, 44, 44, 0.18);
+    overflow: hidden;
+    position: fixed;
+    min-height: 400px;
+    width: 650px;
+    background-color: white;
+
+}
+
+.panel-header {
+    padding: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.panel-title {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 18px;
+    font-weight: 600;
+    color: #2d3748;
+}
+
+.panel-icon {
+    width: 40px;
+    height: 40px;
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: transparent;
+    border: none;
+    padding: 0;
+}
+
+.panel-icon img {
+    width: 100%;
+    height: 100%;
+    display: block;
+}
+
+
+
+.panel-actions {
+    display: flex;
+    gap: 8px;
+}
+
+.action-btn {
+    width: 32px;
+    height: 32px;
+    border: none;
+    background-color: #f7fafc;
+    border-radius: 6px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background-color 0.2s;
+}
+
+.action-btn:hover {
+    background-color: #edf2f7;
+}
+
+.panel-content {
+    padding: 0;
+    padding-left: 10px;
+    /* max-height: 400px; /* altura do painel */
+    /* overflow-y: auto;  permite rolagem do corpo da tabela */
+}
+
+
+
+/* Checkbox */
+.checkbox {
+    width: 16px;
+    height: 16px;
+    border: 2px solid #cbd5e0;
+    border-radius: 3px;
+    cursor: pointer;
+}
+
+.checkbox:checked {
+    background-color: #4299e1;
+    border-color: #4299e1;
+}
+
+/* Link */
+.link {
+    color: #000000;
+    text-decoration: none;
+    font-weight: 500;
+}
+
+.link:hover {
+    text-decoration: underline;
+}
+
+/* Expand button */
+.expand-btn {
+    position: absolute;
+    bottom: 10px;
+    right: 50%;
+    transform: translateX(50%);
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: #a0aec0;
+    font-size: 18px;
+}
+
+.panel {
+    position: relative;
+    min-height: 400px;
+}
+
+
+
+.cell-toggle {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+    min-height: 32px;
+}
+
+
+.scrollable-panel-content {
+    max-height: 250px;
+    overflow-y: scroll;
+}
+
+
+
+
+.table-wrapper {
+    max-height: 200px;
+    overflow-y: scroll;
+    border: 1px solid #444;
+    border-radius: 8px;
+}
+
+/* Modal Editar */
+
+.modal {
+    position: fixed;
+    z-index: 500;
+    left: 0;
+    top: 0;
+    background: rgba(0, 0, 0, 0.4);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    /* background-color: red; */
+}
+
+.modal-content_Painel {
+    background: #414141;
+    color: #fff;
+    padding: 32px;
+    border-radius: 12px;
+    position: relative;
+    width: 90%;
+    max-width: 1000px;
+    height: auto;
+    border: 1px groove black;
+    box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.8);
+
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+}
+
+/* Cada coluna ocupa metade da largura do modal */
+.modal-column {
+    flex: 1 1 45%;
+    /* 45% largura para duas colunas, com gap */
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+/* Inputs e selects ocupam 100% da coluna */
+.modal-column input,
+.modal-column select {
+    width: 100%;
+    padding: 8px;
+    border-radius: 6px;
+    border: 1px solid #ccc;
+    background: #f1f1f1;
+    color: #000;
+}
+
+/* Botão adicionar */
+.save-btn {
+    margin-top: 20px;
+    padding: 12px 24px;
+    border: 2px solid var(--black-dark);
+    border-radius: 6px;
+    background-color: rgb(56, 55, 56);
+    color: #fff;
+    font-size: 1.1em;
+    cursor: pointer;
+    align-self: flex-end;
+    transition: background 0.2s;
+}
+
+.save-btn:hover {
+    background-color: #646169;
+}
+
+
+#div_para_botao {
+    width: 100%;
+    height: 100px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+
+.save-btn-rotina {
+    margin-top: 20px;
+    padding: 12px 24px;
+    border-radius: 6px;
+    background-color: var(--normal-black);
+    color: #fff;
+    border: solid 3px var(--darkness-black);
+    font-size: 1.1em;
+    cursor: pointer;
+    align-self: flex-end;
+    transition: background 0.2s;
+}
+
+.save-btn-rotina:hover {
+    background-color: #646169;
+}
+
+.close {
+    float: right;
+    font-size: 22px;
+    cursor: pointer;
+}
+
+.save-btn {
+    margin-top: 15px;
+    padding: 10px 20px;
+    background: black;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+}
+
+
+
+#div_para_titulo {
+    height: 55px;
+    width: 100%;
+}
+
+.modal-content_Painel h2 {
+    display: flex;
+    justify-content: center;
+    font-size: 40px;
+    font-weight: bold;
+}
+
+
+
+.modal-add-btn {
+    margin-top: 12px;
+    width: 25%;
+    height: 50px;
+    padding: 10px 0;
+    background: #2c2c2c;
+    color: #fff;
+    border: 1px solid black;
+    border-radius: 6px;
+    font-size: 1.1em;
+    cursor: pointer;
+    transition: background 0.2s;
+    box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.8);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.modal-add-btn_save {
+    margin-top: 12px;
+    width: 25%;
+    height: 50px;
+    padding: 10px 0;
+    background-color: var(--normal-black);
+    color: #fff;
+    border: solid 3px var(--darkness-black);
+    border-radius: 6px;
+    font-size: 1.1em;
+    cursor: pointer;
+    transition: background 0.2s;
+    box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.8);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+
+.modal-add-btn:hover {
+    background: #444;
+}
+
+
+table {
+    border-collapse: separate;
+    border-spacing: 0 10px;
+    width: 95%;
+    border: #4299e1 solid 2px;
+}
+
+
+.toggle-switch {
+    width: 45px;
+    height: 25px;
+    border-radius: 20px;
+    position: relative;
+    cursor: pointer;
+    transition: background 0.3s;
+
+}
+
+.toggle-switch:not(.active) {
+    background: #ff3b30;
+}
+
+
+.toggle-switch::after {
+    content: "";
+    width: 20px;
+    height: 20px;
+    background: white;
+    border-radius: 50%;
+    position: absolute;
+    top: 2px;
+    left: 2px;
+    transition: left 0.3s;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+}
+
+.toggle-switch.active {
+    background: #4cd964;
+}
+
+.toggle-switch.active::after {
+    left: 22px;
+}
+
+/* tab - arrendondamento */
+.panel-content table {
+    border-collapse: separate;
+    border-spacing: 0 12px;
+    border: none;
+}
+
+.panel-content {
+    border: none !important;
+}
+
+
+.pill-row {
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    background: linear-gradient(to bottom, rgba(0, 0, 0, 0.15) 0%, rgba(0, 0, 0, 0.08) 50%, transparent 100%);
+    border: 1px solid rgba(0, 0, 0, 0.15);
+    margin-left: 30px;
+    transition: all 0.5s ease-in-out;
+
+}
+
+
+.panel-content table td {
+    padding: 8px 16px;
+    text-align: center;
+    vertical-align: middle;
+}
+
+.panel-content table th {
+    padding: 8px 16px;
+    text-align: center;
+    vertical-align: middle;
+}
+
+.panel-content table th {
+    font-weight: 600;
+    background: transparent;
+
+}
+
+.pill-row td {
+    border: none;
+    background: var(--white-darknes);
+}
+
+.pill-row td:first-child {
+    transform: translateX(25px);
+    background: var(--white-darknes);
+    border-top-left-radius: 12px;
+    border-bottom-left-radius: 12px;
+    text-align: left;
+}
+
+.pill-row td:last-child {
+    border-top-right-radius: 12px;
+    border-bottom-right-radius: 12px;
+    text-align: center;
+}
+
+.pill-row:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.25);
+    border: 1px solid rgba(0, 0, 0, 0.25);
+    transition: all 0.3s ease;
+}
+
+.pill-row:nth-child(even) {
+    background: linear-gradient(to bottom, rgba(248, 250, 252, 0.9) 0%, rgba(248, 250, 252, 0.5) 50%, rgba(248, 250, 252, 0.1) 100%);
+}
+
+.pill-row:nth-child(odd) {
+    background: linear-gradient(to bottom, rgba(248, 250, 252, 0.9) 0%, rgba(248, 250, 252, 0.5) 50%, rgba(248, 250, 252, 0.1) 100%);
+}
+
+.expand-btn {
+    background: rgba(59, 130, 246, 0.1);
+    border: 1px solid rgba(59, 130, 246, 0.3);
+    border-radius: 20px;
+    padding: 8px 16px;
+    color: #3b82f6;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.expand-btn:hover {
+    background: rgba(59, 130, 246, 0.2);
+    border-color: rgba(59, 130, 246, 0.5);
+    transform: translateY(-1px);
+}
+
+
+
+.col-excluir button {
+    background: transparent;
+    border: none;
+    padding: 0;
+    margin: 0;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+}
+
+.col-excluir button img {
+    display: block;
+    background: transparent !important;
+    width: 20px;
+    height: 20px;
+    object-fit: contain;
+    pointer-events: none;
+}
+
+
+/* container rolável: define altura e overflow */
+.panel-content.scrollable-rotinas {
+    max-height: 400px;
+    /* altura do painel com scroll */
+    overflow-y: auto;
+    /* rolagem ativa */
+    scrollbar-gutter: stable;
+    /* reserva espaço para scrollbar quando disponível */
+}
+
+/* tabela: evita que oadaptação de colunas quebre o sticky */
+.rotinas-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+/* cabeçalho fixo */
+.rotinas-table thead th {
+    position: sticky;
+    top: 0;
+    background: #ffffff;
+    z-index: 10;
+    padding: 12px 8px;
+    text-align: left;
+    /* box-shadow: 0 2px 4px rgba(0, 0, 0, 0.06); */
+    border: none;
+}
+
+.rotinas-table thead th,
+.rotinas-table tbody td {
+    min-width: 100px;
+    /* ajuste conforme necessário para manter colunas alinhadas */
+    padding: 10px;
+}
+
+/* se quiser: estilizar scrollbar (opcional, funciona em browsers que suportam) */
+.panel-content.scrollable-rotinas::-webkit-scrollbar {
+    width: 10px;
+}
+
+.panel-content.scrollable-rotinas::-webkit-scrollbar-thumb {
+    border-radius: 6px;
+    background: rgba(0, 0, 0, 0.15);
+}
+
+
+
+/* Área rolável dos funcionários */
+.scrollable-funcionarios {
+    max-height: 300px;
+    min-height: 200px;
+    overflow-y: auto;
+    scrollbar-gutter: stable;
+}
+
+/* Deixa o cabeçalho fixo */
+.scrollable-funcionarios table thead {
+    position: sticky;
+    top: 0;
+    background-color: #fff;
+    z-index: 2;
+    /* box-shadow: 0 2px 3px rgba(0, 0, 0, 0.1); */
+}
+
+/* ==== Scrollbar estilizado ==== */
+.scrollable-funcionarios::-webkit-scrollbar {
+
+    width: 10px;
+
+}
+
+.scrollable-funcionarios::-webkit-scrollbar-thumb {
+    border-radius: 6px;
+    background: rgba(0, 0, 0, 0.15);
+}
+
+
+.senha-container {
+    position: relative;
+}
+
+.senha-wrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.senha-wrapper input {
+    width: 100%;
+    padding-right: 40px;
+    /* espaço pro botão do olho */
+}
+
+.toggle-senha {
+    position: absolute;
+    right: 10px;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    padding: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.toggle-senha:hover svg {
+    stroke: #555;
+}

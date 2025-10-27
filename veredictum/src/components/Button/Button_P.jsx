@@ -1,6 +1,6 @@
 import React from 'react';
-import './Button.css';
-import '../Css/Main.css';
+import './Button_P.css';
+import '../../index.css';
 
 function Button({ children, className = '', ...props }) {
   const classes = ['btn-component'];

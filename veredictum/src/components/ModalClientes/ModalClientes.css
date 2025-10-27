@@ -1,0 +1,452 @@
+
+
+
+/* Fundo escuro que cobre a tela */
+.clientes-modal-backdrop {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 999;
+}
+/* Modal Adicionar Agendamento */
+#clientes-new-appointment-modal-add {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: var(--light-black);
+    border-radius: 12px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.373);
+    width: 1200px; /* Ajuste a largura conforme o protótipo */
+    max-width: 65%; /* Garante que ele seja responsivo */
+    height: 80%;
+    z-index: 1000;
+    
+}
+/* Modal Editar Agendamento */
+#clientes-new-appointment-modal-edit {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: var(--light-black);
+    border-radius: 12px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.373);
+    width: 1200px; /* Ajuste a largura conforme o protótipo */
+    max-width: 65%; /* Garante que ele seja responsivo */
+    height: 50%;
+    z-index: 1000;
+}
+
+/* Esconde o modal e o fundo */
+.clientes-modal.hidden, .clientes-modal-backdrop.hidden {
+    display: none;
+}
+/* Cabeçalho do modal */
+.clientes-modal-header {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px 25px;   
+}
+.clientes-modal-header h2 {
+    margin: auto;
+    font-size: 2.5rem;
+    font-weight: bold;
+    color: var(--white-normal);
+}
+.clientes-modal-close-btn {
+    background: none;
+    border: none;
+    font-size: 2rem;
+    cursor: pointer;
+}
+/* Corpo do formulário */
+.clientes-appointment-form {
+    padding: 25px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+.clientes-form-row {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 20px;
+}
+.clientes-form-group {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+}
+.clientes-form-group.description {
+    flex-grow: 1;
+}
+.clientes-form-group label {
+    font-size: 1rem;
+    color: var(--white-normal);
+    margin-bottom: 15px;
+    font-weight: 600;
+    margin-left: 3%;
+}
+.clientes-form-group input, .clientes-form-group select, .clientes-form-group textarea {
+    padding: 10px;
+    max-width: 450px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    font-size: 1rem;
+    background-color: #f9f9f9;
+    margin-left: 3%;
+}
+.clientes-form-group input:focus, .clientes-form-group select:focus, .clientes-form-group textarea:focus {
+    outline: none;
+    border-color: var(--gray-3);
+    box-shadow: 0 0 0 2px rgba(147, 147, 147, 0.25);
+}
+.clientes-form-group textarea {
+    min-height: 80px;
+    resize: vertical;
+}
+
+/* Rodapé do formulário */
+.clientes-form-footer {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: -5px;
+}
+
+.clientes-form-footer .clientes-btn-new-appointment {
+    margin-right: 42%;
+}
+
+.clientes-reminder-label {
+    display: flex;
+    align-items: center;
+    font-size: 1rem;
+    color: var(--white-normal);
+    margin-right: 18%;
+}
+.clientes-reminder-label input {
+    margin-right: 10px;
+}
+
+/* Modal Editar Agendamento*/
+.clientes-modal-edit{
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: var(--light-black);
+    border-radius: 12px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.373);
+    width: 1200px; /* Ajuste a largura conforme o protótipo */
+    max-width: 65%; /* Garante que ele seja responsivo */
+    height: 40%;
+    z-index: 1000;
+}
+
+/* MODAL DELETE  */
+
+/* Estilos compartilhados para todos os modais */
+.clientes-modal-delete,
+.clientes-modal-mass-delete {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: var(--white-dark);
+    border-radius: 12px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.373);
+    width: 500px;
+    max-width: 90%;
+    z-index: 1000;
+}
+
+/* Estilos compartilhados para todos os fundos de modal */
+.clientes-modal-backdrop-delete,
+.clientes-modal-backdrop-mass-delete {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 999;
+}
+
+/* Estilos para esconder os modais e fundos */
+.clientes-modal-delete.hidden,
+.clientes-modal-backdrop-delete.hidden,
+.clientes-modal-mass-delete.hidden,
+.clientes-modal-backdrop-mass-delete.hidden {
+    display: none;
+}
+
+/* Estilos para o cabeçalho dos modais */
+.clientes-modal-delete .clientes-modal-header,
+.clientes-modal-mass-delete .clientes-modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px 25px;
+    
+}
+
+.clientes-modal-delete .clientes-modal-header h2,
+.clientes-modal-mass-delete .clientes-modal-header h2 {
+    margin: 0;
+    font-size: 1.5rem;
+    color: var(--darkness-black);
+}
+
+.clientes-modal-delete .clientes-modal-close-delete-btn,
+.clientes-modal-mass-delete .clientes-modal-close-mass-delete-btn {
+    background: none;
+    border: none;
+    cursor: pointer;
+}
+
+/* Estilos para o corpo do modal */
+.clientes-modal-delete .clientes-modal-body,
+.clientes-modal-mass-delete .clientes-modal-body {
+    padding: 25px;
+    font-size: 1.2rem;
+    color: var(--darkness-black);
+}
+
+.clientes-modal-delete .clientes-modal-body p,
+.clientes-modal-mass-delete .clientes-modal-body p {
+    margin: 0;
+}
+
+/* Estilos para o rodapé do modal */
+.clientes-modal-delete .clientes-modal-footer,
+.clientes-modal-mass-delete .clientes-modal-footer {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    padding: 20px 25px;
+}
+
+/* Estilos para os botões de ação */
+.clientes-modal-delete .clientes-btn-cancel-delete,
+.clientes-modal-delete .clientes-btn-confirm-delete,
+.clientes-modal-mass-delete .clientes-btn-cancel-mass-delete,
+.clientes-modal-mass-delete .clientes-btn-confirm-mass-delete {
+    padding: 8px 15px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+.clientes-modal-delete .clientes-btn-cancel-delete,
+.clientes-modal-mass-delete .clientes-btn-cancel-mass-delete {
+    background-color: transparent;
+    border: 1px solid var(--darkness-black);
+    color: var(--darkness-black);
+}
+
+.clientes-modal-delete .clientes-btn-confirm-delete,
+.clientes-modal-delete .clientes-btn-confirm-delete {
+    background-color: #f44336; /* Cor vermelha para exclusão */
+    border: none;
+    color: var(--white-normal);
+}
+
+/* ============================================= */
+/* MODAIS (CLIENTES) */
+/* ============================================= */
+
+#clientes-new-appointment-modal-add-client{
+    position: fixed;
+    top: 50%;
+    left: 54%;
+    transform: translate(-50%, -50%);
+    background-color: var(--light-black);
+    border-radius: 12px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.373);
+    width: 1500px; /* Ajuste a largura conforme o protótipo */
+    max-width: 90%; /* Garante que ele seja responsivo */
+    height: 84%;
+    z-index: 5;
+}
+
+#clientes-new-appointment-modal-edit-client{
+    position: fixed;
+    top: 50%;
+    left: 54%;
+    transform: translate(-50%, -50%);
+    background-color: var(--light-black);
+    border-radius: 12px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.373);
+    width: 1500px; /* Ajuste a largura conforme o protótipo */
+    max-width: 90%; /* Garante que ele seja responsivo */
+    height: 84%;
+    z-index: 5;
+}
+#clientes-new-appointment-modal-view-client{
+    position: fixed;
+    top: 50%;
+    left: 54%;
+    transform: translate(-50%, -50%);
+    background-color: var(--light-black);
+    border-radius: 12px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.373);
+    width: 1500px; /* Ajuste a largura conforme o protótipo */
+    max-width: 90%; /* Garante que ele seja responsivo */
+    height: 75%;
+    z-index: 5;
+}
+
+.clientes-form-group-client {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+.clientes-form-group-client .description {
+    flex-grow: 1;
+}
+.clientes-form-group-client label {
+    font-size: 1rem;
+    color: var(--white-normal);
+    /* color: #f44336; */
+    margin-bottom: 5px;
+    font-weight: 600;
+    margin-left: 3%;
+}
+.clientes-form-group-client input, .clientes-form-group-client select, .clientes-form-group-client textarea {
+    padding: 10px;
+    max-width: 450px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    font-size: 1rem;
+    background-color: #f9f9f9;
+    margin-left: 3%;
+    margin-bottom: 10px;
+}
+.clientes-form-group-client input:focus, .clientes-form-group-client select:focus, .clientes-form-group-client textarea:focus {
+    outline: none;
+    border-color: var(--gray-3);
+    box-shadow: 0 0 0 2px rgba(147, 147, 147, 0.25);
+    /* margin-bottom: 20px; */
+}
+.clientes-form-group-client textarea {
+    min-height: 100px;
+    resize: vertical;
+}
+
+/* Rodapé do formulário */
+.clientes-form-footer-client {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 5px;
+    gap: 15px;
+}
+
+
+
+/* Modal rotinas */
+
+.clientes-modal-delete-rotinas {
+    display: flex;
+    align-items: center;
+    justify-content: end;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: var(--white-dark);
+    border-radius: 12px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.373);
+    width: 450px;
+    max-width: 90%;
+    z-index: 500;
+}
+
+/* Estilos compartilhados para todos os fundos de modal */
+.clientes-modal-backdrop-delete {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 999;
+}
+
+/* Estilos para esconder os modais e fundos */
+.clientes-modal-delete.hidden,
+.clientes-modal-backdrop-delete.hidden {
+    display: none;
+}
+
+/* Estilos para o cabeçalho dos modais */
+.clientes-modal-delete .clientes-modal-header{
+    display: flex;
+    gap: 70px;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px 25px;
+      
+    
+}
+
+.clientes-modal-delete .clientes-modal-header h2{
+    margin: 0;
+    font-size: 1.5rem;
+    color: var(--darkness-black);
+}
+
+.clientes-modal-delete .clientes-modal-close-delete-btn {
+    background: none;
+    border: none;
+    cursor: pointer;
+}
+
+/* Estilos para o corpo do modal */
+.clientes-modal-delete .clientes-modal-body {
+    padding: 25px;
+    font-size: 1.2rem;
+    color: var(--darkness-black);
+}
+
+.clientes-modal-delete .clientes-modal-body p {
+    display: flex;
+    margin: 0;
+    gap: 5px;
+    align-items: center;
+}
+
+/* Estilos para o rodapé do modal */
+.clientes-modal-delete .clientes-modal-footer {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    padding: 20px 25px;
+}
+
+/* Estilos para os botões de ação */
+.clientes-modal-delete .clientes-btn-cancel-delete,
+.clientes-modal-delete .clientes-btn-confirm-delete {
+    padding: 8px 15px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+.clientes-modal-delete .clientes-btn-cancel-delete{
+    background-color: transparent;
+    border: 1px solid var(--darkness-black);
+    color: var(--darkness-black);
+}
+
+.clientes-modal-delete .clientes-btn-confirm-delete {
+    background-color: #f44336; /* Cor vermelha para exclusão */
+    border: none;
+    color: var(--white-normal);
+}

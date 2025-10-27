@@ -1,0 +1,161 @@
+.page-title-logs h1{
+ 
+    margin-left: 18px;
+    border: 1px solid #222;
+}
+
+.page-description-logs{
+    color: #000;
+    font-size: 17px;
+    font-weight: 500;
+    margin-top: 5px;
+    margin-bottom: 3%;
+}
+
+.log-email-content-logs {
+    font-size: 14px;
+    width: 100%;
+    margin-top: 5px;
+}
+
+.log-email-filtro-logs {
+    font-size: 14px;
+    border-radius: 12px;
+    padding: 20px;
+    margin-bottom: 3%;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+    display: flex;
+    flex-direction: row;
+    gap: 70px;
+    align-items: center;
+    width: 45vw;
+    height: 15vh;
+    border: 1PX solid black;
+    display: flex;
+    justify-content: space-around;
+}
+
+/* Cada grupo ocupa metade do painel, ajustável */
+.log-email-filtro-group-logs {
+    flex: 1 1 48%;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+/* Label */
+.log-email-filtro-group-logs label {
+    font-weight: 700;
+    color: var(--text-primary, #111);
+    font-size: 14px;
+}
+
+/* Select e input - estilo unificado */
+.log-email-filtro-group-logs select,
+.log-email-filtro-group-logs input[type="text"] {
+    width: 100%;
+    max-width: 380px;
+    background: #ffffff;
+    border: 1px solid rgba(0,0,0,0.06);
+    border-radius: 8px;
+    padding: 12px 14px;
+    font-size: 14px;
+    color: var(--text-primary, #222);
+    box-shadow: 0 6px 18px rgba(0,0,0,0.04);
+    transition: box-shadow .12s ease, transform .08s ease, border-color .12s ease;
+    appearance: none;
+}
+
+/* Placeholder */
+.log-email-filtro-group-logs input::placeholder {
+    color: #bdbdbd;
+    font-weight: 500;
+}
+
+/* Focus */
+.log-email-filtro-group-logs select:focus,
+.log-email-filtro-group-logs input[type="text"]:focus {
+    outline: none;
+    border-color: rgba(0,123,255,0.22);
+    box-shadow: 0 8px 24px rgba(0,123,255,0.06);
+    transform: translateY(-1px);
+}
+
+/* Ajuste do ícone caret do select (mantém seta à direita) */
+.log-email-filtro-group-logs select {
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'><polyline points='6 9 12 15 18 9'/></svg>");
+    background-repeat: no-repeat;
+    background-position: right 12px center;
+    background-size: 14px;
+    padding-right: 36px;
+}
+
+/* Responsivo: empilha em telas pequenas */
+@media (max-width: 760px) {
+    .log-email-filtro-logs {
+        flex-direction: column;
+        gap: 16px;
+    }
+    .log-email-filtro-group-logs select,
+    .log-email-filtro-group-logs input[type="text"] {
+        max-width: 100%;
+    }
+}
+
+.log-email-listagem-logs {
+    font-size: 14px;
+    width: 100%;
+    height: 60vh;
+    margin-top: 5px;
+    background-color: #fff;
+    border-radius: 12px;
+    overflow-y: auto;
+    overflow-x: hidden;
+    padding: 10px;
+}
+
+/* Card raiz já termina com -logs */
+.card-box-logs {
+    width: 88vw;
+    height: 90vh; /* Altura fixa do card */height: calc(60vh + 300px); 
+    background: var(--white-normal, #fff);
+    border-radius: 12px;
+    box-shadow: 0 6px 20px rgba(0,0,0,0.06);
+    padding: 20px;
+    margin-top: 18px;
+    margin-bottom: 18px;
+    display: flex;
+    flex-direction: column;
+    overflow: auto;
+}
+
+/* Mantido 'listagem-body' pois vem do componente Listagem */
+.card-box-logs .listagem-body {
+    min-height: 0;
+    overflow-y: auto;
+    overflow-x: auto;
+    padding-right: 6px; 
+}
+
+.card-box-logs .listagem-header,
+.card-box-logs .listagem-row {
+    gap: 24px;
+    align-items: center;
+}
+
+/* Scrollbar */
+.card-box-logs .listagem-body::-webkit-scrollbar {
+    width: 3px;
+}
+.card-box-logs .listagem-body::-webkit-scrollbar-track {
+    background: transparent;
+}
+.card-box-logs .listagem-body::-webkit-scrollbar-thumb {
+    background: rgb(0, 0, 0);
+    border-radius: 8px;
+    border: 2px solid rgba(0, 0, 0, 0.85);
+}
+.card-box-logs .listagem-body {
+    scrollbar-width: thin;
+    scrollbar-color: rgb(0, 0, 0) transparent;
+}

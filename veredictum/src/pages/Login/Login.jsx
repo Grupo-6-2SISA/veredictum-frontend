@@ -37,11 +37,17 @@ function Login() {
       });
 
       if (response.ok) {
-        const data = await response.json(); 
+        const data = await response.json();
 
-      sessionStorage.setItem("userEmail", formData.email);
-      sessionStorage.setItem("userName", data.nome); 
-     
+        const isAdminValue = data.isAdm !== undefined ? data.isAdm : data.isAdmin;
+
+        const isAdminString = isAdminValue === true || isAdminValue === 'true' || isAdminValue === 1 ? 'true' : 'false';
+
+        sessionStorage.setItem("userEmail", formData.email);
+        sessionStorage.setItem("userName", data.nome);
+        sessionStorage.setItem("isAdmin", isAdminString);
+
+
 
         alert("Login realizado com sucesso!");
         navigate("/VisaoGeral");

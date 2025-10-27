@@ -1,3 +1,5 @@
+@import url('../Css/Main.css');
+
 /* Estilo do Card (Bloco Branco) */
 .card-box {
     background-color: #fff;
@@ -34,9 +36,43 @@
 
 
 .card-content-wrapper {
-    max-height: 100%; /* Limite a altura como no design */
-    overflow-y: auto; /* Adiciona a barra de rolagem */
-   scrollbar-width: thin;
-   scrollbar-color: var(--light-black) var(--white-normal);
+    flex: 1 1 auto;
+    overflow-y: auto;
+    max-height: 100%;
+    padding-right: 10px;
 }
 
+/* Estiliza a barra de rolagem apenas dentro do conteúdo do card */
+.card-content-wrapper::-webkit-scrollbar {
+    width: 8px;
+    background: transparent;
+}
+
+.card-content-wrapper::-webkit-scrollbar-thumb {
+    background: #222;
+    border-radius: 8px;
+}
+
+.card-content-wrapper::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+/* Firefox */
+.card-content-wrapper {
+    scrollbar-width: thin;
+    scrollbar-color: #222 transparent;
+}
+
+.card-box-logs {
+    background-color: #fff;
+    border-radius: 8px;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0 1px 3px #4242425e;
+    overflow: hidden;
+    width: 48%;
+    min-height: 200px; 
+    height: 280px;     
+    max-height: 280px; 
+}
