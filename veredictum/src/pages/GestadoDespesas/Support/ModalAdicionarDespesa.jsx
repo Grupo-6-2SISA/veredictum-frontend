@@ -1,3 +1,4 @@
+
 import React, { useState } from "react";
 import FecharIcon from "../../../assets/svg/fechar.svg";
 import { adicionarDespesa } from "../GestaoDespesas";
@@ -31,18 +32,13 @@ export default function ModalAdicionarDespesa({ show, onClose, atualizarLista })
             return;
         }
 
-        if (urlNuvem && !(/\.(pdf|com)$/i).test(urlNuvem)) {
-            alert("❌ URL deve terminar com .pdf ou .com");
+        if (urlNuvem && !(/\.(pdf|com|br)$/i).test(urlNuvem)) {
+            alert("❌ URL deve terminar com .pdf, .com ou .br");
             return;
         }
 
         if (isNaN(valor) || valor < 0) {
             alert("❌ Valor não pode ser negativo.");
-            return;
-        }
-
-        if (dataVencimento < dataAtual) {
-            alert("❌ Data de vencimento não pode ser menor que a data atual.");
             return;
         }
 
@@ -82,15 +78,14 @@ export default function ModalAdicionarDespesa({ show, onClose, atualizarLista })
 
             onClose();
         }
-
     };
 
     return (
-        <div id="ModalAdicionarDespesa" className="modal">
+        <div id="ModalAdicionarDespesa_Davidson" className="modal_Adicionar_Despesas">
             <div className="modal_add_despesas">
                 <div className="modal-header" style={{ backgroundColor: '#424242', borderBottom: 'none' }}>
-                    <h2>Adicionar Despesa</h2>
-                    <button className="modal-close-btn_Despesas" onClick={onClose}>
+                    <h2 style={{ fontSize: "45px", paddingLeft: "16px" }}>Adicionar Despesa</h2>
+                    <button style={{ transform: "translateX(200%)" }} className="modal-close-btn_Despesas" onClick={onClose}>
                         <img src={FecharIcon} alt="Fechar" />
                     </button>
                 </div>
@@ -125,8 +120,8 @@ export default function ModalAdicionarDespesa({ show, onClose, atualizarLista })
                     {/* Valor */}
                     <div className="form-row_Davidson">
                         <div className="form-group">
-                            <label 
-                            // style={{ transform: "translateX(-1%)" }}
+                            <label
+                                // style={{ transform: "translateX(-1%)" }}
                                 htmlFor="valor">Valor</label>
                             <input
                                 // style={{ transform: "translateX(-3%)", width: "47%" }}

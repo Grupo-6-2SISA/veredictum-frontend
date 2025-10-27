@@ -84,7 +84,7 @@ function ModalEditarRotina({ isModalOpen, closeModalEditarRotina, rotinaData, Fe
     };
 
     return (
-        <div id="modal-editar-rotina" className="modal" style={{ display: 'flex' }}>
+        <div id="modal-editar-rotina" className="modal_Painel_Controle" style={{ display: 'flex' }}>
             <div className="modal-content_Painel" id="modal-editar-rotina-content">
                 <div id="div_para_titulo">
                     <span className="close" onClick={closeModalEditarRotina}>

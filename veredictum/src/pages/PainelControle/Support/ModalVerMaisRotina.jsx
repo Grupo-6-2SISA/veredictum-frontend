@@ -5,7 +5,7 @@ function ModalVerMaisRotina({ isModalOpen, closeModalVerMaisRotina, rotinaData, 
     const { nome, arquivo, horaInicio, dataInicio, dataFim, status } = rotinaData;
 
     return (
-        <div id="modalVerMaisRotina" className="modal" style={{ display: 'flex' }}>
+        <div id="modalVerMaisRotina" className="modal_Painel_Controle" style={{ display: 'flex' }}>
             <div className="modal-content_Painel">
                 <div id="div_para_titulo">
                     <span className="close" onClick={closeModalVerMaisRotina}>

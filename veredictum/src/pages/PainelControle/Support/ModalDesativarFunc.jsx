@@ -12,7 +12,7 @@ function ModalConfirmarDesativacao({
 
   const handleConfirmar = async () => {
     try {
-      // Garante que usamos o idUsuario, igual ao modal de edição
+
       const idParaDesativar = funcionarioData.idUsuario ?? funcionarioData.id;
       if (!idParaDesativar) {
         alert("ID do funcionário inválido!");
@@ -20,10 +20,10 @@ function ModalConfirmarDesativacao({
       }
 
       await desativarFuncionario(idParaDesativar);
-      alert("Funcionário desativado com sucesso!");
+      alert("✅ Funcionário desativado com sucesso!");
       closeModalConfirmar();
       atualizarLista?.();
-      window.location.reload(); // reload para atualizar a página
+      window.location.reload();
     } catch (error) {
       console.error("Erro ao desativar funcionário:", error);
       alert("Falha ao desativar funcionário. Tente novamente.");

@@ -7,7 +7,7 @@ export default function ModalInfoDespesa({ show, onClose, infoItem }) {
 
     return (
         <div className="modal-backdrop">
-            <div id="infoExpenseModal" className="modal-content-despesas">
+            <div id="infoExpenseModal_Davidson" className="modal-content-despesas">
 
                 {/* Botão de fechar */}
                 <button className="close" onClick={onClose}>

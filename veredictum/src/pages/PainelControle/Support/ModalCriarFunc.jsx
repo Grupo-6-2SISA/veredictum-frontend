@@ -72,7 +72,7 @@ function ModalCriarFuncionario({ isModalOpen, closeModalCriar, atualizarLista, F
     if (!isModalOpen) return null;
 
     return (
-        <div id="modalCriar" className="modal" style={{ display: "flex" }}>
+        <div id="modalCriar" className="modal_Painel_Controle" style={{ display: "flex" }}>
             <div className="modal-content_Painel">
                 <div id="div_para_titulo">
                     <span className="close" onClick={closeModalCriar}>

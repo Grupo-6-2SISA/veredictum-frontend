@@ -107,7 +107,7 @@ function ModalEditarFuncionario({
     if (!isModalOpen || !funcionarioData) return null;
 
     return (
-        <div id="modalEditar" className="modal" style={{ display: "flex" }}>
+        <div id="modalEditar" className="modal_Painel_Controle" style={{ display: "flex" }}>
             <div className="modal-content_Painel">
                 <div id="div_para_titulo">
                     <span className="close" onClick={closeModalEditar}>

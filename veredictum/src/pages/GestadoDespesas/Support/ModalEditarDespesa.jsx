@@ -30,10 +30,11 @@ export default function ModalEditarDespesa({ show, onClose, editingItem, atualiz
             return;
         }
 
-        if (urlNuvem && !(/\.(pdf|com)$/i).test(urlNuvem)) {
-            alert("❌ URL deve terminar com .pdf ou .com");
+        if (urlNuvem && !(/\.(pdf|com|br)$/i).test(urlNuvem)) {
+            alert("❌ URL deve terminar com .pdf, .com ou .br");
             return;
         }
+
 
         if (isNaN(valor) || valor < 0) {
             alert("❌ Valor não pode ser negativo.");
@@ -72,11 +73,13 @@ export default function ModalEditarDespesa({ show, onClose, editingItem, atualiz
     };
 
     return (
-        <div id="editExpenseModal" className="modal">
-            <div className="modal-content-despesas" style={{ maxHeight: "580px" }}>
-                <div id="modal-header-top"  style={{ backgroundColor: '#424242', borderBottom: 'none' }} className="modal-header">
-                    <h2>Editar Despesa</h2>
-                    <button className="modal-close-btn_Despesas_edit"  style={{transform: "translateY(-7%)"}} onClick={onClose}>
+        <div id="editExpenseModal_Davidson" className="modal_Adicionar_Despesas">
+            <div className="modal-content-despesas" style={{ maxHeight: "600px" }}>
+
+                <div id="modal-header-top" style={{ backgroundColor: '#424242', borderBottom: 'none' }} className="modal-header">
+                    <h2  style={{fontSize: "47px", transform: "translateY(16%)"}}>Editar Despesa</h2>
+
+                    <button className="modal-close-btn_Despesas_edit" style={{ transform: "translate(100%, 20%)" }} onClick={onClose}>
                         <img src={FecharIcon} alt="Fechar" />
                     </button>
                 </div>
@@ -128,9 +131,9 @@ export default function ModalEditarDespesa({ show, onClose, editingItem, atualiz
 
                     <div className="form-row_Davidson">
                         <div className="form-group">
-                            <label 
-                            style={{ transform: "translateX(-1%)" }} 
-                            htmlFor="edit-valor">Valor</label>
+                            <label
+                                style={{ transform: "translateX(-1%)" }}
+                                htmlFor="edit-valor">Valor</label>
                             <input
                                 style={{ transform: "translateX(-3%)", width: "47%" }}
                                 type="number"
@@ -160,7 +163,7 @@ export default function ModalEditarDespesa({ show, onClose, editingItem, atualiz
                         </div>
                     </div>
 
-                    <div  style={{transform: "translateY(-10%)"}} id="div_para_botao">
+                    <div style={{ transform: "translateY(-10%)" }} id="div_para_botao">
                         <button type="submit" className="modal-add-btn_save">
                             Salvar
                         </button>

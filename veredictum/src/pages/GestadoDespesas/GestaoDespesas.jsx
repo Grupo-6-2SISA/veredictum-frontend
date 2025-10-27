@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import { Chart } from "chart.js/auto";
-import { listarDespesas, getTotalPorMesEAno, valorPorAno } from "../GestadoDespesas/GestaoDespesas"; 
+import { listarDespesas, getTotalPorMesEAno, valorPorAno } from "../GestadoDespesas/GestaoDespesas";
 
 import BtnIcon from "../../assets/svg/btn.svg";
 import CalendarIcon from "../../assets/svg/calendar.svg";
@@ -16,10 +16,18 @@ import "./GestaoDespesas.css";
 
 export default function GestaoDespesas() {
 
+  const now = new Date();
+  const months = [
+    "Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho",
+    "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro",
+  ];
+
+
   const [expenses, setExpenses] = useState([]);
+
   const [showMonthPicker, setShowMonthPicker] = useState(false);
-  const [selectedMonth, setSelectedMonth] = useState("Junho");
-  const [selectedYear, setSelectedYear] = useState(2025);
+  const [selectedMonth, setSelectedMonth] = useState(months[now.getMonth()]);
+  const [selectedYear, setSelectedYear] = useState(now.getFullYear());
   const [monthTotal, setMonthTotal] = useState("0,00");
   const [yearData, setYearData] = useState([]);
 
@@ -33,11 +41,6 @@ export default function GestaoDespesas() {
   const chartRef = useRef(null);
   const chartInstance = useRef(null);
 
-  const months = [
-    "Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho",
-    "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro",
-  ];
-
   // === LISTAR DESPESAS ===
   useEffect(() => {
     async function fetchDespesas() {
@@ -46,18 +49,27 @@ export default function GestaoDespesas() {
         const despesasOrdenadas = response.data.sort((a, b) => {
           const dataA = new Date(a.dataVencimento);
           const dataB = new Date(b.dataVencimento);
-          if (a.isPago !== b.isPago) {
-            return a.isPago ? 1 : -1;
-          }
+          if (a.isPago !== b.isPago) return a.isPago ? 1 : -1;
           return dataA - dataB;
         });
-        setExpenses(despesasOrdenadas);
+
+        const mesNumerico = months.indexOf(selectedMonth) + 1;
+
+        const despesasFiltradas = despesasOrdenadas.filter((item) => {
+          const data = new Date(item.dataVencimento);
+          return (
+            data.getMonth() + 1 === mesNumerico &&
+            data.getFullYear() === selectedYear
+          );
+        });
+
+        setExpenses(despesasFiltradas);
       } catch (error) {
         console.error("Erro ao buscar despesas:", error);
       }
     }
     fetchDespesas();
-  }, []);
+  }, [selectedMonth, selectedYear]);
 
   // === TOTAL DO MÊS ===
   useEffect(() => {
@@ -194,7 +206,10 @@ export default function GestaoDespesas() {
         {/* SELETOR DE MÊS E ANO */}
         <div className="month-selector">
           <div className="month-selector-container">
-            <button className="month-selector-btn" onClick={() => setShowMonthPicker(!showMonthPicker)}>
+            <button
+              className="month-selector-btn"
+              onClick={() => setShowMonthPicker(!showMonthPicker)}
+            >
               <img src={CalendarIcon} alt="Calendário" />
               <span>{selectedMonth} / {selectedYear}</span>
               <img src={SetaIcon} alt="Seta" />

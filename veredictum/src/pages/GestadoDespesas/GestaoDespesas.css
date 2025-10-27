@@ -107,7 +107,7 @@
 
 /* ====== CABEÇALHO FIXO ====== */
 .bills-table thead {
-    position: sticky;
+    /* position: sticky; */
     top: 0;
     z-index: 2;
     background-color: var(--white-normal);
@@ -304,12 +304,9 @@ button.info-link {
 
 /* Modal styles */
 
-
-
-
-.modal {
+.modal_Adicionar_Despesas {
     position: fixed;
-    background: rgba(0, 0, 0, 0.4);
+    background: rgba(0, 0, 0, 0.5);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -459,7 +456,7 @@ button.info-link {
 
 
 /* Modal Editar Despesa */
-#editExpenseModal.modal {
+#editExpenseModal_Davidson.modal {
     position: fixed;
     z-index: 500;
     left: 0;
@@ -471,7 +468,7 @@ button.info-link {
     justify-content: center;
 }
 
-#editExpenseModal .modal-content-despesas {
+#editExpenseModal_Davidson .modal-content-despesas {
     background: #414141;
     margin-top: -2%;
     margin-right: 17%;
@@ -501,14 +498,14 @@ button.info-link {
     transform: translateY(-21%);
 }
 
-#editExpenseModal h2 {
+#editExpenseModal_Davidson h2 {
 
     font-weight: bold;
     margin-left: 25%;
     margin-bottom: 5%;
 }
 
-#editExpenseModal .close {
+#editExpenseModal_Davidson .close {
     position: absolute;
     top: 16px;
     right: 20px;
@@ -516,20 +513,20 @@ button.info-link {
     cursor: pointer;
 }
 
-#editExpenseModal .form-row_Davidson {
+#editExpenseModal_Davidson .form-row_Davidson {
     display: flex;
     gap: 24px;
     margin-bottom: 16px;
 }
 
-#editExpenseModal .form-group {
+#editExpenseModal_Davidson .form-group {
     color: black;
     display: flex;
     flex-direction: column;
     flex: 1;
 }
 
-#editExpenseModal .modal-add-btn {
+#editExpenseModal_Davidson .modal-add-btn {
     margin-top: 12px;
     width: 100%;
     padding: 10px 0;
@@ -542,7 +539,7 @@ button.info-link {
     transition: background 0.2s;
 }
 
-#editExpenseModal .modal-add-btn:hover {
+#editExpenseModal_Davidson .modal-add-btn:hover {
     background: #444;
 }
 
@@ -552,20 +549,20 @@ button.info-link {
 /* Modal Informação sobre a Despesa */
 
 
-#infoExpenseModal.modal {
+#infoExpenseModal_Davidson.modal {
     position: fixed;
     z-index: 500;
     left: 0;
     top: 0;
     width: 100vw;
     height: 100vh;
-    background: rgba(0, 0, 0, 0.4);
+    background: rgba(0, 0, 0, 0.6);
     display: flex;
     align-items: center;
     justify-content: center;
 }
 
-#infoExpenseModal .modal-content-despesas {
+#infoExpenseModal_Davidson .modal-content-despesas {
     background: #414141;
     margin-top: -4%;
     margin-right: 17%;
@@ -578,14 +575,14 @@ button.info-link {
     height: 300px;
 }
 
-#infoExpenseModal h2 {
+#infoExpenseModal_Davidson h2 {
     font-weight: 700;
     font-size: 45px;
     margin-left: 3%;
     margin-bottom: 5%;
 }
 
-#infoExpenseModal .close {
+#infoExpenseModal_Davidson .close {
     background-color: #424242;
     border: none;
     position: absolute;
@@ -596,13 +593,13 @@ button.info-link {
     transform: translateY(90%);
 }
 
-#infoExpenseModal .form-row_Davidson {
+#infoExpenseModal_Davidson .form-row_Davidson {
     display: flex;
     gap: 24px;
     margin-bottom: 16px;
 }
 
-#infoExpenseModal .form-group {
+#infoExpenseModal_Davidson .form-group {
     color: black;
     display: flex;
     flex-direction: column;
