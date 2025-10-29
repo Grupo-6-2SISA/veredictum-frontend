@@ -178,7 +178,7 @@ function ModalEditarFuncionario({
                 </div>
 
                 <div id="div_para_botao">
-                    <button className="modal-add-btn" onClick={handleSalvar}>
+                    <button className="modal-add-btn_Funcionario_Cadastrado" onClick={handleSalvar}>
                         Salvar
                     </button>
                 </div>
