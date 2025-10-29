@@ -5,7 +5,7 @@
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
     padding: 20px;
     position: absolute; /* Posição absoluta para sobrepor a página */
-    z-index: 5;
+    z-index: 100;
     width: 300px;
     /* REMOVIDO: top, left e transform para posicionamento mais flexível */
     transition: all 0.3s ease-in-out;

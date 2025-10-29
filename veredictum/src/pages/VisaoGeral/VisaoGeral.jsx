@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-// import Sidebar from '../../components/Sidebar/Sidebar';
+import Sidebar from '../../components/Sidebar/Sidebar';
 import Card from '../../components/Card/Card';
 import Listagem from '../../components/Listagem/Listagem';
 import './VisaoGeral.css';
@@ -310,7 +310,7 @@ const VisaoGeral = () => {
 
     return (
         <div className="container">
-            {/* <Sidebar nomeCompleto="Lismara Ribeiro" /> */}
+            <Sidebar />
             <main className="main-content">
                 <h1>Visão Geral</h1>
                 {content}

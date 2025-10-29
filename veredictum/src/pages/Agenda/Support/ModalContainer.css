@@ -1,6 +1,6 @@
 /* Theme variables */
 :root {
-  --modal-bg: #3b3b3b;
+  --modal-bg: #2c2c2c;
   --modal-text: #ffffff;
   --input-bg: #ffffff;
   --input-color: #222222;
@@ -18,18 +18,18 @@
 
 /* Aplicação da nova fonte em toda a aplicação/componente */
 body,
-.modal_P-agenda,
-.modal-header_P-agenda,
-.modal-body_P-agenda {
+.modal_L-agenda,
+.modal-header_L-agenda,
+.modal-body_L-agenda {
   font-family: var(--font-family);
 }
 
 /* Backdrop variants (mantido, pois é um elemento de nível superior) */
-.modal-backdrop_P-default,
-.modal-backdrop_P-add,
-.modal-backdrop_P-edit,
-.modal-backdrop_P-delete,
-.modal-backdrop_P-view {
+.modal-backdrop_L-default,
+.modal-backdrop_L-add,
+.modal-backdrop_L-edit,
+.modal-backdrop_L-delete,
+.modal-backdrop_L-view {
   position: fixed;
   inset: 0;
   background: var(--backdrop);
@@ -37,10 +37,10 @@ body,
 }
 
 /* 2. Generic modal container - Adicionado -agenda */
-.modal_P-agenda, /* Nova classe principal */
+.modal_L-agenda, /* Nova classe principal */
 .modal,
 /* Seletores existentes mantidos para compatibilidade */
-.modal_P, 
+.modal_L, 
 #ModalAdicionarDespesa,
 #ModalEditarAtendimento,
 #ModalAdicionarAtendimento,
@@ -59,7 +59,7 @@ body,
   z-index: 1001;
   outline: none;
   font-family: var(--font-family); /* Aplica a nova fonte */
-  max-height: 80vh;
+  max-height: 88vh;
   /* Limite global de altura */
   overflow: hidden;
   /* Evita scroll no container */
@@ -69,9 +69,9 @@ body,
 }
 
 /* 2. Modal body layout - Adicionado -agenda */
-.modal-body_P-agenda, /* Nova classe principal */
+.modal-body_L-agenda, /* Nova classe principal */
 .modal-body,
-.modal-body_P,
+.modal-body_L,
 .modal-content-agenda,
 .modal_add_agenda {
   padding: 22px 28px 30px;
@@ -82,8 +82,7 @@ body,
 
   /* Conteúdo interno rola, mas sem barra visível */
   max-height: unset;
-  /* controlado pelo container */
-  overflow: auto;
+
   /* rolagem do conteúdo */
   -webkit-overflow-scrolling: touch;
   /* rolagem suave */
@@ -98,9 +97,9 @@ body,
 }
 
 /* 2. Header - Adicionado -agenda */
-.modal-header_P-agenda, /* Nova classe principal */
+.modal-header_L-agenda, /* Nova classe principal */
 .modal-header,
-.modal-header_P,
+.modal-header_L,
 #modal-header-top {
   position: relative;
   padding: 18px 28px 8px;
@@ -109,9 +108,9 @@ body,
   justify-content: center;
 }
 
-.modal-header_P-agenda h2, /* Nova classe principal */
+.modal-header_L-agenda h2, /* Nova classe principal */
 .modal-header h2,
-.modal-header_P h2,
+.modal-header_L h2,
 #modal-header-top h2 {
   margin: 0;
   font-size: 28px;
@@ -122,10 +121,10 @@ body,
 }
 
 /* 2. Close button - Adicionado -agenda */
-.modal-close-btn_P-agenda,
-.modal-close-btn_P,
+.modal-close-btn_L-agenda,
+.modal-close-btn_L,
 .modal-close-btn,
-.modal-close-delete-btn_P {
+.modal-close-delete-btn_L {
   position: absolute;
   right: 18px;
   top: 12px;
@@ -147,7 +146,7 @@ body,
 }
 
 /* Removido (ou ajustado) scrollbar dos seletores antigos */
-.modal-body_P-agenda::-webkit-scrollbar,
+.modal-body_L-agenda::-webkit-scrollbar,
 .modal-body::-webkit-scrollbar,
 .modal-content-agenda::-webkit-scrollbar,
 .modal_add_agenda::-webkit-scrollbar {
@@ -155,14 +154,14 @@ body,
   height: 0;
 }
 
-.modal-close-btn_P-agenda:hover,
+.modal-close-btn_L-agenda:hover,
 .modal-close-btn:hover {
   background-color: rgba(255, 255, 255, 0.1);
   border-color: rgba(255, 255, 255, 0.2);
 }
 
 /* Exibir o ícone SVG corretamente */
-.modal-close-btn_P-agenda img,
+.modal-close-btn_L-agenda img,
 .modal-close-btn img {
   display: block; /* Mudado de 'none' para 'block' */
   width: 60px;
@@ -171,15 +170,15 @@ body,
 }
 
 /* Form & inputs (mantidos, pois não são considerados "classes genéricas" para o modal) */
-.appointment-form_P,
+.appointment-form_L,
 .appointment-form,
 form {
   width: 100%;
   display: block;
 }
 
-/* Ajuste para que o formulário use a estrutura de grid do .modal-body_P (display: contents) */
-.appointment-form_P {
+/* Ajuste para que o formulário use a estrutura de grid do .modal-body_L (display: contents) */
+.appointment-form_L {
     display: contents; 
 }
 
@@ -314,7 +313,7 @@ button[type="submit"]:hover {
 /* Small screens: single column layout */
 @media (max-width: 820px) {
 
-  .modal_P-agenda, /* Ajustado */
+  .modal_L-agenda, /* Ajustado */
   .modal,
   .modal_add_agenda,
   .modal-content-agenda {
@@ -323,11 +322,11 @@ button[type="submit"]:hover {
     padding: 16px;
   }
 
-  .modal-header_P-agenda h2 { /* Ajustado */
+  .modal-header_L-agenda h2 { /* Ajustado */
     font-size: 22px;
   }
 
-  .modal-body_P-agenda, /* Ajustado */
+  .modal-body_L-agenda, /* Ajustado */
   .modal-body,
   .modal-content-agenda {
     grid-template-columns: 1fr;
@@ -340,7 +339,7 @@ button[type="submit"]:hover {
   }
 
   .modal-close-btn,
-  .modal-close-btn_P-agenda { /* Ajustado */
+  .modal-close-btn_L-agenda { /* Ajustado */
     right: 12px;
     top: 10px;
   }

@@ -192,7 +192,7 @@ export default function ModalEditarAtendimento({ show, onClose, atualizarLista, 
       ) : (
         <form
           id="appointmentEditForm"
-          className="appointment-form-agenda"
+          className="appointment-form_L"
           onSubmit={handleSubmit}
           style={{ display: 'contents' }}
           autoComplete="off"

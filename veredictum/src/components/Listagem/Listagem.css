@@ -34,7 +34,7 @@
     margin-left: 15px;
 
     /* Adicione uma linha sutil abaixo do cabeçalho, se quiser */
-    border-bottom: 1px solid #e0e0e0;
+    /* border-bottom: 1px solid #e0e0e0; */
 }
 
 /* O restante dos estilos de listagem permanecem os mesmos */

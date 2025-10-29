@@ -129,7 +129,7 @@ export default function ModalAdicionarAtendimento({ show, onClose, atualizarList
     >
       <form
         id="appointmentForm"
-        className="appointment-form-agenda"
+        className="appointment-form_L"
         onSubmit={handleSubmit}
         style={{ display: 'contents' }}
         autoComplete="off"

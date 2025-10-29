@@ -2,6 +2,7 @@ import React, { useState, useMemo, useEffect, useCallback } from 'react';
 import Listagem from '../../components/Listagem/Listagem';
 import ButtonAgenda from '../../components/ButtonAgenda/ButtonAgenda';
 import MonthPickerButton from '../../components/MonthPicker/MonthPickerButton';
+import Sidebar from '../../components/Sidebar/Sidebar';
 import './Agenda.css';
 import '../../index.css';
 import EditIcon from '../../assets/svg/lapiz.svg';
@@ -421,6 +422,7 @@ export default function Agenda() {
 
     return (
         <div className="agenda-container">
+            <Sidebar />
             <main className="main-content agenda-page">
                 <header className="agenda-header">
                     <h1>Agenda & Relacionamento</h1>
