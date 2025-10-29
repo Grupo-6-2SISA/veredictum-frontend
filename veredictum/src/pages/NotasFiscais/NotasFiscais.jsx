@@ -523,7 +523,7 @@ const NotasFiscais = () => {
                   <div className="info-display">{viewingNota.numero}</div>
                 </FormField>
                 <FormField label="Cliente">
-                  <div className="info-display">{getClienteNome(viewingNota.fk_cliente)}</div>
+                  <div className="info-display">{getClienteNome(viewingNota.fkCliente)}</div>
                 </FormField>
               </div>
 
