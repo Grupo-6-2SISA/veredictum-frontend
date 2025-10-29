@@ -54,34 +54,42 @@ const Listagem = ({ dados = [], colunas = [], classNamePrefix = 'listagem', id, 
                             const key = col.key;
                             const value = item[key];
 
-                            // === NOVO AJUSTE: Trate o checkbox como um elemento React, assim como editar/excluir ===
-                            if (key === 'checkbox' || key === 'editar' || key === 'excluir') {
+                            // Se o valor já for um elemento React, renderize-o direto (permite botões customizados, inputs, etc.)
+                            if (React.isValidElement(value)) {
                                 return (
-                                    <div className={`${prefix}-data`} key={key}>
-                                        {value} {/* Renderiza o elemento React passado (o input reativo ou o botão) */}
+                                    <div className={`${prefix}-data`} key={`${key}-${idx}`}>
+                                        {value}
                                     </div>
                                 );
                             }
-                            // === FIM DO NOVO AJUSTE ===
 
-                            if (key === 'editar' || key === 'excluir' || (isLastColumn(colIndex) && col.titulo === 'Ações')) {
-                                if (key === 'editar' || key === 'excluir' || col.titulo === 'Ações') {
-                                    return (
-                                        <div className={`${prefix}-data`} key={key}>
-                                            <button 
-                                                className={`${prefix}-btn ${prefix}-btn-vermais`} 
-                                                aria-label={`Ver mais detalhes sobre ${item.Tipo || 'este item'}`}
-                                                onClick={() => handleActionClick('verMais', item)}
-                                            >
-                                                Ver Mais
-                                            </button>
-                                        </div>
-                                    );
-                                }
+                            // Checkbox / botões de ação também podem ser passados como elementos — tratamos input checkbox simples aqui
+                            if (key === 'checkbox') {
+                                return (
+                                    <div className={`${prefix}-data`} key={`${key}-${idx}`}>
+                                        {value}
+                                    </div>
+                                );
                             }
 
+                            // Se for a coluna de ações e não houver um elemento passado, renderizamos um botão "Ver Mais" padrão
+                            if ((isLastColumn(colIndex) && col.titulo === 'Ações') && (value === undefined || value === null || value === '')) {
+                                return (
+                                    <div className={`${prefix}-data`} key={`${key}-${idx}`}>
+                                        <button 
+                                            className={`${prefix}-btn ${prefix}-btn-vermais`} 
+                                            aria-label={`Ver mais detalhes sobre ${item.Tipo || 'este item'}`}
+                                            onClick={() => handleActionClick('verMais', item)}
+                                        >
+                                            Ver Mais
+                                        </button>
+                                    </div>
+                                );
+                            }
+
+                            // Renderiza valor padrão (texto, número, componentes não-React serão convertidos para string)
                             return (
-                                <div className={`${prefix}-data`} key={key}>
+                                <div className={`${prefix}-data`} key={`${key}-${idx}`}>
                                     {value}
                                 </div>
                             );
