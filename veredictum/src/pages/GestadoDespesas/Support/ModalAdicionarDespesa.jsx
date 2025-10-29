@@ -83,9 +83,10 @@ export default function ModalAdicionarDespesa({ show, onClose, atualizarLista })
     return (
         <div id="ModalAdicionarDespesa_Davidson" className="modal_Adicionar_Despesas">
             <div className="modal_add_despesas">
-                <div className="modal-header" style={{ backgroundColor: '#424242', borderBottom: 'none' }}>
-                    <h2 style={{ fontSize: "45px", paddingLeft: "16px" }}>Adicionar Despesa</h2>
-                    <button style={{ transform: "translateX(200%)" }} className="modal-close-btn_Despesas" onClick={onClose}>
+                <div className="modal-header" style={{ backgroundColor: '#424242', borderBottom: 'none', paddingBottom: "40px" }}>
+
+                    <h2 style={{ fontSize: "45px", paddingLeft: "60px" }}>Adicionar Despesa</h2>
+                    <button style={{ transform: "translateX(350%)" }} className="modal-close-btn_Despesas" onClick={onClose}>
                         <img src={FecharIcon} alt="Fechar" />
                     </button>
                 </div>

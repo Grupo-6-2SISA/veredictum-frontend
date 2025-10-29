@@ -39,7 +39,7 @@ function ModalConfirmarDesativacao({
             <img src={CloseBlackIcon} alt="Fechar" />
           </button>
         </div>
-        <div className="modal-body">
+        <div className="modal-body_Func">
           <p>
             Deseja desativar{" "}
             <span className="client-name" style={{ fontWeight: "bold" }}>

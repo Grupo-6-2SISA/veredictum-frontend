@@ -268,7 +268,7 @@ form {
 
 /* Buttons - Adicionado sufixo _agenda */
 .btn-confirm-delete_agenda,
-.btn-new-appointment_agenda,
+
 .modal-add-btn_agenda,
 .modal-add-btn_save_agenda,
 .btn-confirm-delete,
@@ -293,8 +293,29 @@ button[type="submit"] {
   font-family: var(--font-family); /* Garante a fonte no botão */
 }
 
+.btn-new_agenda{
+    background-color: var(--dark-black);
+  /* Cor escura do botão na imagem */
+  color: var(--white-normal);
+  border: 2px solid var(--dark-black);
+  border-radius: 8px;
+  padding: 10px 20px;
+  font-size: 16px;
+  position: relative;
+  bottom: 5px;
+  right: 380px;
+  font-weight: 600;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center; /* Centraliza o texto no botão */
+  gap: 8px;
+  transition: background-color 0.2s;
+  font-family: var(--font-family);
+}
+
 .btn-confirm-delete_agenda:hover,
-.btn-new-appointment_agenda:hover,
+.btn-new_agenda:hover,
 .modal-add-btn_agenda:hover,
 .modal-add-btn_save_agenda:hover,
 .btn-confirm-delete:hover,

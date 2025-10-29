@@ -272,7 +272,7 @@ export default function GestaoDespesas() {
                     <th>Etiqueta</th>
                     <th>Data de Vencimento</th>
                     <th>Pago</th>
-                    <th>Editor</th>
+                    <th>Editar</th>
                     <th>Informações</th>
                   </tr>
                 </thead>

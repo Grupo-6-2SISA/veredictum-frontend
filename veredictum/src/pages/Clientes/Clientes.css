@@ -26,7 +26,7 @@
    justify-content: space-between;
     align-items: center;
     padding: 20px;
-    background-color: var(--white-light);
+    /* background-color: var(--white-light); */
 }
 
 .clientes-head-description {
@@ -43,9 +43,7 @@
     font-size: 18px;
     font-weight: 400;
     color: var(--dark-black);
-    margin-left: 50px;
 }
-
 
 .clientes-btn-new-appointment {
     display: flex;

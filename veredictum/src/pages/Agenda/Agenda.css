@@ -1,18 +1,14 @@
-/*
-=========================================
-ESTILOS ESPECÍFICOS DA PÁGINA AGENDA
-=========================================
-*/
+/* Agenda - estilos específicos */
 
 .agenda-container {
     display: flex;
     min-height: 100vh;
     background-color: #f0f0f0;
-    transition: padding-left 0.2s ease-out; /* Transição suave */
+    transition: padding-left 0.2s ease-out;
     width: 100vw;
 }
 
-/* --- Cabeçalho e Botão --- */
+/* Cabeçalho e botão */
 .agenda-header {
     display: flex;
     flex-direction: row;
@@ -24,9 +20,7 @@ ESTILOS ESPECÍFICOS DA PÁGINA AGENDA
 }
 
 .agenda-header h1 {
-    /* Garante que o H1 da Agenda use o mesmo estilo grande da Visão Geral */
     margin: 0 0 0 20px;
-
 }
 
 .month-button {
@@ -46,7 +40,6 @@ ESTILOS ESPECÍFICOS DA PÁGINA AGENDA
     transition: transform .08s ease, box-shadow .12s ease, background .12s ease;
 }
 
-/* Calendário SVG à esquerda via pseudo-elemento */
 .month-button::before {
     content: "";
     display: inline-block;
@@ -59,41 +52,32 @@ ESTILOS ESPECÍFICOS DA PÁGINA AGENDA
     margin-left: 2px;
 }
 
-
-
-/* --- Layout da Página (Atendimento + Painel Lateral) --- */
+/* Layout principal */
 .agenda-layout-grid {
     display: grid;
-    /* Define o layout principal: Área de atendimento (maior) e Painel (menor) */
-    flex-direction: column;
     gap: 20px;
-
-    height: calc(100vh - 120px); /* Ocupa a altura restante da viewport */
+    height: calc(100vh - 120px);
 }
 
 .atendimento-container {
     display: flex;
     flex-direction: row;
-    /* Estilos para o Card de Atendimento do Mês (se não estiver usando um Card.jsx) */
     background-color: #f0f0f000;
     padding: 20px;
     justify-content: space-between;
     gap: 35px;
-    /* Remova a altura fixa ou alta: height: 75vh; */
-    /* Remova o overflow, ele deve estar no container da lista: overflow-y: hidden; */
     width: 90vw;
     border-radius: 10px;
-    margin-left: 1em ;
+    margin-left: 1em;
 }
 
-/* MANTENHA O ESSENCIAL */
 .agenda-card-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 0; /* Remove a margem inferior para a lista começar logo abaixo */
-    flex-shrink: 0; /* Impede que o cabeçalho seja "espremido" */
-    padding-bottom: 10px; /* Adiciona espaçamento após o título */
+    margin-bottom: 0;
+    flex-shrink: 0;
+    padding-bottom: 10px;
 }
 
 /* Card principal do atendimento */
@@ -105,12 +89,10 @@ ESTILOS ESPECÍFICOS DA PÁGINA AGENDA
     box-shadow: 0 4px 12px rgba(0,0,0,0.08);
     padding: 24px;
     display: flex;
-    flex-direction: column; /* Essencial: Organiza o conteúdo em coluna */
-    overflow: hidden; /* Garante que nada saia do card */
-    
-    /* Defina uma altura para o card, se quiser que ele ocupe uma porção da tela */
-    height: 100%; /* Permite que ele cresça dentro do pai */
-    min-height: 500px; /* Altura mínima para não sumir */
+    flex-direction: column;
+    overflow: hidden;
+    height: 100%;
+    min-height: 500px;
 }
 
 .agenda-card-action-btn {
@@ -136,7 +118,6 @@ ESTILOS ESPECÍFICOS DA PÁGINA AGENDA
     border: 0;
 }
 
-/* garante que a imagem não tenha borda e mantenha o tamanho desejado */
 .agenda-card-action-icon,
 .agenda-card-action-btn img {
     width: 32px;
@@ -154,28 +135,22 @@ ESTILOS ESPECÍFICOS DA PÁGINA AGENDA
     background: var(--white-normal);
     border-radius: 16px;
     box-shadow: 0 4px 12px rgba(0,0,0,0.08);
-    padding: 24px ;
+    padding: 24px;
     display: flex;
     flex-direction: column;
     overflow: hidden;
     margin-top: -50px;
 }
 
-
-/* AJUSTE CRUCIAL AQUI */
+/* Lista de atendimentos */
 .agenda-listagem-container {
     width: 100%;
-    flex-grow: 1; /* Essencial: Ocupa todo o espaço vertical restante */
-    
-    /* Remova max-height: 60vh; */
-    /* Remova margin-top: 10px; e margin-left: -18px; (para centralizar e deixar o flexbox gerenciar) */
-    
-    overflow-y: auto; /* Ativa o scroll vertical */
-    padding-right: 10px; /* Mantém o espaçamento para a barra de scroll customizada */
-    margin-top: 10px; /* Adicione o espaçamento superior aqui, se necessário */
+    flex-grow: 1;
+    overflow-y: auto;
+    padding-right: 10px;
+    margin-top: 10px;
 }
 
-/* Cabeçalho da tabela */
 .agenda-listagem-header {
     display: grid;
     grid-template-columns: 0.2fr 2fr 1fr 1fr 1fr 0.5fr 0.5fr;
@@ -185,7 +160,6 @@ ESTILOS ESPECÍFICOS DA PÁGINA AGENDA
     margin-bottom: 12px;
 }
 
-/* Linha da tabela */
 .agenda-listagem-row {
     display: grid;
     grid-template-columns: 0.2fr 2fr 1fr 1fr 1fr 0.5fr 0.5fr;
@@ -198,7 +172,6 @@ ESTILOS ESPECÍFICOS DA PÁGINA AGENDA
     padding: 8px 0;
 }
 
-/* Ícones de editar/excluir centralizados */
 .agenda-listagem-data {
     display: flex;
     align-items: center;
@@ -206,12 +179,10 @@ ESTILOS ESPECÍFICOS DA PÁGINA AGENDA
     font-size: 22px;
 }
 
-/* Checkbox alinhado */
 .agenda-listagem-data input[type="checkbox"] {
     margin: 0 auto;
 }
 
-/* Título do card */
 .agenda-card-container h2 {
     font-size: 1.5rem;
     font-weight: 700;
@@ -228,46 +199,37 @@ ESTILOS ESPECÍFICOS DA PÁGINA AGENDA
     margin-bottom: 15px;
 }
 
-
-
 .aniversariantes-panel {
-    /* Estilos para garantir que o painel lateral se comporte como um bloco */
     display: block;
 }
 
-/* --- Estilo de Listagem Específico da Agenda (Para a Listagem Principal) --- */
-
-/* Sobrescreve a definição de colunas para a lista principal de atendimentos */
+/* Listagem principal */
 #atendimento-list .list-header {
-    /* Colunas: Checkbox, Nome, Dia, Horário, Status, Editar, Excluir */
     grid-template-columns: 0.2fr 2fr 1fr 1fr 1fr 0.5fr 0.5fr;
     gap: 15px;
 }
 
 #atendimento-list .list-item {
-     /* Colunas: Checkbox, Nome, Dia, Horário, Status, Editar, Excluir */
     grid-template-columns: 0.2fr 2fr 1fr 1fr 1fr 0.5fr 0.5fr;
     gap: 15px;
 }
 
-/* Garante que o Card de Aniversariantes do Mês na Agenda use 2 colunas */
+/* Card de aniversariantes */
 #agenda-birthdays-card .list-header,
 #agenda-birthdays-card .list-item {
-     /* Colunas: Nome (2fr) e Dia (1fr) */
     grid-template-columns: 2fr 1fr;
     gap: 10px;
 }
 
-/* ALINHAMENTO ESPECÍFICO DOS BOTÕES (ÍCONES) */
+/* Alinhamento dos ícones de ação */
 .list-item p.list-item-editar,
 .list-item p.list-item-excluir {
     text-align: center;
 }
 
-/* Estilização customizada da barra de scroll usada na listagem de atendimento */
+/* Scrollbar customizada */
 .agenda-listagem-container,
 #atendimento-list .listagem-body {
-    /* garante que a área seja rolável */
     overflow-y: auto;
     -webkit-overflow-scrolling: touch;
 }
@@ -276,32 +238,29 @@ ESTILOS ESPECÍFICOS DA PÁGINA AGENDA
 .agenda-listagem-container,
 #atendimento-list .listagem-body {
     scrollbar-width: thin;
-    scrollbar-color: var(--darkness-black) transparent; /* thumb, track */
+    scrollbar-color: var(--darkness-black) transparent;
 }
 
-/* WebKit (Chrome, Edge, Safari) */
+/* WebKit */
 .agenda-listagem-container::-webkit-scrollbar,
 #atendimento-list .listagem-body::-webkit-scrollbar {
     width: 12px;
 }
 
-/* Track (fundo da barra) */
 .agenda-listagem-container::-webkit-scrollbar-track,
 #atendimento-list .listagem-body::-webkit-scrollbar-track {
     background: transparent;
-    margin: 8px 0; /* afasta o track das bordas superior/inferior */
+    margin: 8px 0;
 }
 
-/* Thumb (a "bolinha" que o usuário arrasta) */
 .agenda-listagem-container::-webkit-scrollbar-thumb,
 #atendimento-list .listagem-body::-webkit-scrollbar-thumb {
     background: var(--darkness-black) transparent;
     border-radius: 10px;
-    border: 3px solid rgba(0, 0, 0, 0.85); /* cria espaço branco entre thumb e track */
+    border: 3px solid rgba(0, 0, 0, 0.85);
     box-shadow: 0 2px 6px rgba(0,0,0,0.06) inset;
 }
 
-/* Thumb hover/focus para feedback visual */
 .agenda-listagem-container::-webkit-scrollbar-thumb:hover,
 #atendimento-list .listagem-body::-webkit-scrollbar-thumb:hover,
 .agenda-listagem-container::-webkit-scrollbar-thumb:active,
@@ -309,19 +268,17 @@ ESTILOS ESPECÍFICOS DA PÁGINA AGENDA
     background: rgba(0,0,0,0.18);
 }
 
-/* Remove botões/pequenos controles (se houver) */
 .agenda-listagem-container::-webkit-scrollbar-button,
 #atendimento-list .listagem-body::-webkit-scrollbar-button {
     display: none;
 }
 
-/* Scroll corner (quando houver canto) */
 .agenda-listagem-container::-webkit-scrollbar-corner,
 #atendimento-list .listagem-body::-webkit-scrollbar-corner {
     background: transparent;
 }
 
-/* Ajustes responsivos: barra um pouco mais fina em telas pequenas */
+/* Responsivo */
 @media (max-width: 900px) {
     .agenda-listagem-container::-webkit-scrollbar,
     #atendimento-list .listagem-body::-webkit-scrollbar {

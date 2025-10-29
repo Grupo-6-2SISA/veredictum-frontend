@@ -76,12 +76,13 @@ export default function ModalEditarDespesa({ show, onClose, editingItem, atualiz
         <div id="editExpenseModal_Davidson" className="modal_Adicionar_Despesas">
             <div className="modal-content-despesas" style={{ maxHeight: "600px" }}>
 
-                <div id="modal-header-top" style={{ backgroundColor: '#424242', borderBottom: 'none' }} className="modal-header">
+                <div id="modal-header-top" style={{ backgroundColor: '#414141', borderBottom: 'none' }} className="modal-header">
                     <h2  style={{fontSize: "47px", transform: "translateY(16%)"}}>Editar Despesa</h2>
 
-                    <button className="modal-close-btn_Despesas_edit" style={{ transform: "translate(100%, 20%)" }} onClick={onClose}>
+                    <button className="modal-close-btn_Despesas_edit" style={{ transform: "translate(300%, 20%)" }} onClick={onClose}>
                         <img src={FecharIcon} alt="Fechar" />
                     </button>
+                    
                 </div>
 
                 <form id="editExpenseForm" onSubmit={handleSubmit}>

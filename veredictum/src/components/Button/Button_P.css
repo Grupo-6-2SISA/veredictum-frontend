@@ -40,6 +40,11 @@
     transition: background-color 0.3s 
 ease;
 }
+
+.btn-new-appointment_P:hover{
+    background-color: blue;
+}
+
 .btn-new-appointment__desativar {
     background-color: var(--gray-9);
     color: #1E1E1E;

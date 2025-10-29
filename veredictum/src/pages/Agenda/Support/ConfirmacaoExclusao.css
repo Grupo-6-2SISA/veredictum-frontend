@@ -5,27 +5,26 @@
 /* 1. SOBRESCREVER ESTILO DO MODAL CONTAINER */
 .modal_L-delete {
     /* Fundo (como no iOS) */
-    background: var(--white-dark) !important;
-    color: var(--confirm-modal-text) !important;
-
+    background: var(--white-dark) ;
+    color: var(--confirm-modal-text) ;
     /* Ajuste do tamanho e visual (iOS é menor e arredondado) */
-    max-width: 40vw !important; /* Mais estreito que o anterior */
-    height: 32vh !important;
-    border-radius: 14px !important; /* Arredondamento do iOS */
+    max-width: 40vw ; /* Mais estreito que o anterior */
+    height: 32vh ;
+    border-radius: 14px ; /* Arredondamento do iOS */
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15); /* Sombra mais suave */
 
-    display: flex !important; /* Remove o display: flex da versão anterior */
-    flex-direction: column !important;
-    justify-content: space-between !important;
+    display: flex ; /* Remove o display: flex da versão anterior */
+    flex-direction: column ;
+    justify-content: space-between ;
     gap: 30px;
-    align-items: center !important;
-    grid-template-rows: unset !important;
+    align-items: flex-end ;
+    grid-template-rows: unset ;
     padding: 0; /* Remove padding do container */
 }
 
 /* Oculta o header padrão (título e botão X) que é indesejado neste modelo */
 .modal_L-delete .modal-header_L-agenda {
-    display: none !important;
+    display: flex;
     /* Apenas garante que o header não aparece, o novo X será posicionado ABSOLUTAMENTE */
 }
 
@@ -36,10 +35,10 @@
     /* Classe que será adicionada dentro do ModalContainer Body */
     font-size: 1.15rem; /* Um pouco maior */
     font-weight: 600; /* Semibold/Bold */
-    
     text-align: center;
     margin: 0 0 8px 0; /* Espaçamento com a mensagem */
     padding: 20px 20px 0; /* Top padding (espaço interno) */
+    font-family: "Montserrat", sans-serif;
 }
 
 /* Estilo para o botão X que fica no canto do modal (Posicionado ABSOLUTAMENTE) */
@@ -72,9 +71,11 @@
 /* 3. Ajuste do corpo do modal de exclusão */
 .modal-body_L-agenda-delete {
     /* Body exclusivo para exclusão (sem grid, padding simples) */
-    padding: 0 20px 20px !important; /* Ajusta o padding para o novo design */
-    display: block !important;
-    overflow: hidden !important;
+    padding: 0 20px 20px ; /* Ajusta o padding para o novo design */
+    display: flex ;
+    flex-direction: column ;
+    align-items: center ;
+    overflow: hidden ;
 }
 
 /* 4. Ajustes no Container do ConfirmacaoExclusao */
@@ -84,6 +85,13 @@
     gap: 15px; /* Reduz o gap */
     min-width: auto; /* Permite o tamanho definido pelo modal */
     width: 100%;
+    margin-top: 7%;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    align-items:  flex-end;
+    
+    
 }
 
 .confirmacao-message {
@@ -91,13 +99,14 @@
     font-size: 0.95rem; /* Um pouco menor */
     line-height: 1.4;
     color: var(--confirm-modal-text); /* Cor do texto principal */
-    text-align: center; /* Centraliza como na imagem */
+    margin-bottom: 3%;
+    font-family: "Montserrat", sans-serif;
 }
 
 /* 5. Estilo dos botões (Mais fiéis ao iOS) */
 .confirmacao-buttons {
     /* Alinha à direita, como na imagem */
-    justify-content: flex-end;
+    justify-content: flex-start;
     gap: 8px; /* Espaço menor entre os botões */
 }
 
@@ -112,6 +121,7 @@
 
 .btn-confirmacao-cancel {
     background: #e9e9e9; /* Fundo cinza suave */
+    border: 2px solid #c0c0c0;
     color: #2c2c2c;
     border: 1px solid transparent;
 }

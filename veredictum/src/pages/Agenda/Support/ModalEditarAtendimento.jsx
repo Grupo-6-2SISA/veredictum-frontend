@@ -343,7 +343,7 @@ export default function ModalEditarAtendimento({ show, onClose, atualizarLista, 
             justifyContent: 'flex-end',
             paddingBottom: '30px'
           }}>
-            <button type="submit" className="btn-new-appointment_agenda">Salvar Alterações</button>
+            <button type="submit" className="btn-new_agenda">Salvar Alterações</button>
           </div>
         </form>
       )}

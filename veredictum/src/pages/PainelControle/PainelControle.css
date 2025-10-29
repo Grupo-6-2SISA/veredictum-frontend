@@ -323,12 +323,12 @@
 
 
 
-.modal-add-btn {
+.modal-add-btn_Funcionario_Cadastrado {
     margin-top: 12px;
     width: 25%;
     height: 50px;
     padding: 10px 0;
-    background: #2c2c2c;
+    background: var(--normal-black);
     color: #fff;
     border: 1px solid black;
     border-radius: 6px;
@@ -360,8 +360,10 @@
 }
 
 
-.modal-add-btn:hover {
-    background: #444;
+.modal-add-btn_Funcionario_Cadastrado:hover {
+    background-color: #646169;
+    border: 2px solid black;
+
 }
 
 
@@ -632,4 +634,18 @@ table {
 
 .toggle-senha:hover svg {
     stroke: #555;
+}
+
+
+.modal-body_Func {
+    padding: 25px;
+    font-size: 1.2rem;
+    color: var(--darkness-black);
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px 28px;
+    align-items: start;
+    max-height: unset;
+    overscroll-behavior: contain;
+    scrollbar-width: none;
 }

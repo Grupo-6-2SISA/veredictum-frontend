@@ -302,7 +302,7 @@ const NotasFiscais = () => {
         <div className="nf-management-section">
           <div className="nf-table-card">
             <div className="card-header">
-              <h2>Lista de Notas Fiscais</h2>
+
             </div>
 
             <div className="card-content">
@@ -357,7 +357,7 @@ const NotasFiscais = () => {
                         <a
                           href="#"
                           onClick={(e) => { e.preventDefault(); handleViewInfo(nota); }}
-                          style={{ color: 'black', textDecoration: 'underline' }}
+                          style={{ color: 'black' }}
                         >
                           Ver mais
                         </a>

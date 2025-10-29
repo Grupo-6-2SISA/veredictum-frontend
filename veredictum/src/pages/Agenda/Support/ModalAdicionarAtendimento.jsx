@@ -245,7 +245,7 @@ export default function ModalAdicionarAtendimento({ show, onClose, atualizarList
           justifyContent: 'flex-end',
           paddingBottom: '30px'
         }}>
-          <button type="submit" className="btn-new-appointment_agenda">Adicionar</button>
+          <button type="submit" className="btn-new_agenda">Adicionar</button>
         </div>
 
       </form>

@@ -147,7 +147,7 @@ function ModalCriarFuncionario({ isModalOpen, closeModalCriar, atualizarLista, F
                 </div>
 
                 <div id="div_para_botao">
-                    <button className="modal-add-btn" onClick={handleCadastro}>
+                    <button className="modal-add-btn_Funcionario_Cadastrado" onClick={handleCadastro}>
                         Cadastrar
                     </button>
                 </div>

@@ -7,8 +7,9 @@
 .page-description-logs{
     color: #000;
     font-size: 17px;
-    font-weight: 500;
+    font-weight: 400;
     margin-top: 5px;
+    margin-left: 45px;
     margin-bottom: 3%;
 }
 
@@ -33,6 +34,7 @@
     border: 1PX solid black;
     display: flex;
     justify-content: space-around;
+    margin-left: 45px;
 }
 
 /* Cada grupo ocupa metade do painel, ajustável */
@@ -123,6 +125,7 @@
     box-shadow: 0 6px 20px rgba(0,0,0,0.06);
     padding: 20px;
     margin-top: 18px;
+    margin-left: 45px;
     margin-bottom: 18px;
     display: flex;
     flex-direction: column;
