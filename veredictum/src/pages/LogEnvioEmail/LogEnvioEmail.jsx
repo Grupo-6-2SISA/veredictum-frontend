@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import Sidebar from "../../components/Sidebar/Sidebar";
 import Listagem from "../../components/Listagem/Listagem";
-import Modal_P from "../../components/Modal_P/Modal_P"; // <-- uso do Modal_P
+import ModalLogs from "../../components/Modal_Logs/Modal_Logs"; // <-- uso do ModalLogs
 import "./LogEnvioEmail.css";
 import "../../index.css";
 
@@ -74,7 +74,6 @@ const LogEnvioEmail = () => {
   });
 
   const handleVerMais = (log) => {
-    // abre modal com Modal_P
     setLogSelecionado(log);
     setModalAberto(true);
   };
@@ -84,7 +83,6 @@ const LogEnvioEmail = () => {
     setLogSelecionado(null);
   };
 
-  // adiciona o botão como elemento React para Listagem renderizar corretamente
   const logsComAcoes = logsFiltrados.map((log) => ({
     ...log,
     acoes: (
@@ -165,12 +163,10 @@ const LogEnvioEmail = () => {
           </div>
         </div>
 
-        {/* Modal_P — mesma API usada em NotasFiscais */}
-        <Modal_P
+        <ModalLogs
           isOpen={modalAberto}
           onClose={fecharModal}
-          title="Detalhes do Log de Envio de Email"
-          variant="view"
+          title="Informações sobre Logs"
           modalId="modal-log-detalhes"
           footer={
             <div style={{ display: "flex", justifyContent: "flex-end", gap: 8 }}>
@@ -186,22 +182,47 @@ const LogEnvioEmail = () => {
         >
           {logSelecionado ? (
             <div className="log-detalhes">
-              <p>
-                <strong>Tipo:</strong> {logSelecionado.tipo}
-              </p>
-              <p>
-                <strong>Cliente Relacionado:</strong>{" "}
-                {logSelecionado.clienteRelacionado}
-              </p>
-              <p>
-                <strong>Data de Envio:</strong> {logSelecionado.dataEnvio}
-              </p>
-              <p>
-                <strong>Mensagem:</strong> {logSelecionado.mensagem}
-              </p>
+              <label className="col-left">
+                <strong>Tipo:</strong>
+                <input
+                  type="text"
+                  value={logSelecionado.tipo}
+                  readOnly
+                  className="input-modal"
+                />
+              </label>
+
+              <label className="col-right">
+                <strong>Data de Envio:</strong>
+                <input
+                  type="text"
+                  value={logSelecionado.dataEnvio}
+                  readOnly
+                  className="input-modal"
+                />
+              </label>
+
+              <label className="col-left">
+                <strong>Mensagem:</strong>
+                <textarea
+                  value={logSelecionado.mensagem}
+                  readOnly
+                  className="input-modal"
+                />
+              </label>
+
+              <label className="col-right">
+                <strong>Cliente Relacionado:</strong>
+                <input
+                  type="text"
+                  value={logSelecionado.clienteRelacionado}
+                  readOnly
+                  className="input-modal"
+                />
+              </label>
             </div>
           ) : null}
-        </Modal_P>
+        </ModalLogs>
       </main>
     </div>
   );

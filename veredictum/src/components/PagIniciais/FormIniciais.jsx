@@ -80,7 +80,7 @@ function FormIniciais({ fields, buttonText, onSubmit, showForgotPassword = false
           </Link>
         </div>
       )}
-      <button type="submit" className="register-button">
+      <button type="submitt" className="register-button">
         {buttonText}
       </button>
     </form>

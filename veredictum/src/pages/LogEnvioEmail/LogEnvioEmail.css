@@ -1,10 +1,9 @@
-.page-title-logs h1{
- 
+.page-title-logs h1 {
     margin-left: 18px;
     border: 1px solid #222;
 }
 
-.page-description-logs{
+.page-description-logs {
     color: #000;
     font-size: 17px;
     font-weight: 400;
@@ -31,8 +30,7 @@
     align-items: center;
     width: 45vw;
     height: 15vh;
-    border: 1PX solid black;
-    display: flex;
+    border: 1px solid black;
     justify-content: space-around;
     margin-left: 45px;
 }
@@ -58,12 +56,12 @@
     width: 100%;
     max-width: 380px;
     background: #ffffff;
-    border: 1px solid rgba(0,0,0,0.06);
+    border: 1px solid rgba(0, 0, 0, 0.06);
     border-radius: 8px;
     padding: 12px 14px;
     font-size: 14px;
     color: var(--text-primary, #222);
-    box-shadow: 0 6px 18px rgba(0,0,0,0.04);
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.04);
     transition: box-shadow .12s ease, transform .08s ease, border-color .12s ease;
     appearance: none;
 }
@@ -78,8 +76,8 @@
 .log-email-filtro-group-logs select:focus,
 .log-email-filtro-group-logs input[type="text"]:focus {
     outline: none;
-    border-color: rgba(0,123,255,0.22);
-    box-shadow: 0 8px 24px rgba(0,123,255,0.06);
+    border-color: rgba(0, 123, 255, 0.22);
+    box-shadow: 0 8px 24px rgba(0, 123, 255, 0.06);
     transform: translateY(-1px);
 }
 
@@ -119,10 +117,10 @@
 /* Card raiz já termina com -logs */
 .card-box-logs {
     width: 88vw;
-    height: 90vh; /* Altura fixa do card */height: calc(60vh + 300px); 
+    height: calc(60vh + 300px); /* Altura fixa do card */
     background: var(--white-normal, #fff);
     border-radius: 12px;
-    box-shadow: 0 6px 20px rgba(0,0,0,0.06);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.06);
     padding: 20px;
     margin-top: 18px;
     margin-left: 45px;
@@ -161,4 +159,33 @@
 .card-box-logs .listagem-body {
     scrollbar-width: thin;
     scrollbar-color: rgb(0, 0, 0) transparent;
+}
+
+.log-detalhes-inputs {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.input-modal {
+    width: 100%;
+    max-width: 400px; /* Ajuste conforme necessário */
+    padding: 10px;
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+    font-size: 14px;
+    color: #333;
+    background: #f9f9f9;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.input-modal:focus {
+    outline: none;
+    border-color: rgba(0, 123, 255, 0.5);
+    box-shadow: 0 0 5px rgba(0, 123, 255, 0.3);
+}
+
+textarea.input-modal {
+    resize: vertical; /* Permite redimensionar verticalmente */
+    height: 100px; /* Altura padrão */
 }
