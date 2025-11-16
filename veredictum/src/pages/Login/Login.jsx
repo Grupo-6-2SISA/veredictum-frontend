@@ -1,13 +1,28 @@
 import { useNavigate } from "react-router-dom";
+import { useState } from "react";
 import LayoutIniciais from "../../components/PagIniciais/LayoutIniciais";
 import ImgSide from "../../components/PagIniciais/ImgSide";
 import InfoSide from "../../components/PagIniciais/InfoSide";
 import FormIniciais from "../../components/PagIniciais/FormIniciais";
+import SwitchAlert from "../../components/SwitchAlert/SwitchAlert";
 import imgCadastro from "./../../assets/img/img-cadastro.png";
 import "../Cadastro/Cadastro.css";
 
 function Login() {
   const navigate = useNavigate();
+
+  const [alert, setAlert] = useState({
+    visible: false,
+    message: "",
+    type: "info",
+    duration: 3000,
+  });
+
+  const switchAlert = (message, type = "info", duration = 3000) => {
+    setAlert({ visible: true, message, type, duration });
+  };
+
+  const hideAlert = () => setAlert((a) => ({ ...a, visible: false }));
 
   const fields = [
     { label: "E-mail", type: "email", name: "email", placeholder: "E-mail" },
@@ -15,14 +30,19 @@ function Login() {
   ];
 
   async function handleLogin(formData) {
-    if (formData.senha.length < 6) {
-      alert("A senha deve ter pelo menos 6 caracteres.");
+    if (!formData || typeof formData !== "object") return;
+
+    if (!formData.senha || formData.senha.length < 6) {
+      switchAlert(
+        "Senha insuficiente. Certifique-se de que haja ao menos 6 caracteres.",
+        "error"
+      );
       return;
     }
 
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(formData.email)) {
-      alert("Por favor, insira um e-mail válido.");
+      switchAlert("Por favor, insira um e-mail válido.", "error");
       return;
     }
 
@@ -36,58 +56,74 @@ function Login() {
         }),
       });
 
-      if (response.ok) {
-        const data = await response.json();
+       if (response.ok) {
+          const data = await response.json();
+          const isAdminValue =
+            data.isAdm !== undefined ? data.isAdm : data.isAdmin;
+          const isAdminString =
+            isAdminValue === true || isAdminValue === "true" || isAdminValue === 1
+              ? "true"
+              : "false";
 
-        const isAdminValue = data.isAdm !== undefined ? data.isAdm : data.isAdmin;
+          sessionStorage.setItem("userEmail", formData.email);
+          sessionStorage.setItem("userName", data.nome);
+          sessionStorage.setItem("isAdmin", isAdminString);
+          // flag que ProtectedRoute irá checar
+          sessionStorage.setItem("isAuthenticated", "true");
 
-        const isAdminString = isAdminValue === true || isAdminValue === 'true' || isAdminValue === 1 ? 'true' : 'false';
+        switchAlert("Login realizado com sucesso!", "success", 900);
+        setTimeout(() => navigate("/VisaoGeral"), 900);
+        return;
+      }
 
-        sessionStorage.setItem("userEmail", formData.email);
-        sessionStorage.setItem("userName", data.nome);
-        sessionStorage.setItem("isAdmin", isAdminString);
-
-
-
-        alert("Login realizado com sucesso!");
-        navigate("/VisaoGeral");
-      } else if (response.status === 404) {
-        alert("E-mail não encontrado. Certifique-se de que esteja cadastrado no nosso sistema.");
-      } else if (response.status === 400) {
-        alert("E-mail ou senha incorretos.");
+      // Status handling
+      if (response.status === 404) {
+        switchAlert("E-mail inválido. Cadastre-se para acessar o sistema.", "error");
+      } else if (response.status === 400 || response.status === 403) {
+        switchAlert("Credenciais inválidas. Verifique seu e-mail e senha.", "error");
       } else if (response.status === 401) {
-        alert("Usuário inativo. Entre em contato com o administrador.");
+        switchAlert("Usuário inativo. Entre em contato com o administrador.", "error");
       } else {
-        alert("Erro ao tentar logar.");
+        switchAlert("Erro ao tentar logar.", "error");
       }
     } catch (error) {
       console.error("Erro na requisição:", error);
-      alert("Falha de conexão com o servidor.");
+      switchAlert("Falha de conexão com o servidor.", "error");
     }
   }
 
   return (
-    <LayoutIniciais
-      leftContent={
-        <ImgSide
-          imgSrc={imgCadastro}
-          title="Não tem uma conta?"
-          subtitle="Cadastre-se aqui"
-          linkTo="/cadastro"
-          linkText="Cadastre-se"
-        />
-      }
-      rightContent={
-        <InfoSide>
-          <FormIniciais
-            fields={fields}
-            buttonText="Entrar"
-            onSubmit={handleLogin}
-            showForgotPassword={true}
+    <>
+      <SwitchAlert
+        visible={alert.visible}
+        message={alert.message}
+        type={alert.type}
+        duration={alert.duration}
+        onClose={hideAlert}
+      />
+
+      <LayoutIniciais
+        leftContent={
+          <ImgSide
+            imgSrc={imgCadastro}
+            title="Não tem uma conta?"
+            subtitle="Cadastre-se aqui"
+            linkTo="/cadastro"
+            linkText="Cadastre-se"
           />
-        </InfoSide>
-      }
-    />
+        }
+        rightContent={
+          <InfoSide>
+            <FormIniciais
+              fields={fields}
+              buttonText="Entrar"
+              onSubmit={handleLogin}
+              showForgotPassword={true}
+            />
+          </InfoSide>
+        }
+      />
+    </>
   );
 }
 

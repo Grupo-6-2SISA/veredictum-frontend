@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
 import './Sidebar.css';
 import '../../index.css';
 
-// itens de navegação (use paths consistentes com o roteamento)
+// ...existing code...
 const navItems = [
     { name: 'Visão Geral', iconPath: 'src/assets/svg/visao-geral.svg', path: '/VisaoGeral', iconClass: 'icon_vg' },
     { name: 'Dashboard', iconPath: 'src/assets/svg/dash.svg', path: '/Dashboard', iconClass: 'icon_dash' },
@@ -15,9 +16,10 @@ const navItems = [
 ];
 
 const Sidebar = () => {
+    const navigate = useNavigate();
     const userName = sessionStorage.getItem('userName') || 'Usuário';
 
-        // lê isAdmin salvo no login (sessionStorage) e normaliza para boolean
+    // lê isAdmin salvo no login (sessionStorage) e normaliza para boolean
     const [isAdmin, setIsAdmin] = useState(() => {
         const raw = sessionStorage.getItem('isAdmin');
         console.log('[Sidebar] isAdmin (init raw):', raw);
@@ -26,11 +28,8 @@ const Sidebar = () => {
 
     const [activeFile, setActiveFile] = useState('');
 
-
     // Normaliza e protege isAdmin para evitar ReferenceError em runtime
     const adminFlag = typeof isAdmin !== 'undefined' && (isAdmin === true || isAdmin === 'true' || isAdmin === '1');
-
-
 
     useEffect(() => {
         console.log('[Sidebar] mounted - userName:', userName, 'isAdmin:', isAdmin);
@@ -74,6 +73,14 @@ const Sidebar = () => {
         return activeFile.toLowerCase() === linkClean;
     };
 
+    const handleLogout = () => {
+        // limpa sessão e força redirecionamento para login
+        sessionStorage.clear();
+        // substitui histórico e garante recarga para invalidar cache SPA
+        navigate('/login', { replace: true });
+        window.location.replace('/login');
+    };
+
     return (
         <aside className="sidebar">
             <div className="sidebar-header">
@@ -81,10 +88,10 @@ const Sidebar = () => {
                     <img src="src/assets/svg/logo_vectorized.svg" alt="Logo Veredictum" />
                     <span className="menu-text-logo">Veredictum</span>
                 </div>
-                    <div className="user-info">
-                        <span className="user-name">{userName}</span>
-                        {/* {adminFlag && <span className="user-role badge-admin">Administrador</span>} */}
-                    </div>
+                <div className="user-info">
+                    <span className="user-name">{userName}</span>
+                    {/* {adminFlag && <span className="user-role badge-admin">Administrador</span>} */}
+                </div>
             </div>
 
             <nav className="sidebar-nav">
@@ -95,7 +102,8 @@ const Sidebar = () => {
                             const active = isLinkActive(item.path);
                             return (
                                 <li key={item.name}>
-                                    <a href={item.path} className={active ? 'active' : ''}>
+                                    {/* use Link para navegação via react-router (evita recarga completa) */}
+                                    <Link to={item.path} className={active ? 'active' : ''}>
                                         <img
                                             src={getIconSrc(item.iconPath, item.path)}
                                             className={item.iconClass}
@@ -104,7 +112,7 @@ const Sidebar = () => {
                                         <span className={active ? 'menu-text-active' : 'menu-text'}>
                                             {item.name}
                                         </span>
-                                    </a>
+                                    </Link>
                                 </li>
                             );
                         })}
@@ -112,10 +120,14 @@ const Sidebar = () => {
             </nav>
 
             <div className="sidebar-footer">
-                <a href="/">
+                <button
+                    type="button"
+                    className="sidebar-logout"
+                    onClick={handleLogout}
+                >
                     <img src="src/assets/svg/exit.svg" className="icon_exit" alt="Sair" />
                     <span className="menu-text">Sair</span>
-                </a>
+                </button>
             </div>
         </aside>
     );

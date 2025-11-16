@@ -1,6 +1,5 @@
-/* BASE DO SIDEBAR - SUBSTITUI O SELETOR 'ASIDE' COM 'POSITION: FIXED'*/
 .sidebar {
-    position: fixed; 
+    position: fixed;
     width: 6%;
     height: 100vh;
     background-color: var(--dark-black);
@@ -17,7 +16,7 @@
     z-index: 1000;
 }
 
-/* CABEÇALHO (LOGO E NOME)*/    
+/* CABEÇALHO (LOGO E NOME)*/
 .sidebar-header {
     width: 100%;
     display: flex;
@@ -76,7 +75,7 @@
 
 .sidebar-nav a {
     display: flex;
-    justify-content: center; 
+    justify-content: center;
     align-items: center;
     width: 100%;
     height: 50px;
@@ -112,10 +111,9 @@
     border-left: 4px solid var(--accent-color);
     font-weight: 600;
     transition: background 0.2s, color 0.2s;
-    margin: 0 5px; 
-    width: auto; 
+    margin: 0 5px;
+    width: auto;
 }
-
 
 /* Estilos de hover para links de navegação */
 .sidebar-nav a:hover {
@@ -123,37 +121,57 @@
     border-radius: 10px;
 }
 
-/* RODAPÉ (FOOTER)*/
+/* RODAPÉ (FOOTER)
+   Ajustes para alinhar ícone + texto horizontalmente tanto para <a> quanto para botão .sidebar-logout
+*/
 .sidebar-footer {
     width: 100%;
     display: flex;
+    flex-direction: row;
     justify-content: center;
     align-items: center;
     margin-top: auto;
     padding-top: 20px;
     margin-bottom: 5%;
     height: 60px;
+    /* remova bordas de debug */
 }
 
+/* aplica o mesmo estilo para links e botão no footer */
+.sidebar-footer .sidebar-logout,
 .sidebar-footer a {
     display: flex;
-    justify-content: center;
     align-items: center;
+    justify-content: center;
+    gap: 10px;
     width: 100%;
     height: 50px;
-    color: var(--text-color);
+    background: transparent;
+    border: 0;
+    padding: 0 12px;
     text-decoration: none;
-    font-size: 24px;
+    color: var(--text-color);
+    font-size: 16px;
     transition: all 0.3s ease;
-    gap: 10px;
+    cursor: pointer;
 }
 
-/* Estilos de hover para link do rodapé */
+/* tamanho do ícone no footer */
+.sidebar-footer .icon_exit,
+.sidebar-footer img.icon_exit {
+    width: 35px;
+    height: 35px;
+    object-fit: contain;
+}
+
+/* hover no rodapé*/
+.sidebar-footer .sidebar-logout:hover,
 .sidebar-footer a:hover {
     border: 2px solid var(--white-normal);
     border-radius: 10px;
-}
+} 
 
+/* EXPANDIR SIDEBAR */
 .sidebar:hover {
     width: 17%;
     margin-right: 30px;
@@ -163,13 +181,14 @@
 .sidebar:hover .menu-text,
 .sidebar:hover .menu-text-active,
 .sidebar:hover .menu-text-logo {
-    display: inline; 
+    display: inline;
     opacity: 1;
 }
 
 /* 2. Alinhar Ícones à Esquerda */
 .sidebar:hover .sidebar-nav a,
-.sidebar:hover .sidebar-footer a {
+.sidebar:hover .sidebar-footer a,
+.sidebar:hover .sidebar-footer .sidebar-logout {
     justify-content: flex-start;
     padding-left: 18px;
 }
@@ -177,33 +196,48 @@
 /* 3. Ajuste do Texto "Sair" no Rodapé */
 .sidebar:hover .sidebar-footer {
     justify-content: flex-start;
+    align-items: center;
+    display: flex;
+    flex-direction: row;
+    border-radius: 10px;
     padding-left: 10px;
 }
 
+/* no estado expandido, garante que o botão mantenha layout em linha */
+.sidebar:hover .sidebar-footer .sidebar-logout,
 .sidebar:hover .sidebar-footer a {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
     justify-content: flex-start;
-    padding-left: 0; 
-    width: auto; 
+    padding-left: 0;
+    width: auto;
 }
 
+/* garante que o texto apareça corretamente ao expandir */
 .sidebar:hover .sidebar-footer span {
-        display: inline; 
-    align-items: center;
-    margin-left: 10px; 
+    display: inline;
+    margin-left: 10px;
 }
 
 /* ESTILOS AO EXPANDIR (.sidebar:hover) - GARANTE ALINHAMENTO DO CABEÇALHO */
-.sidebar:hover .logo {    
+.sidebar:hover .logo {
     justify-content: center;
     padding-left: 50%;
 }
 
 .sidebar:hover .sidebar-header .logo img {
     margin-right: -2px;
-    text-align: center;  
+    text-align: center;
 }
 
 .sidebar:hover .sidebar-header .user-name {
-    text-align: center; 
-    padding-left: 18px; 
+    text-align: center;
+    padding-left: 18px;
+}
+
+/* garante comportamento responsivo se for necessário */
+@media (max-width: 900px) {
+  .sidebar { width: 14%; }
+  .sidebar:hover { width: 40%; }
 }
