@@ -74,8 +74,8 @@ const VisaoGeral = () => {
 
     // Card: Contas a Pagar
     const goToGerenciamentoDespesas = () => {
-        const rota = '/Despesas'; // Usando a rota que você indicou
-        console.log(`[Redirecionamento] Clicado em Contas a Pagar. Navegando para: ${rota}`); // <--- CONSOLE LOG ADICIONADO
+        const rota = '/GestaoDespesas'; // corrigido para rota consistente no app
+        console.log(`[Redirecionamento] Clicado em Contas a Pagar. Navegando para: ${rota}`);
         navigate(rota);
     };
 
@@ -84,21 +84,26 @@ const VisaoGeral = () => {
 
         console.log('[VisaoGeral] useEffect mounted - iniciando fetch de dados');
 
-        // Função simples para formatar a data/hora
-        const formatarData = (isoString) => {
-            if (!isoString) return '';
+        // Função para formatar ISO -> { date: 'dd/mm/yyyy', time: 'HH:MM' }
+        const formatISO = (isoString) => {
+            if (!isoString) return { date: '', time: '' };
             try {
-                const [dataCompleta] = isoString.split('.'); // Remove milissegundos, se houver
-                const [data, horaComMinuto] = dataCompleta.split('T'); // Ex: 2024-05-22 e 13:00:00
-
-                const [ano, mes, dia] = data.split('-');
-                const [hora, minuto] = horaComMinuto.split(':'); // Pega hora e minuto
-
-                return `${dia}/${mes}/${ano} ${hora}:${minuto}`; // Ex: 22/05/2024 13:00
+                const d = new Date(isoString);
+                if (Number.isNaN(d.getTime())) return { date: isoString, time: '' };
+                const day = String(d.getDate()).padStart(2, '0');
+                const month = String(d.getMonth() + 1).padStart(2, '0');
+                const year = d.getFullYear();
+                const hours = String(d.getHours()).padStart(2, '0');
+                const minutes = String(d.getMinutes()).padStart(2, '0');
+                return {
+                    date: `${day}/${month}/${year}`,
+                    time: `${hours}:${minutes}`
+                };
             } catch (e) {
-                return isoString;
+                return { date: isoString, time: '' };
             }
-        }
+        };
+
         const fetchDashboardData = async () => {
             setLoading(true);
             setErro(null);
@@ -126,83 +131,116 @@ const VisaoGeral = () => {
 
 
                 // Helper para extrair 'data' da resposta se o status for 'fulfilled' (sucesso)
-                const formatData = (result) => result.status === 'fulfilled' && result.value.data ? result.value.data : [];
-
+                 const formatData = (result) => {
+                    if (result.status !== 'fulfilled') return [];
+                    const v = result.value;
+                    return (v && (v.data ?? v)) || [];
+                 };
 
                 // 1. Processar e Formatar os Atendimentos
                 const atendimentosBrutos = formatData(resAtendimentos);
-                console.log('[VisaoGeral] atendimentosBrutos (raw):', atendimentosBrutos);
-                const atendimentosFormatados = atendimentosBrutos.map(item => {
-                    console.log('[VisaoGeral] formatando atendimento item:', item);
-                    // A chave do item formatado deve ser retornada pelo map
-                    const dataFormatada = formatarData(item.dataInicio);
+                const now = new Date();
 
-                    // Verifica se a formatação foi bem sucedida para evitar erros de split
-                    const dia = dataFormatada.split(' ')[0] || '';
-                    const horario = dataFormatada.split(' ')[1] || '';
-
+                const atendimentosFormatados = atendimentosBrutos
+                  .map(item => {
+                    const d = item.dataInicio ? new Date(item.dataInicio) : null;
+                    return { ...item, __startDate: d && !Number.isNaN(d.getTime()) ? d : null };
+                  })
+                  // mantém somente atendimentos futuros (>= agora)
+                  .filter(item => item.__startDate && item.__startDate.getTime() >= now.getTime())
+                  // ordena do mais próximo para o mais distante
+                  .sort((a, b) => a.__startDate.getTime() - b.__startDate.getTime())
+                  // formata para exibição (dd/mm/aaaa e HH:MM)
+                  .map(item => {
+                    const { date, time } = formatISO(item.__startDate.toISOString());
                     return {
-                        // Use a chave correta para o nome do cliente (se tiver feito a Opção A)
-                        nome: item.nome || 'Cliente Desconhecido',
-                        dia: dia,
-                        horario: horario,
-                    }
-                });
-                console.log('[VisaoGeral] atendimentosFormatados (processed) count:', atendimentosFormatados.length);
-
-                // 2. Processar e Formatar Notas Fiscais (NOVO BLOCO)
-                const notasBrutas = formatData(resNotasFiscais);
-                console.log('[VisaoGeral] notasBrutas (raw):', notasBrutas);
-                const notasFormatadas = notasBrutas.map(item => {
-                    console.log('[VisaoGeral] formatando nota item:', item);
-                    // Usa a função global para formatar (DD/MM/AAAA HH:MM)
-                    const dataVencimentoCompleta = formatarData(item.dataVencimento);
-
-                    return {
-                        // Mantenha as chaves do DTO:
-                        numero: item.numero,
-                        clienteNome: item.clienteNome || 'Cliente Não Informado',
-
-                        // Pega APENAS a data (DD/MM/AAAA)
-                        dataVencimento: dataVencimentoCompleta.split(' ')[0],
-
-                        ...item // Garante que qualquer outra propriedade seja mantida
-                    }
-                });
-                console.log('[VisaoGeral] notasFormatadas count:', notasFormatadas.length);
-
-                // 3. Processar e Formatar Contas a Pagar
-                const contasBrutas = formatData(resContas);
-                const contasFormatadas = contasBrutas.map(item => {
-                    // Formatar a data (DD/MM/AAAA)
-                    const dataFormatada = formatarData(item.dataVencimento).split(' ')[0];
-
-                    return {
-                        ...item, // Mantém outras propriedades do DTO (como etiqueta)
-                        dataVencimento: dataFormatada, // Sobrescreve com a data formatada
+                      nome: item.nome || 'Cliente Desconhecido',
+                      dia: date,
+                      horario: time
                     };
-                });
-                console.log('[VisaoGeral] contasFormatadas count:', contasFormatadas.length);
+                  });
+
+                // 2. Processar e Formatar Notas Fiscais (mostra do mais atrasado -> mais recente)
+                const notasBrutas = formatData(resNotasFiscais);
+
+                // prepara 'hoje' no inicio do dia para comparação (sem hora)
+                const today = new Date();
+                today.setHours(0,0,0,0);
+
+                const notasFormatadas = notasBrutas
+                  // cria objeto Date válido em __vencimentoDate (aceita vários nomes de campo)
+                  .map(item => {
+                    const raw = item.dataVencimento || item.data_vencimento || item.vencimento || item.data || null;
+                    const d = raw ? new Date(raw) : null;
+                    return {
+                      ...item,
+                      __vencimentoDate: d && !Number.isNaN(d.getTime()) ? d : null
+                    };
+                  })
+                  // mantém somente itens com data válida
+                  .filter(item => item.__vencimentoDate)
+                  // ordena do mais antigo (mais atrasado) para o mais recente
+                  .sort((a, b) => a.__vencimentoDate.getTime() - b.__vencimentoDate.getTime())
+                  // opcional: limitar aos N mais relevantes (ajuste ou remova .slice)
+                  .slice(0, 10)
+                  // formata a data para dd/mm/aaaa para exibição e adiciona flag 'vencida'
+                  .map(item => {
+                    const d = item.__vencimentoDate;
+                    const day = String(d.getDate()).padStart(2, '0');
+                    const month = String(d.getMonth() + 1).padStart(2, '0');
+                    const year = d.getFullYear();
+                    return {
+                      ...item,
+                      numero: item.numero,
+                      clienteNome: item.clienteNome || 'Cliente Não Informado',
+                      dataVencimento: `${day}/${month}/${year}`,
+                      vencida: d < today
+                    };
+                  });
+
+                // 3. Processar e Filtrar/Formatar Contas a Pagar
+                const contasBrutas = formatData(resContas);
+
+                const contasFormatadas = contasBrutas
+                  // cria objeto Date válido em __vencimentoDate
+                  .map(item => {
+                    const raw = item.dataVencimento || item.data_vencimento || item.vencimento || item.data || null;
+                    const d = raw ? new Date(raw) : null;
+                    return {
+                      ...item,
+                      __vencimentoDate: d && !Number.isNaN(d.getTime()) ? d : null
+                    };
+                  })
+                  // remove itens sem data válida ou com vencimento anterior a hoje
+                  .filter(item => item.__vencimentoDate && item.__vencimentoDate >= today)
+                  // ordena pelo vencimento mais próximo primeiro (ascendente)
+                  .sort((a, b) => a.__vencimentoDate.getTime() - b.__vencimentoDate.getTime())
+                  // opcional: mostrar somente os N mais próximos (descomente/ajuste se quiser limitar)
+                  .slice(0, 10)
+                  // formata a data para dd/mm/aaaa para exibição
+                  .map(item => {
+                    // usa formatISO para garantir dd/mm/aaaa (aceita Date ou ISO string)
+                    const iso = item.__vencimentoDate ? item.__vencimentoDate.toISOString() : item.dataVencimento;
+                    const { date } = formatISO(iso);
+                    return {
+                      ...item,
+                      dataVencimento: date
+                    };
+                  });
 
                 // 4. Processar e Formatar Aniversariantes do Mês
                 const aniversariantesBrutos = formatData(resAniversariantes);
                 const aniversariantesFormatados = aniversariantesBrutos.map(item => {
-                    // 1. Formatar a data completa (Ex: 22/05/2024 13:00)
-                    const dataFormatadaCompleta = formatarData(item.dataNascimento);
-
-                    // 2. Extrair apenas o DIA e MÊS (Ex: 22/05)
-                    // Pega os 5 primeiros caracteres (DD/MM) da string formatada
-                    const diaMesFormatado = dataFormatadaCompleta.substring(0, 5);
-
+                    // obtém a data raw de diferentes possíveis campos e formata apenas dia/mês (dd/mm)
+                    const raw = item.dataNascimento || item.data_nascimento || item.nascimento || item.data || '';
+                    const { date } = formatISO(raw); // date vem como dd/mm/aaaa
+                    const diaMes = date ? date.split('/').slice(0, 2).join('/') : '';
                     return {
-                        // Assume que a chave do nome é 'nome' ou 'nomeCompleto'
+                        ...item,
                         nome: item.nome || item.nomeCompleto || 'Nome Desconhecido',
-                        dia: diaMesFormatado, // Coluna 'Dia' da Listagem
-                        ...item
-                    }
+                        dataNascimento: diaMes, // agora dd/mm
+                    };
                 });
-                console.log('[VisaoGeral] aniversariantesFormatados count:', aniversariantesFormatados.length);
-
 
                 // 5. Atualiza os estados COM AS LISTAS PROCESSADAS
                 setProximosAtendimentos(atendimentosFormatados);

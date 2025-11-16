@@ -16,6 +16,21 @@ import { getClientes, createCliente, updateCliente, activateCliente, deactivateC
 
 const DEACTIVATION_ANIMATION_MS = 1000;
 
+// helper: formata date -> dd/mm/yyyy (retorna '' se inválida)
+const formatDate = (value) => {
+    if (!value) return '';
+    try {
+        const d = new Date(value);
+        if (Number.isNaN(d.getTime())) return String(value);
+        const day = String(d.getDate()).padStart(2, '0');
+        const month = String(d.getMonth() + 1).padStart(2, '0');
+        const year = d.getFullYear();
+        return `${day}/${month}/${year}`;
+    } catch {
+        return String(value);
+    }
+};
+
 
 const CLIENT_FORM_COLUMNS = (clientList = []) => {
     const columns = [
@@ -253,6 +268,8 @@ const renderFormColumns = (mode, clientData, clientList) => (
 
 const TABLE_COLUMNS = [
     { key: 'nome', titulo: 'Nome', className: 'clientes-col-name' },
+    { key: 'proBono', titulo: 'Pro-Bono', className: 'clientes-col-probono' },
+    { key: 'dataInicio', titulo: 'Data Início', className: 'clientes-col-data' },
     { key: 'editar', titulo: 'Editar', className: 'clientes-col-edit' },
     { key: 'informacoes', titulo: 'Informações', className: 'clientes-col-info' },
     { key: 'status', titulo: 'Status', className: 'clientes-col-status' },
@@ -300,6 +317,16 @@ function Clientes() {
                     <p>{client.nome}</p>
                 </div>
             ),
+          proBono: (
+              <div className="clientes-col-probono">
+                  <p>{client.isProBono ? 'Sim' : 'Não'}</p>
+              </div>
+          ),
+          dataInicio: (
+              <div className="clientes-col-data">
+                  <p>{formatDate(client.dataInicio)}</p>
+              </div>
+          ),
             editar: (
                 <Button className="btn-icon-only" type="button" onClick={() => handleOpenEdit(client)} aria-label={`Editar ${client.nome}`}>
                     <img src={editIcon} alt="Editar" />
@@ -327,58 +354,81 @@ function Clientes() {
     function handleCloseEdit() { setIsEditOpen(false); setSelectedClient(null); }
     function handleOpenView(client) { setSelectedClient(client); setIsViewOpen(true); }
     function handleCloseView() { setIsViewOpen(false); setSelectedClient(null); }
-    function handleOpenDelete(client) { setSelectedClient(client); setIsDeleteOpen(true); }
-    function handleCloseDelete() { setIsDeleteOpen(false); setSelectedClient(null); }
+
+    function handleOpenDelete(client) {
+        // marca como "pendente" para refletir no toggle (visualmente desativado)
+        setSelectedClient(client);
+        setIsDeleteOpen(true);
+        setDeactivatingClients(prev => prev.includes(client.idCliente) ? prev : [...prev, client.idCliente]);
+    }
+
+    function handleCloseDelete() {
+        // captura id antes de limpar selectedClient
+        const clientId = selectedClient?.idCliente;
+        setIsDeleteOpen(false);
+        setSelectedClient(null);
+
+        // se não existe um timer em andamento, remove o estado de "pendente"
+        if (clientId) {
+            const timer = deactivationTimersRef.current.get(clientId);
+            if (!timer) {
+                setDeactivatingClients(prev => prev.filter(id => id !== clientId));
+            }
+        }
+    }
 
     async function handleToggleStatus(client) {
-        try {
-            if (!client.isAtivo) {
-                const pendingTimer = deactivationTimersRef.current.get(client.idCliente);
-                if (pendingTimer) {
-                    clearTimeout(pendingTimer);
-                    deactivationTimersRef.current.delete(client.idCliente);
-                }
-                await activateCliente(client.idCliente);
-                await fetchClients();
-                setDeactivatingClients((prev) => prev.filter((id) => id !== client.idCliente));
-            } else {
-                handleOpenDelete(client);
-            }
-        } catch (error) {
-            console.error("Erro ao alterar status do cliente:", error);
-        }
-    }
+         try {
+            // evita abrir modal/acionar enquanto já está em processo de desativação
+            if (deactivatingClients.includes(client.idCliente)) return;
+             if (!client.isAtivo) {
+                 const pendingTimer = deactivationTimersRef.current.get(client.idCliente);
+                 if (pendingTimer) {
+                     clearTimeout(pendingTimer);
+                     deactivationTimersRef.current.delete(client.idCliente);
+                 }
+                 await activateCliente(client.idCliente);
+                 await fetchClients();
+                 setDeactivatingClients((prev) => prev.filter((id) => id !== client.idCliente));
+             } else {
+                 handleOpenDelete(client);
+             }
+         } catch (error) {
+             console.error("Erro ao alterar status do cliente:", error);
+         }
+     }
+ 
 
     async function handleConfirmDelete() {
-        if (selectedClient) {
-            const clientId = selectedClient.idCliente;
-            setDeactivatingClients((prev) => (
-                prev.includes(clientId) ? prev : [...prev, clientId]
-            ));
+         if (selectedClient) {
+             const clientId = selectedClient.idCliente;
 
-            const existingTimer = deactivationTimersRef.current.get(clientId);
-            if (existingTimer) {
-                clearTimeout(existingTimer);
-                deactivationTimersRef.current.delete(clientId);
-            }
-
-            const timeoutId = setTimeout(async () => {
-                try {
-                    await deactivateCliente(clientId);
-                    await fetchClients();
-                } catch (error) {
-                    console.error("Erro ao desativar cliente:", error);
-                    window.alert?.("Não foi possível desativar o cliente. Tente novamente.");
-                } finally {
-                    setDeactivatingClients((prev) => prev.filter((id) => id !== clientId));
-                    deactivationTimersRef.current.delete(clientId);
-                }
-            }, DEACTIVATION_ANIMATION_MS);
-
-            deactivationTimersRef.current.set(clientId, timeoutId);
-        }
-        handleCloseDelete();
-    }
+            // caso não tenha sido marcado ainda (pode já ter sido no open), marca aqui
+            setDeactivatingClients((prev) => (prev.includes(clientId) ? prev : [...prev, clientId]));
+ 
+             const existingTimer = deactivationTimersRef.current.get(clientId);
+             if (existingTimer) {
+                 clearTimeout(existingTimer);
+                 deactivationTimersRef.current.delete(clientId);
+             }
+ 
+             const timeoutId = setTimeout(async () => {
+                 try {
+                     await deactivateCliente(clientId);
+                     await fetchClients();
+                 } catch (error) {
+                     console.error("Erro ao desativar cliente:", error);
+                     window.alert?.("Não foi possível desativar o cliente. Tente novamente.");
+                 } finally {
+                     setDeactivatingClients((prev) => prev.filter((id) => id !== clientId));
+                     deactivationTimersRef.current.delete(clientId);
+                 }
+             }, DEACTIVATION_ANIMATION_MS);
+ 
+             deactivationTimersRef.current.set(clientId, timeoutId);
+         }
+         handleCloseDelete();
+     }
 
     
     const getClientDataFromForm = (formData) => {

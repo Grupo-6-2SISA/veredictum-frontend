@@ -46,24 +46,54 @@ export default function GestaoDespesas() {
     async function fetchDespesas() {
       try {
         const response = await listarDespesas();
-        const despesasOrdenadas = response.data.sort((a, b) => {
-          const dataA = new Date(a.dataVencimento);
-          const dataB = new Date(b.dataVencimento);
+        const rawList = response.data || [];
+
+        // helper: tenta criar Date a partir do campo (mantém original se inválido)
+        const toDate = (val) => {
+          const d = new Date(val);
+          return Number.isNaN(d.getTime()) ? null : d;
+        };
+
+        // helper: formata Date -> dd/mm/yyyy (se receber string tenta parsear)
+        const formatToDDMMYYYY = (val) => {
+          const d = val instanceof Date ? val : toDate(val);
+          if (!d) return val || '';
+          const day = String(d.getDate()).padStart(2, '0');
+          const month = String(d.getMonth() + 1).padStart(2, '0');
+          const year = d.getFullYear();
+          return `${day}/${month}/${year}`;
+        };
+
+        // anexa objeto Date temporário para ordenar/filtrar sem perder o valor original
+        const withDates = rawList.map(item => ({
+          ...item,
+          __vencimentoDate: toDate(item.dataVencimento) // null se inválido
+        }));
+
+        // ordena por data de vencimento (e por isPago)
+        const despesasOrdenadas = withDates.sort((a, b) => {
           if (a.isPago !== b.isPago) return a.isPago ? 1 : -1;
-          return dataA - dataB;
+          const da = a.__vencimentoDate ? a.__vencimentoDate.getTime() : 0;
+          const db = b.__vencimentoDate ? b.__vencimentoDate.getTime() : 0;
+          return da - db;
         });
 
         const mesNumerico = months.indexOf(selectedMonth) + 1;
 
+        // filtra pelo mês/ano usando o objeto Date anexado
         const despesasFiltradas = despesasOrdenadas.filter((item) => {
-          const data = new Date(item.dataVencimento);
-          return (
-            data.getMonth() + 1 === mesNumerico &&
-            data.getFullYear() === selectedYear
-          );
+          const d = item.__vencimentoDate;
+          if (!d) return false;
+          return d.getMonth() + 1 === mesNumerico && d.getFullYear() === selectedYear;
         });
 
-        setExpenses(despesasFiltradas);
+        // formata data para dd/mm/yyyy apenas para exibição (mantém __vencimentoDate)
+        const despesasFormatadas = despesasFiltradas.map(item => ({
+          ...item,
+          dataVencimento: formatToDDMMYYYY(item.__vencimentoDate || item.dataVencimento)
+        }));
+
+        setExpenses(despesasFormatadas);
       } catch (error) {
         console.error("Erro ao buscar despesas:", error);
       }

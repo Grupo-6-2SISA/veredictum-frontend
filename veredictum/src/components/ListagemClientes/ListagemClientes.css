@@ -1,48 +1,33 @@
 @import url(../Css/Main.css);
 
-/* Estilo base da Listagem */
-.clientes-listagem-container {
-    width: 100%;
-}
-
-.clientes-listagem-header {
-    display: grid;
-}
-
-.clientes-listagem-body {
-    display: flex;
-    flex-direction: column;
-}
-
-.clientes-listagem-row {
-    display: grid;
-    align-items: center;
-}
-
-.clientes-listagem-data {
-    color: #333;
-    font-size: 0.95em;
-    overflow: hidden;
-    white-space: nowrap;
-    text-overflow: ellipsis;
-}
-
-.clientes-listagem-vazia {
-    margin: 1rem auto;
-    font-size: 0.95rem;
-    color: var(--dark-black);
-    opacity: 0.75;
-    text-align: center;
-}
-
-/* Variante Clientes */
+/* Variante Clientes - Ajustado para 6 colunas (Nome, Pro-Bono, Data Início, Editar, Informações, Status)
+   Mantém o padrão visual e evita quebra de linha; permite scroll horizontal em telas pequenas. */
 .clientes-listagem-clientes {
     display: flex;
     flex-direction: column;
     gap: 0.75rem;
 }
+
+
+/* Aplica a fonte Montserrat ao componente e seus elementos filhos */
+.clientes-listagem-clientes,
+.clientes-listagem-container,
+.clientes-listagem-header,
+.clientes-listagem-row,
+.clientes-listagem-row * {
+    font-family: "Montserrat", sans-serif;
+    font-weight: 700;
+}
+
+/* Container permite scroll horizontal se o espaço for insuficiente */
+.clientes-listagem-container {
+    width: 100%;
+    overflow-x: auto;
+}
+
+/* Cabeçalho e linhas usam o mesmo grid-template-columns para alinhamento preciso */
 .clientes-listagem-header {
-  grid-template-columns: 3fr 1fr 1.5fr 1.5fr;
+    grid-template-columns: 3fr 0.9fr 1.1fr 0.9fr 1.5fr 1fr;
     gap: 1rem;
     padding: 0.75rem 1.2rem;
     font-weight: bold;
@@ -51,28 +36,26 @@
     z-index: 2;
     padding-top: 0;
     padding-bottom: 8px;
-    display: grid;
-    /* margin-left: 1px; */
     top: 0;
     background-color: white;
+    display: grid;
+    align-items: center;
+    white-space: nowrap;
 }
+
 .clientes-listagem-header .clientes-header-item {
     margin: 0;
     font-size: 19px;
     color: var(--dark-black);
     font-weight: 700;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
-.clientes-list-items-container {
-    display: flex;
-    flex-direction: column;
-    gap: 0.7rem;
-    padding-right: 1rem;
-}
-
+/* Linhas usando a mesma grade para alinhamento perfeito */
 .clientes-listagem-row {
     display: grid;
-    grid-template-columns: 3fr 1.2fr 1.6fr 1.3fr;
+    grid-template-columns: 3fr 0.9fr 1.1fr 0.9fr 1.5fr 1fr;
     gap: 1rem;
     align-items: center;
     padding: 0.3rem 1.2rem;
@@ -80,36 +63,84 @@
     border-radius: 10px;
     margin-bottom: 0.7rem;
     background-color: #f6f6f6;
-    /* background-color: var(--white-normal); */
     margin-left: 1%;
+    white-space: nowrap;
 }
 
+/* Ajustes de largura mínimos por coluna para evitar quebra e manter legibilidade */
+.col-nome,
+.clientes-col-name {
+    min-width: 220px;
+}
+
+.col-proBono,
+.clientes-col-probono {
+    min-width: 80px;
+    font-weight: 700;
+    text-align: center;
+}
+
+.col-dataInicio,
+.clientes-col-data {
+    min-width: 110px;
+    text-align: center;
+}
+
+.col-editar,
+.clientes-col-edit {
+    min-width: 60px;
+    display: flex;
+    justify-content: center;
+}
+
+.col-informacoes,
+.clientes-col-info {
+    min-width: 120px;
+    display: flex;
+    justify-content: flex-start;
+}
+
+.col-status,
+.clientes-col-status {
+    min-width: 90px;
+    display: flex;
+    justify-content: center;
+}
+
+/* Texto das células */
 .clientes-listagem-row .clientes-listagem-data {
     font-weight: 600;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
-.clientes-listagem-row .clientes-col-info {
+/* Mobilidade: reduz espaçamentos e permite scroll horizontal em telas menores */
+@media (max-width: 900px) {
+    .clientes-listagem-header,
+    .clientes-listagem-row {
+        padding-left: 12px;
+        padding-right: 12px;
+        grid-template-columns: 2.4fr 0.9fr 1fr 0.9fr 1.2fr 0.9fr;
+    }
+
+    .clientes-listagem-header .clientes-header-item {
+        font-size: 16px;
+    }
+
+    .clientes-listagem-row {
+        padding: 0.5rem;
+    }
+}
+
+/* Pequenas melhorias visuais já existentes (mantidas) */
+.clientes-list-items-container {
     display: flex;
-    justify-content: flex-start;
+    flex-direction: column;
+    gap: 0.7rem;
+    padding-right: 1rem;
 }
 
-.clientes-listagem-row .clientes-col-status,
-.clientes-listagem-row .clientes-col-edit {
-    display: flex;
-    justify-content: center;
-}
-
-.clientes-listagem-row .clientes-col-info {
-    display: flex;
-    justify-content: flex-start;
-}
-
-.clientes-listagem-row .clientes-col-status,
-.clientes-listagem-row .clientes-col-edit {
-    display: flex;
-    justify-content: center;
-}
-
+/* Animação de desativação mantida */
 .clientes-listagem-row .clientes-list-name[data-row-state="deactivating"] {
     pointer-events: none;
 }
@@ -119,16 +150,7 @@
 }
 
 @keyframes clienteDesativadoSlide {
-    0% {
-        transform: translateY(0);
-        opacity: 1;
-    }
-    50% {
-        transform: translateY(16px);
-        opacity: 0.7;
-    }
-    100% {
-        transform: translateY(0);
-        opacity: 1;
-    }
+    0% { transform: translateY(0); opacity: 1; }
+    50% { transform: translateY(16px); opacity: 0.7; }
+    100% { transform: translateY(0); opacity: 1; }
 }

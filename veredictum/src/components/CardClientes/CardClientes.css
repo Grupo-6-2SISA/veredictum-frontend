@@ -40,8 +40,8 @@
    scrollbar-color: var(--light-black) var(--white-normal);
 }
 
-@media (max-width: 1280px) {
+/* @media (max-width: 1280px) {
     .clientes-table-card {
-        width: 90vw;
+        width: 100vw;
     }
-}
+} */

@@ -26,15 +26,17 @@
     /* Aumente o valor para garantir que ele esteja no topo */
 
     /* Estilos de espaçamento */
-    height: auto;
+    height: 50px;
+    width: 100%;
     padding: 12px 15px;
     /* Ajuste o padding para altura, use o mesmo valor do listagem-row se possível */
 
     box-shadow: none;
-    margin-left: 15px;
+    margin-left: 8px;
 
     /* Adicione uma linha sutil abaixo do cabeçalho, se quiser */
-    /* border-bottom: 1px solid #e0e0e0; */
+    /* border: 1px solid red; */
+    
 }
 
 /* O restante dos estilos de listagem permanecem os mesmos */

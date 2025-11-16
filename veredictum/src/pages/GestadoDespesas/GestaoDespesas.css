@@ -1020,3 +1020,26 @@ button.info-link {
 }
 
 /* #chart-container */
+
+/* Cores para indicador "Pago" */
+.status.paid {
+  color: var(--green-normal); /* verde */
+  font-weight: 700;
+  font-size: 14px;
+  transition: color .12s ease;
+}
+
+/* Cores para indicador "Não" (não pago) */
+.status.unpaid {
+  color: var(--red-normal); /* vermelho */
+  font-weight: 700;
+  font-size: 14px;
+  transition: color .12s ease;
+}
+
+/* Garante que o estilo seja aplicado também dentro da célula da tabela */
+.bills-table td .status {
+  display: inline-block;
+  min-width: 36px;
+  text-align: center;
+}

@@ -32,7 +32,7 @@
     height: 15vh;
     border: 1px solid black;
     justify-content: space-around;
-    margin-left: 45px;
+    margin-left: 30px;
 }
 
 /* Cada grupo ocupa metade do painel, ajustável */
@@ -116,14 +116,14 @@
 
 /* Card raiz já termina com -logs */
 .card-box-logs {
-    width: 88vw;
+    width: 90vw;
     height: calc(60vh + 300px); /* Altura fixa do card */
     background: var(--white-normal, #fff);
     border-radius: 12px;
     box-shadow: 0 6px 20px rgba(0, 0, 0, 0.06);
     padding: 20px;
     margin-top: 18px;
-    margin-left: 45px;
+    margin-left: 30px;
     margin-bottom: 18px;
     display: flex;
     flex-direction: column;
@@ -144,21 +144,45 @@
     align-items: center;
 }
 
-/* Scrollbar */
+/* Scrollbar: versão consistente e "black" para os containers de listagem
+   Aplica-se tanto .log-email-listagem-logs quanto .card-box-logs .listagem-body */
+
+/* WebKit (Chrome, Edge, Safari) */
+.log-email-listagem-logs::-webkit-scrollbar,
 .card-box-logs .listagem-body::-webkit-scrollbar {
-    width: 3px;
+    width: 10px;
+    height: 10px;
 }
+
+.log-email-listagem-logs::-webkit-scrollbar-track,
 .card-box-logs .listagem-body::-webkit-scrollbar-track {
-    background: transparent;
+    background: #0b0b0b; /* track escuro */
+    border-radius: 10px;
 }
+
+.log-email-listagem-logs::-webkit-scrollbar-thumb,
 .card-box-logs .listagem-body::-webkit-scrollbar-thumb {
-    background: rgb(0, 0, 0);
-    border-radius: 8px;
-    border: 2px solid rgba(0, 0, 0, 0.85);
+    background: #000; /* thumb preto */
+    border-radius: 10px;
+    border: 2px solid #0b0b0b; /* contorno discreto para destacar */
 }
+
+.log-email-listagem-logs::-webkit-scrollbar-thumb:hover,
+.card-box-logs .listagem-body::-webkit-scrollbar-thumb:hover {
+    background: #111;
+}
+
+/* Firefox */
+.log-email-listagem-logs,
 .card-box-logs .listagem-body {
     scrollbar-width: thin;
-    scrollbar-color: rgb(0, 0, 0) transparent;
+    scrollbar-color: #000 #0b0b0b; /* thumb / track */
+}
+
+/* Fallback para navegadores que suportam propriedades CSS modernas */
+.log-email-listagem-logs::-webkit-scrollbar-corner,
+.card-box-logs .listagem-body::-webkit-scrollbar-corner {
+    background: #0b0b0b;
 }
 
 .log-detalhes-inputs {

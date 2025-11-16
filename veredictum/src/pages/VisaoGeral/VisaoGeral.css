@@ -33,3 +33,42 @@
     justify-content: center;
     margin-bottom: 20px;
 }
+
+/* Ajustes para monitores ainda maiores (≈ 2200px+, boas para 27"-30" 2560px wide) */
+@media (min-width: 2200px) {
+  .main-content {
+    padding: 48px 120px;
+    padding-left: 12%;
+  }
+
+  .main-content h1 {
+    font-size: 80px;
+  }
+
+  .cards-grid {
+    grid-template-columns: repeat(3, minmax(360px, 1fr));
+    gap: 36px;
+  }
+}
+
+/* Ajustes para telas ultra-wide / 4K grandes (≈ 3200px+) */
+@media (min-width: 3200px) {
+  .main-content {
+    padding: 64px 180px;
+    padding-left: 14%;
+  }
+
+  .main-content h1 {
+    font-size: 96px;
+  }
+
+  .cards-grid {
+    grid-template-columns: repeat(4, minmax(380px, 1fr));
+    gap: 44px;
+  }
+}
+
+/* proteção para que cards não fiquem muito comprimidos */
+.cards-grid > * {
+  min-width: 280px;
+}
