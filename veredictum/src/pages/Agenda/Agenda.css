@@ -227,55 +227,56 @@
     text-align: center;
 }
 
-/* Scrollbar customizada */
-.agenda-listagem-container,
-#atendimento-list .listagem-body {
+/* Tornar os dois cards roláveis internamente (Atendimentos e Aniversariantes) */
+.agenda-card-container-atendimento,
+.agenda-card-container-birthdays {
+    /* permite scroll interno quando o conteúdo ultrapassar a área do card */
+    overflow: auto;
+}
+
+/* Restringe a área da listagem dentro do card para que gere scrollbar vertical */
+.agenda-card-container-atendimento .agenda-listagem-container,
+.agenda-card-container-birthdays .aniversariantes-panel,
+.agenda-card-container-birthdays .agenda-listagem-container {
+    max-height: calc(100% - 120px); /* reserva espaço para header / paddings do card */
     overflow-y: auto;
     -webkit-overflow-scrolling: touch;
 }
 
+/* Scrollbar custom para esses cards (WebKit + Firefox) */
+.agenda-card-container-atendimento .agenda-listagem-container::-webkit-scrollbar,
+.agenda-card-container-birthdays .aniversariantes-panel::-webkit-scrollbar,
+.agenda-card-container-birthdays .agenda-listagem-container::-webkit-scrollbar {
+    width: 10px;
+}
+
+.agenda-card-container-atendimento .agenda-listagem-container::-webkit-scrollbar-track,
+.agenda-card-container-birthdays .aniversariantes-panel::-webkit-scrollbar-track,
+.agenda-card-container-birthdays .agenda-listagem-container::-webkit-scrollbar-track {
+    background: transparent;
+    border-radius: 8px;
+}
+
+.agenda-card-container-atendimento .agenda-listagem-container::-webkit-scrollbar-thumb,
+.agenda-card-container-birthdays .aniversariantes-panel::-webkit-scrollbar-thumb,
+.agenda-card-container-birthdays .agenda-listagem-container::-webkit-scrollbar-thumb {
+    background: var(--darkness-black);
+    border-radius: 8px;
+    border: 3px solid rgba(0,0,0,0.85);
+}
+
+.agenda-card-container-atendimento .agenda-listagem-container::-webkit-scrollbar-thumb:hover,
+.agenda-card-container-birthdays .aniversariantes-panel::-webkit-scrollbar-thumb:hover,
+.agenda-card-container-birthdays .agenda-listagem-container::-webkit-scrollbar-thumb:hover {
+    background: rgba(0,0,0,0.65);
+}
+
 /* Firefox */
-.agenda-listagem-container,
-#atendimento-list .listagem-body {
+.agenda-card-container-atendimento .agenda-listagem-container,
+.agenda-card-container-birthdays .aniversariantes-panel,
+.agenda-card-container-birthdays .agenda-listagem-container {
     scrollbar-width: thin;
     scrollbar-color: var(--darkness-black) transparent;
-}
-
-/* WebKit */
-.agenda-listagem-container::-webkit-scrollbar,
-#atendimento-list .listagem-body::-webkit-scrollbar {
-    width: 12px;
-}
-
-.agenda-listagem-container::-webkit-scrollbar-track,
-#atendimento-list .listagem-body::-webkit-scrollbar-track {
-    background: transparent;
-    margin: 8px 0;
-}
-
-.agenda-listagem-container::-webkit-scrollbar-thumb,
-#atendimento-list .listagem-body::-webkit-scrollbar-thumb {
-    background: var(--darkness-black) transparent;
-    border-radius: 10px;
-    border: 3px solid rgba(0, 0, 0, 0.85);
-    box-shadow: 0 2px 6px rgba(0,0,0,0.06) inset;
-}
-
-.agenda-listagem-container::-webkit-scrollbar-thumb:hover,
-#atendimento-list .listagem-body::-webkit-scrollbar-thumb:hover,
-.agenda-listagem-container::-webkit-scrollbar-thumb:active,
-#atendimento-list .listagem-body::-webkit-scrollbar-thumb:active {
-    background: rgba(0,0,0,0.18);
-}
-
-.agenda-listagem-container::-webkit-scrollbar-button,
-#atendimento-list .listagem-body::-webkit-scrollbar-button {
-    display: none;
-}
-
-.agenda-listagem-container::-webkit-scrollbar-corner,
-#atendimento-list .listagem-body::-webkit-scrollbar-corner {
-    background: transparent;
 }
 
 /* Responsivo */

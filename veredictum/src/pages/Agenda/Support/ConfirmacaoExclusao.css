@@ -8,7 +8,7 @@
     background: var(--white-dark) ;
     color: var(--confirm-modal-text) ;
     /* Ajuste do tamanho e visual (iOS é menor e arredondado) */
-    max-width: 40vw ; /* Mais estreito que o anterior */
+    max-width: 32vw ; /* Mais estreito que o anterior */
     height: 32vh ;
     border-radius: 14px ; /* Arredondamento do iOS */
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15); /* Sombra mais suave */
@@ -71,7 +71,7 @@
 /* 3. Ajuste do corpo do modal de exclusão */
 .modal-body_L-agenda-delete {
     /* Body exclusivo para exclusão (sem grid, padding simples) */
-    padding: 0 20px 20px ; /* Ajusta o padding para o novo design */
+    padding: 5px 20px ; /* Ajusta o padding para o novo design */
     display: flex ;
     flex-direction: column ;
     align-items: center ;
