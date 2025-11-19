@@ -44,23 +44,44 @@ veredictum-frontend/
 │   │   │   └── svg/               # Ícones e ilustrações SVG
 │   │   │
 │   │   ├── components/            # Componentes reutilizáveis
+│   │   │   ├── Auth/
 │   │   │   ├── Button/
 │   │   │   ├── ButtonAgenda/
+│   │   │   ├── ButtonClientes/
+│   │   │   ├── Card/
+│   │   │   ├── CardClientes/
+│   │   │   ├── ChartContainer/
+│   │   │   ├── DashboardFilter/
+│   │   │   ├── KpiCard/
 │   │   │   ├── Listagem/
+│   │   │   ├── ListagemClientes/
+│   │   │   ├── Modal_Logs/
+│   │   │   ├── Modal_P/
+│   │   │   ├── Modals/
+│   │   │   ├── ModalClientes/
 │   │   │   ├── MonthPicker/
-│   │   │   └── Sidebar/
+│   │   │   ├── PagIniciais/
+│   │   │   ├── Sidebar/
+│   │   │   ├── StatusWrapper/
+│   │   │   ├── SwitchAlert/
+│   │   │   └── Toggle/
 │   │   │
 │   │   ├── pages/                 # Páginas/telas da aplicação
 │   │   │   ├── Agenda/
 │   │   │   │   └── Support/       # Modais e componentes auxiliares
+│   │   │   ├── Cadastro/
 │   │   │   ├── Clientes/
 │   │   │   ├── Dashboard/
-│   │   │   ├── Despesas/
-│   │   │   ├── Funcionarios/
+│   │   │   ├── GestaoDespesas/
+│   │   │   ├── Home/
+│   │   │   ├── LogEnvioEmail/
 │   │   │   ├── Login/
-│   │   │   └── NotaFiscal/
+│   │   │   ├── NotasFiscais/
+│   │   │   ├── PainelControle/
+│   │   │   ├── RecuperarSenha/
+│   │   │   └── VisaoGeral/
 │   │   │
-│   │   ├── services/              # Lógica de comunicação com API
+│   │   ├── styles/                # Arquivos de estilização global
 │   │   │
 │   │   ├── App.jsx                # Componente raiz com roteamento
 │   │   ├── App.css                # Estilos globais do App
@@ -168,6 +189,10 @@ npm install prop-types
 - **chart.js** (gráficos)
 ```bash
 npm install chart.js
+```
+- **recharts** (biblioteca de gráficos React — alternativa leve para visualizações)
+```bash
+npm install recharts
 ```
 
 - **date-fns** (utilitários de data)

@@ -1,0 +1,207 @@
+/* src/pages/Dashboard/KpiCard.css */
+
+/*
+* ==============================
+* SEÇÃO DOS KPIs (Ajuste de Layout e Tamanho)
+* ==============================
+*/
+
+.kpi-section {
+    width: 100%;
+    margin: 0;
+    display: flex;
+    justify-content: center;
+}
+
+.kpi-grid {
+    display: grid;
+    /* Usa 4 colunas de 1 fração (1fr) para dividir o espaço igualmente */
+    grid-template-columns: repeat(4, 1fr);
+    gap: 15px;
+    width: 90%;
+    position: relative;
+}
+
+/* --- Card KPI (Redução de Tamanho) --- */
+.kpi-card {
+    background: var(--white-normal, #fff);
+    border-radius: 8px;
+    padding: 10px 14px;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
+    border: 1px solid #eee;
+    height: 90px;
+    margin-bottom: 10px;
+}
+
+/* 1. Kpi Header com Status/Cuidado */
+.kpi-header {
+    min-height: 20px; /* Garante que o status não comprima o card */
+    margin-bottom: 2px;
+}
+
+.kpi-status {
+    display: inline-flex;
+    align-items: center;
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--normal-black);
+    background-color: #fff3e0;
+    /* Fundo levemente alaranjado/amarelado */
+    padding: 2px 6px;
+    border-radius: 4px;
+    border: 1px solid var(--warning-color);
+}
+
+.kpi-status .status-icon {
+    font-size: 14px;
+    margin-right: 4px;
+    color: var(--warning-color);
+}
+
+.kpi-status-hidden {
+    display: none; /* Esconde o span se não houver status, mantendo o layout */
+}
+
+/* Conteúdo principal do KPI (kpi-main) */
+.kpi-main {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: flex-start;
+    margin-top: 5px;
+}
+
+/* Valor principal e percentual secundário (ex: 55 (90%)) */
+.kpi-value {
+    font-size: 18px;
+    font-weight: bold;
+    margin-bottom: 2px;
+    display: flex;
+    align-items: baseline;
+    gap: 5px;
+}
+
+.kpi-value .percent {
+    font-size: 13px;
+    font-weight: normal;
+    color: #888; /* Cor mais suave para o percentual */
+}
+
+.kpi-label {
+    font-size: 13px;
+    color: #555;
+    margin-bottom: 5px;
+}
+
+/* Variação (lado direito superior) - O Contêiner de Posição ABSOLUTA */
+.kpi-change {
+    position: absolute;
+    top: 10px;
+    right: 14px;
+    height: 40px; /* Define uma altura para o contêiner */
+    width: 45px; /* Define uma largura para o contêiner */
+}
+
+/* Estilo da Seta (▲ ou ▼) - POSICIONADA NO TOPO */
+.kpi-change .change-icon {
+    position: absolute;
+    top: 0;
+    right: 0;
+    font-size: 16px;
+    line-height: 1;
+    z-index: 2; /* Garante que fique sobre o balão */
+    background: none; /* Não tem fundo */
+}
+
+/* Cores da Seta (A seta em si, sem fundo, fica verde/vermelha) */
+.kpi-change .change-icon.change-positive {
+    color: var(--positive-color);
+}
+
+.kpi-change .change-icon.change-negative {
+    color: var(--negative-color);
+}
+
+
+/* Estilo do Valor Percentual (o balão com fundo colorido) - POSICIONADO ABAIXO */
+.kpi-change .change-value-baloon {
+    position: absolute;
+    top: 15px; /* Ajusta a posição para que fique abaixo da seta */
+    right: 0;
+
+    font-size: 10px;
+    font-weight: bold;
+    color: var(--white-normal);
+
+    /* Estilo do Balão */
+    padding: 3px 6px;
+    border-radius: 6px;
+    line-height: 1;
+}
+
+/* Cores do Balão (herdando as classes do pai) */
+.kpi-change.change-positive .change-value-baloon {
+    background-color: var(--positive-color);
+}
+
+.kpi-change.change-negative .change-value-baloon {
+    background-color: var(--negative-color);
+}
+
+/* --- ESTILOS DE ESQUELETO DO KPI --- */
+.kpi-change-skeleton {
+    height: 40px;
+    width: 45px;
+}
+
+.kpi-change-skeleton .change-skeleton-placeholder {
+    position: absolute;
+    top: 15px;
+    right: 0;
+    background-color: #e0e0e0 !important;
+    color: transparent !important;
+    padding: 3px 6px;
+    border-radius: 6px;
+    width: 100%;
+    height: 16px;
+}
+
+
+/* --- Card de Filtro Ativo (Posicionado no Grid) --- */
+.active-filter-card {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-start;
+    background: var(--white-normal, #fff);
+    border-radius: 8px;
+    padding: 10px 14px;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
+    border: 1px solid #eee;
+    height: 90px;
+}
+
+.filter-card-content {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.filter-icon {
+    font-size: 1.5rem;
+    color: #333;
+}
+
+.filter-title.skeleton-text-medium {
+    font-size: 13px;
+    height: 14px;
+    margin-bottom: 5px;
+    width: 100%;
+}
+
+.filter-date.skeleton-value {
+    font-size: 18px;
+    font-weight: bold;
+    height: 20px;
+    width: 100%;
+}

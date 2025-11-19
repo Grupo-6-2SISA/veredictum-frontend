@@ -1,0 +1,88 @@
+/* src/pages/Dashboard/ChartContainer.css */
+
+/*
+* ==============================
+* SEÇÃO DOS GRÁFICOS
+* ==============================
+*/
+
+.dashboard-charts {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 15px;
+    width: 90%;
+    margin: -10px auto 10px auto; /* Centraliza o grid de gráficos */
+}
+
+.chart-container {
+    background-color: var(--white-normal, #fff);
+    border-radius: 12px;
+    padding: 1.5rem;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    min-height: 350px;
+    display: flex; /* Adiciona flex para organizar header e conteúdo */
+    flex-direction: column;
+}
+
+/* Header do Gráfico (Título e Ícone de Info) */
+.chart-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.chart-title { /* Alterado de h3 para .chart-title */
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: var(--normal-black);
+}
+
+/* Área de conteúdo do gráfico (Onde o Recharts será renderizado) */
+.chart-content {
+    flex-grow: 1;
+    /* Garante que o gráfico preencha o espaço restante */
+    position: relative; 
+    /* 🚀 IMPORTANTE: Defina uma altura para o Recharts saber renderizar */
+    min-height: 280px; 
+}
+/* Tooltip (Ícone de Informação) */
+.info-tooltip-wrapper {
+    position: relative;
+    cursor: pointer;
+    padding: 5px; /* Área de clique maior */
+}
+
+.chart-tooltip {
+    /* Inicialmente escondido e posicionado */
+    visibility: hidden;
+    opacity: 0;
+    position: absolute;
+    top: 100%; /* Abaixo do ícone */
+    right: 0;
+    width: 250px;
+    padding: 10px;
+    background-color: #333;
+    color: white;
+    border-radius: 6px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+    z-index: 10;
+    transition: opacity 0.3s;
+}
+
+.chart-tooltip h4 {
+    font-size: 0.9rem;
+    margin: 0 0 5px 0;
+    font-weight: bold;
+}
+
+.chart-tooltip p {
+    font-size: 0.8rem;
+    margin: 0;
+}
+
+/* Exibe o tooltip ao passar o mouse */
+.info-tooltip-wrapper:hover .chart-tooltip {
+    visibility: visible;
+    opacity: 1;
+}

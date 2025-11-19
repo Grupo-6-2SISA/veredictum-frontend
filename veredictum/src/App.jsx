@@ -2,6 +2,7 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Home from './pages/Home/Home.jsx';
 import Cadastro from './pages/Cadastro/Cadastro.jsx';
 import VisaoGeral from './pages/VisaoGeral/VisaoGeral.jsx';
+import Dashboard from './pages/Dashboard/Dashboard.jsx';
 import PainelControle from "./pages/PainelControle/PainelControle.jsx";
 import GestaoDespesas from './pages/GestadoDespesas/GestaoDespesas.jsx';
 import NotasFiscais from './pages/NotasFiscais/NotasFiscais.jsx';
@@ -20,6 +21,7 @@ function App() {
         <Route path="/login" element={<Login />} />
         <Route path="/recuperarSenha" element={<RecuperarSenha/>} />
         <Route path="/VisaoGeral" element={<VisaoGeral />} />
+        <Route path="/Dashboard" element={<Dashboard />} />
         <Route path="/PainelControle" element={<PainelControle />} />
         <Route path="/GestaoDespesas" element={<GestaoDespesas />} />
         <Route path="/NotasFiscais" element={<NotasFiscais />} />
