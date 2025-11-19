@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import FecharIcon from "../../../assets/svg/fechar.svg";
 import { adicionarDespesa } from "../GestaoDespesas";
@@ -19,16 +18,16 @@ export default function ModalAdicionarDespesa({ show, onClose, atualizarLista })
         const urlNuvem = e.target.urlNuvem.value.trim();
         const descricao = e.target.descricao.value.trim();
 
-        // === VALIDAÇÕES ===
-        const somenteLetras = /^[A-Za-zÀ-ú\s]+$/;
+        // === NOVA VALIDAÇÃO (mesma do modal editar) ===
+        const regexTexto = /^[A-Za-zÀ-ú\s.\-]+$/;
 
-        if (!etiqueta || etiqueta.length < 3 || !somenteLetras.test(etiqueta)) {
-            alert("❌ Etiqueta deve ter pelo menos 3 letras e conter somente caracteres alfabéticos.");
+        if (!etiqueta || etiqueta.length < 3 || !regexTexto.test(etiqueta)) {
+            alert("❌ Etiqueta deve ter pelo menos 3 caracteres e pode conter letras, espaços, pontos e traços (sem números).");
             return;
         }
 
-        if (!descricao || descricao.length < 3 || !somenteLetras.test(descricao)) {
-            alert("❌ Descrição deve ter pelo menos 3 letras e conter somente caracteres alfabéticos.");
+        if (!descricao || descricao.length < 3 || !regexTexto.test(descricao)) {
+            alert("❌ Descrição deve ter pelo menos 3 caracteres e pode conter letras, espaços, pontos e traços (sem números).");
             return;
         }
 
@@ -84,7 +83,6 @@ export default function ModalAdicionarDespesa({ show, onClose, atualizarLista })
         <div id="ModalAdicionarDespesa_Davidson" className="modal_Adicionar_Despesas">
             <div className="modal_add_despesas">
                 <div className="modal-header" style={{ backgroundColor: '#424242', borderBottom: 'none', paddingBottom: "40px" }}>
-
                     <h2 style={{ fontSize: "45px", paddingLeft: "60px" }}>Adicionar Despesa</h2>
                     <button style={{ transform: "translateX(350%)" }} className="modal-close-btn_Despesas" onClick={onClose}>
                         <img src={FecharIcon} alt="Fechar" />
@@ -121,16 +119,8 @@ export default function ModalAdicionarDespesa({ show, onClose, atualizarLista })
                     {/* Valor */}
                     <div className="form-row_Davidson">
                         <div className="form-group">
-                            <label
-                                // style={{ transform: "translateX(-1%)" }}
-                                htmlFor="valor">Valor</label>
-                            <input
-                                // style={{ transform: "translateX(-3%)", width: "47%" }}
-
-                                type="number"
-                                step="0.01"
-                                id="valor"
-                                name="valor" required />
+                            <label htmlFor="valor">Valor</label>
+                            <input type="number" step="0.01" id="valor" name="valor" required />
                         </div>
                     </div>
 

@@ -472,12 +472,12 @@ table {
     text-align: center;
 }
 
+/* 
 .pill-row:hover {
-    transform: translateY(-2px);
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.25);
     border: 1px solid rgba(0, 0, 0, 0.25);
     transition: all 0.3s ease;
-}
+} */
 
 .pill-row:nth-child(even) {
     background: linear-gradient(to bottom, rgba(248, 250, 252, 0.9) 0%, rgba(248, 250, 252, 0.5) 50%, rgba(248, 250, 252, 0.1) 100%);
@@ -527,17 +527,12 @@ table {
 }
 
 
-/* container rolável: define altura e overflow */
 .panel-content.scrollable-rotinas {
     max-height: 400px;
-    /* altura do painel com scroll */
     overflow-y: auto;
-    /* rolagem ativa */
     scrollbar-gutter: stable;
-    /* reserva espaço para scrollbar quando disponível */
 }
 
-/* tabela: evita que oadaptação de colunas quebre o sticky */
 .rotinas-table {
     width: 100%;
     border-collapse: collapse;
@@ -558,18 +553,16 @@ table {
 .rotinas-table thead th,
 .rotinas-table tbody td {
     min-width: 100px;
-    /* ajuste conforme necessário para manter colunas alinhadas */
     padding: 10px;
 }
 
-/* se quiser: estilizar scrollbar (opcional, funciona em browsers que suportam) */
 .panel-content.scrollable-rotinas::-webkit-scrollbar {
     width: 10px;
 }
 
 .panel-content.scrollable-rotinas::-webkit-scrollbar-thumb {
     border-radius: 6px;
-    background: rgba(0, 0, 0, 0.15);
+    background: #222;
 }
 
 
@@ -601,6 +594,7 @@ table {
 .scrollable-funcionarios::-webkit-scrollbar-thumb {
     border-radius: 6px;
     background: rgba(0, 0, 0, 0.15);
+    background-color: #222;
 }
 
 
@@ -649,3 +643,13 @@ table {
     overscroll-behavior: contain;
     scrollbar-width: none;
 }
+
+/* 
+#Celula_pulinho_sem {
+    transition: transform 0.12s ease, box-shadow 0.12s ease;
+}
+
+#Celula_pulinho_sem:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.08);
+} */

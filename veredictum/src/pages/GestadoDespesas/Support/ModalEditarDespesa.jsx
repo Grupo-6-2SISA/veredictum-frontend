@@ -17,16 +17,16 @@ export default function ModalEditarDespesa({ show, onClose, editingItem, atualiz
         const urlNuvem = e.target.urlNuvem.value.trim();
         const isPago = e.target.isPago.checked;
 
-        // === VALIDAÇÕES ===
-        const somenteLetras = /^[A-Za-zÀ-ú\s]+$/;
+        // === NOVA VALIDAÇÃO PARA AMBAS ===
+        const regexTexto = /^[A-Za-zÀ-ú\s.\-]+$/;
 
-        if (!etiqueta || etiqueta.length < 3 || !somenteLetras.test(etiqueta)) {
-            alert("❌ Etiqueta deve ter pelo menos 3 letras e conter somente caracteres alfabéticos.");
+        if (!etiqueta || etiqueta.length < 3 || !regexTexto.test(etiqueta)) {
+            alert("❌ Etiqueta deve ter pelo menos 3 caracteres e pode conter letras, espaços, pontos e traços (sem números).");
             return;
         }
 
-        if (!descricao || descricao.length < 3 || !somenteLetras.test(descricao)) {
-            alert("❌ Descrição deve ter pelo menos 3 letras e conter somente caracteres alfabéticos.");
+        if (!descricao || descricao.length < 3 || !regexTexto.test(descricao)) {
+            alert("❌ Descrição deve ter pelo menos 3 caracteres e pode conter letras, espaços, pontos e traços (sem números).");
             return;
         }
 
@@ -34,7 +34,6 @@ export default function ModalEditarDespesa({ show, onClose, editingItem, atualiz
             alert("❌ URL deve terminar com .pdf, .com ou .br");
             return;
         }
-
 
         if (isNaN(valor) || valor < 0) {
             alert("❌ Valor não pode ser negativo.");
@@ -62,7 +61,6 @@ export default function ModalEditarDespesa({ show, onClose, editingItem, atualiz
             alert("✅ Conta atualizada com sucesso");
 
             onClose();
-
             window.location.reload();
 
         } catch (error) {
@@ -77,12 +75,11 @@ export default function ModalEditarDespesa({ show, onClose, editingItem, atualiz
             <div className="modal-content-despesas" style={{ maxHeight: "600px" }}>
 
                 <div id="modal-header-top" style={{ backgroundColor: '#414141', borderBottom: 'none' }} className="modal-header">
-                    <h2  style={{fontSize: "47px", transform: "translateY(16%)"}}>Editar Despesa</h2>
+                    <h2 style={{ fontSize: "47px", transform: "translateY(16%)" }}>Editar Despesa</h2>
 
                     <button className="modal-close-btn_Despesas_edit" style={{ transform: "translate(300%, 20%)" }} onClick={onClose}>
                         <img src={FecharIcon} alt="Fechar" />
                     </button>
-                    
                 </div>
 
                 <form id="editExpenseForm" onSubmit={handleSubmit}>
@@ -132,9 +129,7 @@ export default function ModalEditarDespesa({ show, onClose, editingItem, atualiz
 
                     <div className="form-row_Davidson">
                         <div className="form-group">
-                            <label
-                                style={{ transform: "translateX(-1%)" }}
-                                htmlFor="edit-valor">Valor</label>
+                            <label style={{ transform: "translateX(-1%)" }} htmlFor="edit-valor">Valor</label>
                             <input
                                 style={{ transform: "translateX(-3%)", width: "47%" }}
                                 type="number"

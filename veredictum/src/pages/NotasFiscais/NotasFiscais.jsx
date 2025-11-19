@@ -308,12 +308,12 @@ const NotasFiscais = () => {
             <div className="card-content">
               <div className="list-header-nf">
                 <p>Número</p>
-                <p>Etiqueta</p>
+                <p style={{transform: "translateX(40px)" }}>Etiqueta</p>
                 <p>Data Vencimento</p>
                 <p>Emitida</p>
-                <p>Editar</p>
-                <p>Excluir</p>
-                <p>Ver mais</p>
+                <p style={{transform: "translateX(10px)" }}>Editar</p>
+                <p style={{transform: "translateX(10px)" }}>Excluir</p>
+                <p style={{transform: "translateX(23px)" }}>Ver mais</p>
               </div>
 
               {loading ? (
@@ -345,7 +345,7 @@ const NotasFiscais = () => {
                         <p>{nota.numero}</p>
 
                         <p className="nf-etiqueta" title={nota.etiqueta}>{nota.etiqueta}</p>
-                        <p>{formatDateForDisplay(nota.dataVencimento)}</p>
+                        <p  style={{transform: "translateX(15px)" }}>{formatDateForDisplay(nota.dataVencimento)}</p>
                         <p style={{
                           color: emitidaText === 'Sim' ? 'green' : 'red',
                           fontWeight: 'bold'

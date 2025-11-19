@@ -159,9 +159,9 @@
     transition: transform 0.2s ease;
 }
 
-.nf-list-item img:hover {
+/* .nf-list-item img:hover {
     transform: scale(1.1);
-}
+} */
 
 .nf-list-item a {
     color: black;
@@ -260,7 +260,7 @@
 
 .modal-close-btn:hover {
     background-color: rgba(255, 255, 255, 0.1);
-    transform: scale(1.1);
+    /* transform: scale(1.1); */
 }
 
 .modal-close-btn img {

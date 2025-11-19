@@ -303,7 +303,12 @@ export default function PainelControle() {
                   </thead>
                   <tbody>
                     {funcionariosOrdenados.map(func => (
-                      <tr style={{ backgroundColor: '#f6f6f6' }} key={func.id} className="pill-row">
+                      <tr
+                        id="Celula_pulinho_sem"
+                        style={{ backgroundColor: '#f6f6f6' }}
+                        key={func.id}
+                        className="pill-row"
+                      >
                         <td>{func.id}</td>
                         <td>{func.nome}</td>
                         <td>
@@ -313,7 +318,7 @@ export default function PainelControle() {
                           </button>
                         </td>
                         <td>
-                          <div style={{ transform: 'translateX(50%)' }} 
+                          <div style={{ transform: 'translateX(50%)' }}
                             className={`toggle-switch ${func.ativo ? 'active' : ''}`}
                             onClick={() => alternarStatusFuncionario(func.id)}
                           ></div>
@@ -345,9 +350,10 @@ export default function PainelControle() {
                   <tr>
                     <th>Nome de Rotina</th>
                     <th>Executado</th>
-                    <th>Ações</th>
-                    <th>Acesso</th>
+                    <th style={{ transform: "translateX(15%)" }}>Ações</th>
+
                     <th>Editar</th>
+                    <th>Acesso</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -356,21 +362,24 @@ export default function PainelControle() {
                       <td>{rotina.nome}</td>
                       <td>{"Sim"}</td>
                       <td>
-                        <a href="#"   style={{ textDecoration: 'none'}} className="link" onClick={(e) => { e.preventDefault(); openModalVerMaisRotina(rotina.id); }}>
-                          Ver Mais
+                        <a href="#" style={{ textDecoration: 'none' }} className="link" onClick={(e) => { e.preventDefault(); openModalVerMaisRotina(rotina.id); }}>
+                          <span style={{ fontSize: "15px" }}>Ver Mais</span>
                         </a>
                       </td>
+
+                      <td>
+                        <button className="edit-btn" onClick={() => openModalEditarRotina(rotina.id)}>
+                          <img src={EditIcon} alt="Editar" />
+                        </button>
+                      </td>
+
                       <td>
                         <div
                           className={`toggle-switch ${rotina.ativo ? 'active' : ''}`}
                           onClick={() => alternarStatusRotina(rotina.id)}
                         />
                       </td>
-                      <td>
-                        <button className="edit-btn" onClick={() => openModalEditarRotina(rotina.id)}>
-                          <img src={EditIcon} alt="Editar" />
-                        </button>
-                      </td>
+
                     </tr>
                   ))}
                 </tbody>

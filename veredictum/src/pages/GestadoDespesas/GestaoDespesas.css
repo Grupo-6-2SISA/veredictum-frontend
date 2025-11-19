@@ -155,11 +155,10 @@
     box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
     transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
-
+/* 
 .bills-table tbody tr:hover {
-    transform: scale(1.01);
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.25);
-}
+} */
 
 /* ====== CÉLULAS ====== */
 .bills-table tbody tr td {
@@ -906,9 +905,9 @@ button.info-link {
     transition: transform 0.2s ease;
 }
 
-.modal-close-btn_Despesas_edit:hover {
+/* .modal-close-btn_Despesas_edit:hover {
     transform: scale(1.1);
-}
+} */
 
 
 #form-group-vencimento {
