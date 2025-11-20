@@ -49,7 +49,7 @@ const ActiveFilterCard = ({ currentFilter, currentPeriod }) => {
     return (
         <div className="active-filter-card kpi-card">
             <div className="filter-card-content">
-                <span className="filter-icon">📄</span>
+                <span className="icon-calendar"></span>
                 <div className="filter-card-text">
                     <div className="filter-title">Filtro Atual - {names[currentFilter] || 'Catálogo'}</div>
                     <div className="filter-date">{periodText}</div>

@@ -21,7 +21,7 @@ const DashboardFilter = ({ onApplyFilter }) => {
                 <label htmlFor="date-from">De</label>
                 <div className="input-with-icon">
                     <input type="month" id="date-from" value={fromPeriod} onChange={e => setFromPeriod(e.target.value)} />
-                    <span className="icon-calendar"></span>
+                    {/* <span className="icon-calendar"></span> */}
                 </div>
             </div>
 
@@ -30,7 +30,7 @@ const DashboardFilter = ({ onApplyFilter }) => {
                 <label htmlFor="date-to">Para</label>
                 <div className="input-with-icon">
                     <input type="month" id="date-to" value={toPeriod} onChange={e => setToPeriod(e.target.value)} />
-                    <span className="icon-calendar"></span>
+                    {/* <span className="icon-calendar"></span> */}
                 </div>
             </div>
 
