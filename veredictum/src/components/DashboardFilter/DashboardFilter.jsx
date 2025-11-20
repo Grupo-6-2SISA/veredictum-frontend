@@ -9,6 +9,16 @@ const DashboardFilter = ({ onApplyFilter }) => {
     const [toPeriod, setToPeriod] = useState('');
 
     const handleApply = () => {
+        // valida campos preenchidos
+        if (!selectedCatalog || !fromPeriod || !toPeriod) {
+            alert('Preencha Catálogo, De e Para antes de filtrar.');
+            return;
+        }
+        // valida intervalo
+        if (fromPeriod > toPeriod) {
+            alert('Período inválido: "De" deve ser anterior ou igual a "Para".');
+            return;
+        }
         if (!onApplyFilter) return;
         onApplyFilter({ catalog: selectedCatalog, from: fromPeriod, to: toPeriod });
     };
