@@ -38,58 +38,62 @@
     width: 100%;
 }
 
-/* Estilização Base para Input e Select */
+/* Input / Select: usar 100% da largura e centralizar verticalmente o texto */
 .input-with-icon input,
 .input-with-icon select {
-    width: 100%;
-    padding: 10px 35px 10px 10px;
+    width: 95%;
+    padding: 10px 44px 10px 12px; /* espaço à direita para a seta, à esquerda para o texto */
     border: 1px solid var(--input-border-color);
-    /* Borda clara */
     border-radius: 6px;
     font-size: 1rem;
     background-color: var(--white-normal);
     color: var(--normal-black);
-    height: 38px;
+    height: auto;
+    line-height: 22px;      /* centraliza verticalmente */
     box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
-}
-
-/* Estilo Específico para o SELECT */
-.input-with-icon select {
-    /* Remove a seta padrão do navegador */
     appearance: none;
     -webkit-appearance: none;
     -moz-appearance: none;
-    cursor: pointer;
+    text-align: left;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
 }
 
-/* Estilo do Ícone de Calendário nas Inputs (De/Para) */
-.icon-calendar {
-    position: absolute;
-    right: 10px;
-    top: 50%;
-    transform: translateY(-50%);
-    pointer-events: none;
+.select-container {
+    position: relative;
+    display: flex;
+    align-items: center;
+    width: 100%;
+}
+
+/* Remove o comportamento padrão do botão de expandir (IE/Edge) */
+.input-with-icon select::-ms-expand {
+    display: none;
+}
+
+/* Garante que opções do select também tenham cor legível */
+.input-with-icon select option {
+    color: var(--normal-black);
 }
 
 .icon-calendar::before {
     /* Código SVG ou ícone de fonte para o calendário */
-    content: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="%23333333" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-calendar"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>');
+    content: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="%23333333" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-calendar"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>');
     display: block;
-    width: 20px;
-    height: 20px;
+    width: 40px;
+    height: 45px;
 }
 
-/* POSICIONAMENTO DA SETA DE DROP-DOWN NO SELECT */
+/* seta posicionada à direita sem interceptar clique */
 .select-arrow {
     position: absolute;
-    /* Move a seta para a esquerda do ícone de calendário */
-    right: 10px;
+    right: 30px; /* distância da borda direita */
     top: 50%;
     transform: translateY(-50%);
     pointer-events: none;
-    /* Garante que o clique passe para o select */
     color: var(--normal-black);
-    /* Cor da seta SVG */
+    z-index: 2;
 }
 
 .select-arrow svg {
@@ -114,4 +118,13 @@
 
 .filter-button.button-dark-solid:hover {
     background-color: #555;
+}
+
+/* Pequeno ajuste para tamanhos menores */
+@media (max-width: 900px) {
+    .input-with-icon select {
+        padding-right: 40px;
+        font-size: 0.95rem;
+    }
+    .select-arrow { right: 10px; }
 }
