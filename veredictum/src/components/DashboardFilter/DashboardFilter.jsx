@@ -1,27 +1,36 @@
 // src/pages/Dashboard/DashboardFilter.jsx (Ajustado)
 
-import React from 'react';
+import React, { useState } from 'react';
 import './DashboardFilter.css';
 
-const DashboardFilter = () => {
+const DashboardFilter = ({ onApplyFilter }) => {
+    const [selectedCatalog, setSelectedCatalog] = useState('');
+    const [fromPeriod, setFromPeriod] = useState(''); // format YYYY-MM
+    const [toPeriod, setToPeriod] = useState('');
+
+    const handleApply = () => {
+        if (!onApplyFilter) return;
+        onApplyFilter({ catalog: selectedCatalog, from: fromPeriod, to: toPeriod });
+    };
+
     return (
         <div className="dashboard-filter-bar">
 
-            {/* Input "De" */}
+            {/* Input "De" (mês/ano) */}
             <div className="filter-input-group">
                 <label htmlFor="date-from">De</label>
                 <div className="input-with-icon">
-                    <input type="text" id="date-from" placeholder="MM/YYYY" />
-                    <span className="icon-calendar"></span> {/* Ícone de Calendário */}
+                    <input type="month" id="date-from" value={fromPeriod} onChange={e => setFromPeriod(e.target.value)} />
+                    <span className="icon-calendar"></span>
                 </div>
             </div>
 
-            {/* Input "Para" */}
+            {/* Input "Para" (mês/ano) */}
             <div className="filter-input-group">
                 <label htmlFor="date-to">Para</label>
                 <div className="input-with-icon">
-                    <input type="text" id="date-to" placeholder="MM/YYYY" />
-                    <span className="icon-calendar"></span> {/* Ícone de Calendário */}
+                    <input type="month" id="date-to" value={toPeriod} onChange={e => setToPeriod(e.target.value)} />
+                    <span className="icon-calendar"></span>
                 </div>
             </div>
 
@@ -29,11 +38,11 @@ const DashboardFilter = () => {
             <div className="filter-input-group">
                 <label htmlFor="catalog">Catálogo</label>
                 <div className="input-with-icon select-container">
-                    <select id="catalog">
+                    <select id="catalog" onChange={e => setSelectedCatalog(e.target.value)} value={selectedCatalog}>
                         <option value="" disabled>Catálogo</option>
-                        <option value="cat1">Atendimentos</option>
-                        <option value="cat2">Contas</option>
-                        <option value="cat3">Notas Fiscais</option>
+                        <option value="atendimentos">Atendimentos</option>
+                        <option value="contas">Contas</option>
+                        <option value="notas">Notas Fiscais</option>
                     </select>
 
                     {/* Seta para baixo para o select */}
@@ -46,7 +55,7 @@ const DashboardFilter = () => {
             </div>
 
             {/* Botão Filtrar (Estilo Sólido Escuro) */}
-            <button className="filter-button button-dark-solid">Filtrar</button>
+            <button className="filter-button button-dark-solid" onClick={handleApply}>Filtrar</button>
         </div>
     );
 };
