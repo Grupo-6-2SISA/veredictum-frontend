@@ -1,41 +1,31 @@
-/* src/pages/Dashboard/Dashboard.css */
-
-/*
-* ==============================
-* ESTILOS GERAIS DO DASHBOARD E VARIÁVEIS
-* ==============================
-*/
-
-/* Variáveis de cores (ajustar conforme seu main.css) */
 :root {
     --normal-black: #333;
     --white-normal: #fff;
     --white-light: #f4f4f4;
     --input-border-color: #ececec;
-    --positive-color: #4CAF50; /* Verde, para variação positiva */
-    --negative-color: #F44336; /* Vermelho, para variação negativa */
-    --warning-color: #FF9800; /* Laranja/Amarelo, para o status "Cuidado" */
+    --positive-color: #4CAF50;
+    --negative-color: #F44336;
+    --warning-color: #FF9800;
 }
 
 .main-content-dashboard { 
     flex-direction: column;
     flex-grow: 1;
     font-family: "Montserrat", sans-serif;
-    gap: 15px; /* Diminui o espaçamento geral */
+    gap: 15px;
     padding: 15px 30px;
     padding-left: 8%;
     background-color: var(--white-light, #f4f4f4);
 }
 
 h1 {
-    font-size: 40px; /* Reduz o tamanho do título */
+    font-size: 40px;
     font-weight: 700;
     font-family: "Montserrat", sans-serif;
     color: var(--normal-black, #333);
     margin: 5px 0 20px 0;
 }
 
-/* --- ESTILOS DE ESQUELETO GERAIS --- */
 .skeleton-header-label,
 .skeleton-text-medium,
 .skeleton-text-long,
@@ -47,11 +37,6 @@ h1 {
     border-radius: 4px;
 }
 
-/*
-* ==============================
-* MEDIA QUERIES (Layouts Responsivos)
-* ==============================
-*/
 @media (max-width: 1024px) {
     .kpi-grid {
         grid-template-columns: repeat(2, 1fr);
@@ -61,7 +46,6 @@ h1 {
         grid-template-columns: 1fr;
     }
 
-    /* Ajusta a largura do grid principal para telas menores */
     .kpi-grid,
     .dashboard-filter-bar,
     .dashboard-charts {

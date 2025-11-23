@@ -13,14 +13,9 @@ import './Dashboard.css';
 // Estrutura de dados AJUSTADA para 3 KPIs
 // Adicionamos a propriedade 'status' para simular o aviso "Cuidado"
 const kpiDataEsqueleto = [
-    // Usando Contas Pagas como neutro/positivo, sem status de aviso
-    { id: 'kpi2', label: 'Contas Pagas', tooltipTitle: 'Contas Pagas', value: '7', change: '-55%', status: null }, 
-    
-    // Contas Vencidas (Atrasadas) costuma ser um status de "Cuidado"
-    { id: 'kpi3', label: 'Contas Vencidas (5%)', tooltipTitle: 'Contas Vencidas', value: '3', change: '+40%', status: 'Cuidado' },
-    
-    // Total de Contas como neutro/positivo, sem status de aviso
-    { id: 'kpi4', label: 'Total de Contas (90%)', tooltipTitle: 'Total de Contas', value: '55', change: '+52%', status: null },
+    { id: 'kpi2', label: 'Contas Pagas', tooltipTitle: 'Contas Pagas', value: '7', change: '+55%', status: null }, // POSITIVO
+    { id: 'kpi3', label: 'Contas Vencidas (5%)', tooltipTitle: 'Contas Vencidas', value: '3', change: '-40%', status: 'Cuidado' }, // NEGATIVO
+    { id: 'kpi4', label: 'Total de Contas (90%)', tooltipTitle: 'Total de Contas', value: '55', change: '+52%', status: null }, // POSITIVO
 ];
 
 

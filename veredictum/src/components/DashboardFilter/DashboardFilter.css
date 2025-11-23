@@ -42,7 +42,7 @@
 .input-with-icon input,
 .input-with-icon select {
     width: 95%;
-    padding: 10px 44px 10px 12px; /* espaço à direita para a seta, à esquerda para o texto */
+    padding: 10px 4px 10px 12px; /* espaço à direita para a seta, à esquerda para o texto */
     border: 1px solid var(--input-border-color);
     border-radius: 6px;
     font-size: 1rem;

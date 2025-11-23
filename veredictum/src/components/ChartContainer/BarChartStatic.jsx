@@ -48,7 +48,7 @@ const BarChartStatic = () => {
                     domain={[0, 100]} 
                     axisLine={false} 
                     tickLine={false} 
-                    style={{ fontSize: '10px' }} 
+                    style={{ fontSize: '10px', fontFamily: "Montserrat" }} 
                     tickCount={11} // De 0 a 100 de 10 em 10
                 />
                 

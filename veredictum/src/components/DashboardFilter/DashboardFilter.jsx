@@ -49,7 +49,7 @@ const DashboardFilter = ({ onApplyFilter }) => {
                 <label htmlFor="catalog">Catálogo</label>
                 <div className="input-with-icon select-container">
                     <select id="catalog" onChange={e => setSelectedCatalog(e.target.value)} value={selectedCatalog}>
-                        <option value="" disabled>Catálogo</option>
+                        <option value="" disabled>Geral</option>
                         <option value="atendimentos">Atendimentos</option>
                         <option value="contas">Contas</option>
                         <option value="notas">Notas Fiscais</option>
