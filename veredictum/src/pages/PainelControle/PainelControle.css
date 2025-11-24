@@ -526,19 +526,24 @@ table {
     pointer-events: none;
 }
 
+/* ================================
+   ROTINAS – ÁREA ROLÁVEL
+================================ */
 
 .panel-content.scrollable-rotinas {
     max-height: 400px;
     overflow-y: auto;
     scrollbar-gutter: stable;
+    padding-right: 25px; /* afasta a barra da borda */
 }
 
+/* Tabela */
 .rotinas-table {
     width: 100%;
     border-collapse: collapse;
 }
 
-/* cabeçalho fixo */
+/* Cabeçalho fixo */
 .rotinas-table thead th {
     position: sticky;
     top: 0;
@@ -546,7 +551,6 @@ table {
     z-index: 10;
     padding: 12px 8px;
     text-align: left;
-    /* box-shadow: 0 2px 4px rgba(0, 0, 0, 0.06); */
     border: none;
 }
 
@@ -556,45 +560,78 @@ table {
     padding: 10px;
 }
 
+/* Scrollbar WebKit */
 .panel-content.scrollable-rotinas::-webkit-scrollbar {
     width: 10px;
 }
 
+.panel-content.scrollable-rotinas::-webkit-scrollbar-track {
+    background: transparent;
+    border-radius: 8px;
+}
+
 .panel-content.scrollable-rotinas::-webkit-scrollbar-thumb {
-    border-radius: 6px;
     background: #222;
+    border-radius: 8px;
+    border: 3px solid rgba(0, 0, 0, 0.85);
+}
+
+.panel-content.scrollable-rotinas::-webkit-scrollbar-thumb:hover {
+    background: rgba(0, 0, 0, 0.65);
+}
+
+/* Firefox */
+.panel-content.scrollable-rotinas {
+    scrollbar-width: thin;
+    scrollbar-color: #222 transparent;
 }
 
 
 
-/* Área rolável dos funcionários */
+/* ================================
+   FUNCIONÁRIOS – ÁREA ROLÁVEL
+================================ */
+
 .scrollable-funcionarios {
     max-height: 300px;
     min-height: 200px;
     overflow-y: auto;
     scrollbar-gutter: stable;
+    padding-right: 2px; 
 }
 
-/* Deixa o cabeçalho fixo */
+/* Cabeçalho fixo */
 .scrollable-funcionarios table thead {
     position: sticky;
     top: 0;
     background-color: #fff;
     z-index: 2;
-    /* box-shadow: 0 2px 3px rgba(0, 0, 0, 0.1); */
 }
 
-/* ==== Scrollbar estilizado ==== */
+/* Scrollbar WebKit */
 .scrollable-funcionarios::-webkit-scrollbar {
-
     width: 10px;
+}
 
+.scrollable-funcionarios::-webkit-scrollbar-track {
+    background: transparent;
+    border-radius: 8px;
 }
 
 .scrollable-funcionarios::-webkit-scrollbar-thumb {
-    border-radius: 6px;
-    background: rgba(0, 0, 0, 0.15);
-    background-color: #222;
+    background: #222;
+    border-radius: 8px;
+    border: 3px solid rgba(0, 0, 0, 0.85);
+}
+
+.scrollable-funcionarios::-webkit-scrollbar-thumb:hover {
+    background: rgba(0, 0, 0, 0.65);
+}
+
+/* Firefox */
+.scrollable-funcionarios {
+    scrollbar-width: thin;
+    scrollbar-color: #222 transparent;
 }
 
 

@@ -17,6 +17,7 @@ function ModalConfirmarRotina({
             await desativarRotina(idParaEnvio);
 
             console.log(`✅ Rotina ${rotinaData.nome ?? rotinaData.nomeRotina} desativada com sucesso!`);
+            alert(`✅ Rotina ${rotinaData.nome ?? rotinaData.nomeRotina} desativada com sucesso!`);
 
             onRotinaDesativada && onRotinaDesativada(idParaEnvio);
 
