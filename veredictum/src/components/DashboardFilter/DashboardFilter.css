@@ -39,9 +39,28 @@
 }
 
 /* Input / Select: usar 100% da largura e centralizar verticalmente o texto */
-.input-with-icon input,
-.input-with-icon select {
-    width: 95%;
+.input-with-icon input {
+    width: 80%;
+    padding: 10px 4px 10px 12px; /* espaço à direita para a seta, à esquerda para o texto */
+    border: 1px solid var(--input-border-color);
+    border-radius: 6px;
+    font-size: 1rem;
+    background-color: var(--white-normal);
+    color: var(--normal-black);
+    height: auto;
+    line-height: 22px;      /* centraliza verticalmente */
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    text-align: left;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
+}
+
+.input-with-icon select{
+    width: 85%;
     padding: 10px 4px 10px 12px; /* espaço à direita para a seta, à esquerda para o texto */
     border: 1px solid var(--input-border-color);
     border-radius: 6px;
@@ -88,7 +107,7 @@
 /* seta posicionada à direita sem interceptar clique */
 .select-arrow {
     position: absolute;
-    right: 30px; /* distância da borda direita */
+    right: 65px; /* distância da borda direita */
     top: 50%;
     transform: translateY(-50%);
     pointer-events: none;

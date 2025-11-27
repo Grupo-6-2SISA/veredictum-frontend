@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import Sidebar from "../../components/Sidebar/Sidebar";
 import Listagem from "../../components/Listagem/Listagem";
-import ModalLogs from "../../components/Modal_Logs/Modal_Logs"; // <-- uso do ModalLogs
+import ModalLogs from "../../components/Modal_Logs/Modal_Logs";
 import "./LogEnvioEmail.css";
 import "../../index.css";
 
@@ -22,6 +22,7 @@ const LogEnvioEmail = () => {
   const [logs, setLogs] = useState([]);
   const [filtroTipo, setFiltroTipo] = useState("");
   const [filtroCliente, setFiltroCliente] = useState("");
+  const [filtroData, setFiltroData] = useState("");
   const [carregando, setCarregando] = useState(false);
   const [erro, setErro] = useState(null);
 
@@ -70,7 +71,20 @@ const LogEnvioEmail = () => {
     const buscaCliente = filtroCliente.toLowerCase();
     const tipoOk = filtroTipo ? log.idTipo === parseInt(filtroTipo) : true;
     const clienteOk = nomeCliente.includes(buscaCliente);
-    return tipoOk && clienteOk;
+
+    const dataOk = (() => {
+      if (!filtroData) return true;
+      try {
+        const dataLog = log.dataEnvio
+          ? new Date(log.dataEnvio).toISOString().slice(0, 10)
+          : "";
+        return dataLog === filtroData;
+      } catch {
+        return true;
+      }
+    })();
+
+    return tipoOk && clienteOk && dataOk;
   });
 
   const handleVerMais = (log) => {
@@ -98,6 +112,40 @@ const LogEnvioEmail = () => {
       </button>
     ),
   }));
+
+  // função de exportação CSV usando os dados já filtrados
+  const exportToCSV = () => {
+    if (!logsFiltrados || logsFiltrados.length === 0) return;
+
+    const headers = COLUNAS_LOG_EMAIL.filter((c) => c.key !== "acoes").map(
+      (c) => c.titulo
+    );
+
+    const rows = logsFiltrados.map((log) => {
+      const dataIso = log.dataEnvio ? new Date(log.dataEnvio).toISOString() : "";
+      const dataFormatada = dataIso ? new Date(dataIso).toLocaleString("pt-BR") : "";
+      return [
+        log.tipo ?? "",
+        dataFormatada,
+        (log.mensagem ?? "").replace(/\r?\n/g, " ").replace(/;/g, ","),
+        log.clienteRelacionado ?? "",
+      ];
+    });
+
+    const csvArray = [headers, ...rows].map((row) =>
+      row.map((cell) => `"${String(cell).replace(/"/g, '""')}"`).join(";")
+    );
+    const csvContent = csvArray.join("\r\n");
+    const blob = new Blob(["\ufeff", csvContent], { type: "text/csv;charset=utf-8;" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = `logs_envio_${new Date().toISOString().slice(0, 10)}.csv`;
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    URL.revokeObjectURL(url);
+  };
 
   return (
     <div className="container">
@@ -139,6 +187,28 @@ const LogEnvioEmail = () => {
                 value={filtroCliente}
                 onChange={(e) => setFiltroCliente(e.target.value)}
               />
+            </div>
+
+            <div className="log-email-filtro-group-logs">
+              <label htmlFor="filtroData">Filtrar por data:</label>
+              <input
+                type="date"
+                id="filtroData"
+                value={filtroData}
+                onChange={(e) => setFiltroData(e.target.value)}
+              />
+            </div>
+
+            <div className="log-email-filtro-actions">
+              <button
+                type="button"
+                className="btn-export-csv"
+                onClick={exportToCSV}
+                disabled={!logsFiltrados || logsFiltrados.length === 0}
+                title="Exportar os logs filtrados para CSV"
+              >
+                Exportar CSV
+              </button>
             </div>
           </div>
 
