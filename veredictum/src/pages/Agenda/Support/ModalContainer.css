@@ -58,18 +58,15 @@ body,
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6);
   z-index: 1001;
   outline: none;
-  font-family: var(--font-family); /* Aplica a nova fonte */
-  max-height: 88vh;
-  /* Limite global de altura */
+  font-family: var(--font-family);
+  max-height: 92vh;
   overflow: hidden;
-  /* Evita scroll no container */
   display: grid;
-  /* Header + Body */
   grid-template-rows: auto 1fr;
 }
 
 /* 2. Modal body layout - Adicionado -agenda */
-.modal-body_L-agenda, /* Nova classe principal */
+.modal-body_L-agenda, 
 .modal-body,
 .modal-body_L,
 .modal-content-agenda,
@@ -79,25 +76,15 @@ body,
   grid-template-columns: 1fr 1fr;
   gap: 20px 28px;
   align-items: start;
-
-  /* Conteúdo interno rola, mas sem barra visível */
   max-height: unset;
-
-  /* rolagem do conteúdo */
-  -webkit-overflow-scrolling: touch;
-  /* rolagem suave */
+  /* -webkit-overflow-scrolling: touch; */
   overscroll-behavior: contain;
-  /* evita scroll no fundo */
-
-  /* Oculta barras de rolagem */
   scrollbar-width: none;
-  /* Firefox */
   -ms-overflow-style: none;
-  /* IE/Edge legado */
 }
 
 /* 2. Header - Adicionado -agenda */
-.modal-header_L-agenda, /* Nova classe principal */
+.modal-header_L-agenda, 
 .modal-header,
 .modal-header_L,
 #modal-header-top {
@@ -117,7 +104,7 @@ body,
   font-weight: 800;
   color: var(--modal-text);
   text-align: center;
-  font-family: var(--font-family); /* Garante a fonte no título */
+  font-family: var(--font-family);
 }
 
 /* 2. Close button - Adicionado -agenda */

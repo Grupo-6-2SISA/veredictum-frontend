@@ -472,7 +472,11 @@ export default function Agenda() {
             </main>
 
             {/* MODAIS */}
-            <ModalAdicionarAtendimento show={showAddModal} onClose={closeModalAdd} atualizarLista={fetchAtendimentos} />
+            <ModalAdicionarAtendimento 
+                show={showAddModal} 
+                onClose={closeModalAdd}
+                atualizarLista={fetchAtendimentos} 
+            />
 
             <ModalEditarAtendimento
                 show={showEditModal}
@@ -500,10 +504,10 @@ export default function Agenda() {
                 show={showDeleteModal}
                 onClose={closeAllDelete}
                 title="Cancelamento de atendimentos"
-                variant="delete"
+                variant="delete" // 👈 Aplica o estilo de modal de deleção
                 modalId="modal-delete-atendimentos-lote"
             >
-                <ConfirmacaoExclusao
+                <ConfirmacaoExclusao // 👈 Renderiza apenas o conteúdo (mensagem + botões)
                     message={`Deseja cancelar ${selectedIds.size} atendimento(s) selecionado(s)?`}
                     onConfirm={handleDeleteConfirm}
                     onCancel={closeAllDelete}

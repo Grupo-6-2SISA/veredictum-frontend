@@ -292,7 +292,7 @@ export default function PainelControle() {
                 <div className="panel-icon">
                   <img src={EquipeImg} alt="User Icon" />
                 </div>
-                <span style={{ fontWeight: "bold", fontSize: "27px", color: "black", paddingLeft: "10px" }}>
+                <span style={{ fontWeight: "bold", fontSize: "27px", color: "black", paddingLeft: "10px", fontFamily: "Montserrat, sans-serif" }}>
                   Equipes e Funcionários
                 </span>
               </div>
@@ -363,7 +363,7 @@ export default function PainelControle() {
                 <div className="panel-icon">
                   <img src={IconCarrier} alt="" />
                 </div>
-                <span style={{ fontWeight: "bold", fontSize: "27px", color: "black", paddingLeft: "7px" }}>
+                <span style={{ fontWeight: "bold", fontSize: "27px", color: "black", paddingLeft: "7px", fontFamily: "Montserrat, sans-serif" }}>
                   Gestão de Rotinas
                 </span>
               </div>

@@ -1,6 +1,7 @@
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { Routes, Route } from 'react-router-dom';
 import Home from './pages/Home/Home.jsx';
 import Cadastro from './pages/Cadastro/Cadastro.jsx';
+import ProtectedRoute from './components/Auth/ProtectedRoute.jsx';
 import VisaoGeral from './pages/VisaoGeral/VisaoGeral.jsx';
 import Dashboard from './pages/Dashboard/Dashboard.jsx';
 import PainelControle from "./pages/PainelControle/PainelControle.jsx";
@@ -14,22 +15,54 @@ import LogEnvioEmail from './pages/LogEnvioEmail/LogEnvioEmail.jsx';
 
 function App() {
   return (
-    <Router>
-      <Routes>
-        <Route path="/" element={<Home />} />
-        <Route path="/cadastro" element={<Cadastro />} />
-        <Route path="/login" element={<Login />} />
-        <Route path="/recuperarSenha" element={<RecuperarSenha/>} />
-        <Route path="/VisaoGeral" element={<VisaoGeral />} />
-        <Route path="/Dashboard" element={<Dashboard />} />
-        <Route path="/PainelControle" element={<PainelControle />} />
-        <Route path="/GestaoDespesas" element={<GestaoDespesas />} />
-        <Route path="/NotasFiscais" element={<NotasFiscais />} />
-        <Route path="/Clientes" element={<Clientes />} />
-        <Route path="/Agenda" element={<Agenda />} />
-        <Route path="/LogEnvioEmail" element={<LogEnvioEmail />} />
-      </Routes>
-    </Router>
+    <Routes>
+      <Route path="/" element={<Home />} />
+      <Route path="/cadastro" element={<Cadastro />} />
+      <Route path="/login" element={<Login />} />
+      <Route path="/recuperarSenha" element={<RecuperarSenha/>} />
+
+      {/* Rotas protegidas */}
+      <Route path="/VisaoGeral" element={
+        <ProtectedRoute>
+          <VisaoGeral />
+        </ProtectedRoute>
+      } />
+      <Route path="/Dashboard" element={
+        <ProtectedRoute>
+          <Dashboard />
+        </ProtectedRoute>
+      } />
+      <Route path="/PainelControle" element={
+        <ProtectedRoute requireAdmin={true}>
+          <PainelControle />
+        </ProtectedRoute>
+      } />
+      <Route path="/GestaoDespesas" element={
+        <ProtectedRoute>
+          <GestaoDespesas />
+        </ProtectedRoute>
+      } />
+      <Route path="/NotasFiscais" element={
+        <ProtectedRoute>
+          <NotasFiscais />
+        </ProtectedRoute>
+      } />
+      <Route path="/Clientes" element={
+        <ProtectedRoute>
+          <Clientes />
+        </ProtectedRoute>
+      } />
+      <Route path="/Agenda" element={
+        <ProtectedRoute>
+          <Agenda />
+        </ProtectedRoute>
+      } />
+      <Route path="/LogEnvioEmail" element={
+        <ProtectedRoute>
+          <LogEnvioEmail />
+        </ProtectedRoute>
+      } />
+    </Routes>
   );
 }
 

@@ -4,40 +4,35 @@
 
 /* 1. SOBRESCREVER ESTILO DO MODAL CONTAINER */
 .modal_L-delete {
-    /* Fundo (como no iOS) */
     background: var(--white-dark) ;
     color: var(--confirm-modal-text) ;
-    /* Ajuste do tamanho e visual (iOS é menor e arredondado) */
-    max-width: 32vw ; /* Mais estreito que o anterior */
+    max-width: 32vw ; 
     height: 32vh ;
-    border-radius: 14px ; /* Arredondamento do iOS */
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15); /* Sombra mais suave */
-
-    display: flex ; /* Remove o display: flex da versão anterior */
+    border-radius: 14px ;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    display: flex ;
     flex-direction: column ;
     justify-content: space-between ;
     gap: 30px;
     align-items: flex-end ;
     grid-template-rows: unset ;
-    padding: 0; /* Remove padding do container */
+    padding: 0;
 }
 
 /* Oculta o header padrão (título e botão X) que é indesejado neste modelo */
 .modal_L-delete .modal-header_L-agenda {
     display: flex;
-    /* Apenas garante que o header não aparece, o novo X será posicionado ABSOLUTAMENTE */
 }
 
 /* 2. NOVO TÍTULO E BOTÃO DE FECHAR DO MODAL DE EXCLUSÃO */
 
 /* Estilo do título que estava na imagem: "Cancelamento de atendimentos" */
 .modal-delete-title {
-    /* Classe que será adicionada dentro do ModalContainer Body */
-    font-size: 1.15rem; /* Um pouco maior */
-    font-weight: 600; /* Semibold/Bold */
+    font-size: 1.15rem;
+    font-weight: 600; 
     text-align: center;
-    margin: 0 0 8px 0; /* Espaçamento com a mensagem */
-    padding: 20px 20px 0; /* Top padding (espaço interno) */
+    margin: 0 0 8px 0; 
+    padding: 20px 20px 0;
     font-family: "Montserrat", sans-serif;
 }
 
@@ -63,64 +58,68 @@
 }
 
 .btn-delete-close-ios img {
-    width: 85px; /* Ícone um pouco menor */
+    width: 85px; 
     height: 85px;
     filter: invert(1)   
 }
 
 /* 3. Ajuste do corpo do modal de exclusão */
 .modal-body_L-agenda-delete {
-    /* Body exclusivo para exclusão (sem grid, padding simples) */
-    padding: 5px 20px ; /* Ajusta o padding para o novo design */
+    width: 100% ;
+    height: auto ;
+    padding: 5px 20px ;
     display: flex ;
     flex-direction: column ;
     align-items: center ;
-    overflow: hidden ;
 }
 
 /* 4. Ajustes no Container do ConfirmacaoExclusao */
 .confirmacao-container {
-    /* Remove o padding, pois será dado pelo body do modal */
     padding: 0;
-    gap: 15px; /* Reduz o gap */
-    min-width: auto; /* Permite o tamanho definido pelo modal */
+    gap: 15px; 
+    min-width: auto;
     width: 100%;
     margin-top: 7%;
     display: flex;
     flex-direction: column;
-    justify-content: flex-end;
-    align-items:  flex-end;
+    justify-content: center;
+    align-items:  center;
     
     
 }
 
 .confirmacao-message {
+    display: flex;
+    justify-content: center;
     margin: 0;
-    font-size: 0.95rem; /* Um pouco menor */
+    font-size: 0.95rem;
     line-height: 1.4;
-    color: var(--confirm-modal-text); /* Cor do texto principal */
-    margin-bottom: 3%;
+    color: var(--confirm-modal-text);
+    text-align: center;
+    margin-bottom: 5%;
     font-family: "Montserrat", sans-serif;
 }
 
 /* 5. Estilo dos botões (Mais fiéis ao iOS) */
 .confirmacao-buttons {
-    /* Alinha à direita, como na imagem */
-    justify-content: flex-start;
-    gap: 8px; /* Espaço menor entre os botões */
+    display: flex;
+    justify-content: flex-end;
+    gap: 12px;
+    width: 100%;
+    padding: 5px;
+
 }
 
 .btn-confirmacao {
-    /* Simplifica o estilo base */
-    border-radius: 6px; /* Arredondamento menor */
+    border-radius: 6px;
     padding: 8px 14px;
-    font-weight: 600; /* Semibold */
+    font-weight: 600;
     font-size: 0.9rem;
     min-width: 60px;
 }
 
 .btn-confirmacao-cancel {
-    background: #e9e9e9; /* Fundo cinza suave */
+    background: #e9e9e9;
     border: 2px solid #c0c0c0;
     color: #2c2c2c;
     border: 1px solid transparent;
@@ -129,7 +128,7 @@
 .btn-confirmacao-cancel:active { background: #c5c5c5; }
 
 .btn-confirmacao-sim {
-    background: #ff3b30; /* Vermelho mais do iOS */
+    background: #ff3b30;
     color: #fff;
     border: 1px solid transparent;
 }

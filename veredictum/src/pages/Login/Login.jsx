@@ -8,6 +8,8 @@ import SwitchAlert from "../../components/SwitchAlert/SwitchAlert";
 import imgCadastro from "./../../assets/img/img-cadastro.png";
 import "../Cadastro/Cadastro.css";
 
+const API_BASE_URL = import.meta.env.VITE_API_URL || "http://localhost:8080";
+
 function Login() {
   const navigate = useNavigate();
 
@@ -47,7 +49,7 @@ function Login() {
     }
 
     try {
-      const response = await fetch("http://localhost:8080/usuarios/logar", {
+      const res = await fetch(`${API_BASE_URL}/usuarios/logar`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -56,38 +58,77 @@ function Login() {
         }),
       });
 
-       if (response.ok) {
-          const data = await response.json();
-          const isAdminValue =
-            data.isAdm !== undefined ? data.isAdm : data.isAdmin;
-          const isAdminString =
-            isAdminValue === true || isAdminValue === "true" || isAdminValue === 1
-              ? "true"
-              : "false";
+      const data = await res.json().catch(() => ({}));
 
-          sessionStorage.setItem("userEmail", formData.email);
-          sessionStorage.setItem("userName", data.nome);
-          sessionStorage.setItem("isAdmin", isAdminString);
-          // flag que ProtectedRoute irá checar
-          sessionStorage.setItem("isAuthenticated", "true");
-
-        switchAlert("Login realizado com sucesso!", "success", 900);
-        setTimeout(() => navigate("/VisaoGeral"), 900);
+      if (!res.ok) {
+        // backend message fallback
+        const msg = data.message || data.msg || "Credenciais inválidas.";
+        switchAlert(msg, "error");
         return;
       }
 
-      // Status handling
-      if (response.status === 404) {
-        switchAlert("E-mail inválido. Cadastre-se para acessar o sistema.", "error");
-      } else if (response.status === 400 || response.status === 403) {
-        switchAlert("Credenciais inválidas. Verifique seu e-mail e senha.", "error");
-      } else if (response.status === 401) {
+      // Tenta extrair token (se houver)
+      const token =
+        data.token ||
+        data.accessToken ||
+        data.access_token ||
+        data.jwt ||
+        data.tokenJwt ||
+        data.data?.token ||
+        null;
+
+      // Extrai campos do usuário no caso do backend retornar o objeto do usuário
+      const usuario = data.usuario || data.user || data; // aceita resposta direta com campos
+      const isAtivoRaw =
+        data.is_ativo ??
+        data.isAtivo ??
+        data.is_ativo_usuario ??
+        usuario?.is_ativo ??
+        usuario?.isAtivo ??
+        usuario?.is_ativo ??
+        null;
+      const isAdmRaw =
+        data.is_adm ??
+        data.isAdm ??
+        data.isAdmin ??
+        usuario?.is_adm ??
+        usuario?.isAdm ??
+        usuario?.isAdmin ??
+        false;
+      const userId = usuario?.id_usuario ?? usuario?.id ?? data.id_usuario ?? null;
+      const nome =
+        usuario?.nome || usuario?.name || data.nome || data.name || formData.email;
+
+      // Normalize flags
+      const isAtivo =
+        isAtivoRaw === null
+          ? null
+          : !!(Number(isAtivoRaw) || isAtivoRaw === true || isAtivoRaw === "true");
+      const isAdm = !!(Number(isAdmRaw) || isAdmRaw === true || isAdmRaw === "true");
+
+      // Se backend informa que usuário está inativo, bloqueia login
+      if (isAtivo === false) {
         switchAlert("Usuário inativo. Entre em contato com o administrador.", "error");
-      } else {
-        switchAlert("Erro ao tentar logar.", "error");
+        return;
       }
-    } catch (error) {
-      console.error("Erro na requisição:", error);
+
+      // Salva token se houver
+      if (token) {
+        sessionStorage.setItem("token", token);
+      }
+
+      // Marca sessão autenticada (fallback quando não há JWT)
+      sessionStorage.setItem("isAuthenticated", "true");
+      if (isAtivo !== null) sessionStorage.setItem("isAtivo", String(isAtivo));
+      sessionStorage.setItem("isAdmin", String(isAdm));
+      if (userId) sessionStorage.setItem("userId", String(userId));
+      sessionStorage.setItem("userName", nome);
+
+      switchAlert("Login realizado com sucesso!", "success", 900);
+      // Navega após breve delay para que o usuário veja a notificação
+      setTimeout(() => navigate("/VisaoGeral", { replace: true }), 700);
+    } catch (err) {
+      console.error("Erro na requisição:", err);
       switchAlert("Falha de conexão com o servidor.", "error");
     }
   }
