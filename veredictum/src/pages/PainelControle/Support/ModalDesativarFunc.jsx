@@ -6,7 +6,8 @@ function ModalConfirmarDesativacao({
   closeModalConfirmar,
   funcionarioData,
   CloseBlackIcon,
-  atualizarLista
+  atualizarLista,
+  showAlert
 }) {
   if (!isModalOpen || !funcionarioData) return null;
 
@@ -15,25 +16,28 @@ function ModalConfirmarDesativacao({
 
       const idParaDesativar = funcionarioData.idUsuario ?? funcionarioData.id;
       if (!idParaDesativar) {
-        alert("ID do funcionário inválido!");
+        // alert("ID do funcionário inválido!");
+        showAlert?.("ID do funcionário inválido!", "error", 3500);
         return;
       }
 
       await desativarFuncionario(idParaDesativar);
-      alert("✅ Funcionário desativado com sucesso!");
+      // alert("✅ Funcionário desativado com sucesso!");
+      showAlert?.("Funcionário desativado com sucesso!", "success", 2200);
       closeModalConfirmar();
       atualizarLista?.();
       window.location.reload();
     } catch (error) {
       console.error("Erro ao desativar funcionário:", error);
-      alert("Falha ao desativar funcionário. Tente novamente.");
+      // alert("Falha ao desativar funcionário. Tente novamente.");
+      showAlert?.("Falha ao desativar funcionário. Tente novamente.", "error", 3500);
     }
   };
 
   return (
     <div id="modalConfirmar" className="modal-delete-rotinas" style={{ display: "flex" }}>
       <div className="modal-content-rotinas">
-        <div className="modal-header"  style={{backgroundColor: '#edeaef', borderBottom: 'none'}}>
+        <div className="modal-header" style={{ backgroundColor: '#edeaef', borderBottom: 'none' }}>
           <h2>Desativar Funcionário</h2>
           <button className="modal-close-delete-btn" onClick={closeModalConfirmar}>
             <img src={CloseBlackIcon} alt="Fechar" />

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { AtualizarRotinas } from "../Painel";
 
-function ModalEditarRotina({ isModalOpen, closeModalEditarRotina, rotinaData, FecharIcone, onAtualizarRotina }) {
+function ModalEditarRotina({ isModalOpen, closeModalEditarRotina, rotinaData, FecharIcone, onAtualizarRotina, showAlert }) {
     if (!isModalOpen || !rotinaData) return null;
 
     const [formData, setFormData] = useState({
@@ -38,22 +38,26 @@ function ModalEditarRotina({ isModalOpen, closeModalEditarRotina, rotinaData, Fe
         const nomeValido = /^[A-Za-zÀ-ÿ\s()_]+$/;
 
         if (!nomeValido.test(formData.nome)) {
-            alert("O nome da rotina deve conter apenas letras, espaços, parênteses ou underline (_).");
+            // alert("O nome da rotina deve conter apenas letras, espaços, parênteses ou underline (_).");
+            showAlert("O nome da rotina deve conter apenas letras, espaços, parênteses ou underline (_).", "error", 3500);
             return;
         }
 
         if (!nomeValido.test(formData.arquivo)) {
-            alert("O campo 'Rotina' deve conter apenas letras, espaços, parênteses ou underline (_).");
+            // alert("O campo 'Rotina' deve conter apenas letras, espaços, parênteses ou underline (_).");
+            showAlert("O campo 'Rotina' deve conter apenas letras, espaços, parênteses ou underline (_).", "error", 3500);
             return;
         }
 
         if (formData.dataInicio && formData.dataFim && formData.dataFim < formData.dataInicio) {
-            alert("A data de fim não pode ser anterior à data de início.");
+            // alert("A data de fim não pode ser anterior à data de início.");
+            showAlert("A data de fim não pode ser anterior à data de início.", "error", 3500);
             return;
         }
 
         if (formData.dataInicio && formData.dataFim && formData.dataInicio > formData.dataFim) {
-            alert("A data de início não pode ser posterior à data de fim.");
+            // alert("A data de início não pode ser posterior à data de fim.");
+            showAlert("A data de início não pode ser posterior à data de fim.", "error", 3500);
             return;
         }
 
@@ -72,14 +76,16 @@ function ModalEditarRotina({ isModalOpen, closeModalEditarRotina, rotinaData, Fe
             const idParaEnvio = rotinaData.idRotina ?? rotinaData.id;
             await AtualizarRotinas(idParaEnvio, payload);
 
-            alert("Rotina atualizada com sucesso!");
+            // alert("Rotina atualizada com sucesso!");
+            showAlert("Rotina atualizada com sucesso!", "success", 2200);
             onAtualizarRotina && onAtualizarRotina(idParaEnvio, payload);
             closeModalEditarRotina();
             window.location.reload();
 
         } catch (error) {
             console.error("❌ Erro ao atualizar rotina:", error);
-            alert("Erro ao atualizar rotina. Tente novamente.");
+            // alert("Erro ao atualizar rotina. Tente novamente.");
+            showAlert("Erro ao atualizar rotina. Tente novamente.", "error", 3500);
         }
     };
 

@@ -59,10 +59,10 @@
     grid-template-columns: 2.8fr 0.9fr 1.1fr 0.9fr 1.5fr 1fr;
     gap: 1rem;
     align-items: center;
-    padding: 0.3rem 1.2rem;
-    box-shadow: 0 4px 10px 1px rgba(0, 0, 0, 0.151);
+    padding: 0.6rem 1.2rem;
+    box-shadow: 0 1px 3px #424242;
     border-radius: 10px;
-    margin-bottom: 0.7rem;
+    margin-bottom: 0.1rem;
     background-color: #f6f6f6;
     margin-left: 1%;
     white-space: nowrap;

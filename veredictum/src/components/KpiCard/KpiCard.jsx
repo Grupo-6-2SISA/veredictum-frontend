@@ -3,11 +3,8 @@ import './KpiCard.css';
 
 const KpiCard = ({ label, value, change, status, tooltipTitle, tooltipText }) => {
     const isSkeleton = !value && !change;
-    const displayValue = value || '00';
+    const displayValue = value || '0';
     const displayChange = change || '0%';
-
-    const matchPercent = label ? label.match(/\s*(\(\s*\d{1,3}%\s*\))/) : null;
-    const displayPercent = matchPercent ? matchPercent[1] : '';
     const cleanLabel = label ? label.replace(/\s*(\(\s*\d{1,3}%\s*\))/, '').trim() : '';
 
     let changeClass = '';
@@ -58,7 +55,6 @@ const KpiCard = ({ label, value, change, status, tooltipTitle, tooltipText }) =>
                     <div className={labelClass}>{cleanLabel}</div>
                     <div className={valueClass}>
                         {displayValue}
-                        <span className="percent">{displayPercent}</span>
                     </div>
                 </div>
 

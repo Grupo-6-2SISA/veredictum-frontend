@@ -7,7 +7,8 @@ function ModalConfirmarRotina({
     closeModalConfirmarRotina,
     rotinaData,
     onRotinaDesativada,
-    CloseBlackIcon
+    CloseBlackIcon,
+    showAlert
 }) {
     if (!isModalOpen || !rotinaData) return null;
 
@@ -17,7 +18,8 @@ function ModalConfirmarRotina({
             await desativarRotina(idParaEnvio);
 
             console.log(`✅ Rotina ${rotinaData.nome ?? rotinaData.nomeRotina} desativada com sucesso!`);
-            alert(`✅ Rotina ${rotinaData.nome ?? rotinaData.nomeRotina} desativada com sucesso!`);
+            // alert(`✅ Rotina ${rotinaData.nome ?? rotinaData.nomeRotina} desativada com sucesso!`);
+            showAlert?.(`Rotina ${rotinaData.nome ?? rotinaData.nomeRotina} desativada com sucesso!`, "success", 2200);
 
             onRotinaDesativada && onRotinaDesativada(idParaEnvio);
 
@@ -26,7 +28,8 @@ function ModalConfirmarRotina({
 
         } catch (error) {
             console.error("❌ Erro ao desativar rotina:", error);
-            alert("Erro ao desativar rotina. Tente novamente.");
+            // alert("Erro ao desativar rotina. Tente novamente.");
+             showAlert?.("Erro ao desativar rotina. Tente novamente.", "error", 3500);
         }
     };
 

@@ -8,19 +8,6 @@
 
 }
 
-
-/* .container {
-    background-color: var(--white-light);
-    width: 100%;
-    display: flex;
-    position: fixed;
-    flex-direction: row;
-    min-height: 100vh;
-    font-family: "Montserrat", sans-serif;
-    font-size: 20px;
-
-} */
-
 .main-content_Davidson {
     margin-left: 120px;
     flex: 1;
@@ -31,17 +18,12 @@
     font-size: 50px;
     font-weight: bold;
     margin-bottom: 30px;
-    margin-top: 40px;
+    margin-top: 20px;
 }
 
 .panels-container {
     display: flex;
     gap: 20px;
-    /* margin-left: 3%;
-    margin-top: 3%; */
-    /* border: #000 solid 2px; */
-
-
 }
 
 .panel {
@@ -52,7 +34,6 @@
     min-height: 400px;
     width: 650px;
     background-color: white;
-
 }
 
 .panel-header {
@@ -89,8 +70,6 @@
     display: block;
 }
 
-
-
 .panel-actions {
     display: flex;
     gap: 8px;
@@ -116,11 +95,7 @@
 .panel-content {
     padding: 0;
     padding-left: 10px;
-    /* max-height: 400px; /* altura do painel */
-    /* overflow-y: auto;  permite rolagem do corpo da tabela */
 }
-
-
 
 /* Checkbox */
 .checkbox {
@@ -165,8 +140,6 @@
     min-height: 400px;
 }
 
-
-
 .cell-toggle {
     display: flex;
     justify-content: center;
@@ -175,14 +148,10 @@
     min-height: 32px;
 }
 
-
 .scrollable-panel-content {
     max-height: 250px;
     overflow-y: scroll;
 }
-
-
-
 
 .table-wrapper {
     max-height: 200px;
@@ -192,7 +161,6 @@
 }
 
 /* Modal Editar */
-
 .modal_Painel_Controle {
     position: fixed;
     z-index: 500;
@@ -206,7 +174,6 @@
     left: 0;
     width: 100%;
     height: 100%;
-    /* background-color: red; */
 }
 
 .modal-content_Painel {
@@ -220,7 +187,6 @@
     height: auto;
     border: 1px groove black;
     box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.8);
-
     display: flex;
     flex-wrap: wrap;
     gap: 20px;
@@ -229,7 +195,6 @@
 /* Cada coluna ocupa metade da largura do modal */
 .modal-column {
     flex: 1 1 45%;
-    /* 45% largura para duas colunas, com gap */
     display: flex;
     flex-direction: column;
     gap: 15px;
@@ -307,8 +272,6 @@
     cursor: pointer;
 }
 
-
-
 #div_para_titulo {
     height: 55px;
     width: 100%;
@@ -320,8 +283,6 @@
     font-size: 40px;
     font-weight: bold;
 }
-
-
 
 .modal-add-btn_Funcionario_Cadastrado {
     margin-top: 12px;
@@ -359,13 +320,11 @@
     align-items: center;
 }
 
-
 .modal-add-btn_Funcionario_Cadastrado:hover {
     background-color: #646169;
     border: 2px solid black;
 
 }
-
 
 table {
     border-collapse: separate;
@@ -374,7 +333,6 @@ table {
     border: #4299e1 solid 2px;
 }
 
-
 .toggle-switch {
     width: 45px;
     height: 25px;
@@ -382,7 +340,6 @@ table {
     position: relative;
     cursor: pointer;
     transition: background 0.3s;
-
 }
 
 .toggle-switch:not(.active) {
@@ -422,45 +379,47 @@ table {
     border: none !important;
 }
 
-
 .pill-row {
     border-radius: 12px;
     overflow: hidden;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    box-shadow: 0 1px 3px #424242;
     background: linear-gradient(to bottom, rgba(0, 0, 0, 0.15) 0%, rgba(0, 0, 0, 0.08) 50%, transparent 100%);
     border: 1px solid rgba(0, 0, 0, 0.15);
     margin-left: 30px;
     transition: all 0.5s ease-in-out;
-
 }
-
 
 .panel-content table td {
     padding: 8px 16px;
     text-align: center;
+    font-family: "Montserrat", sans-serif;
     vertical-align: middle;
+    font-weight: 600;
 }
 
 .panel-content table th {
     padding: 8px 16px;
     text-align: center;
+    font-family: "Montserrat", sans-serif;
     vertical-align: middle;
 }
 
 .panel-content table th {
     font-weight: 600;
     background: transparent;
-
 }
 
 .pill-row td {
     border: none;
+    font-family: "Montserrat", sans-serif;
     background: var(--white-darknes);
 }
 
 .pill-row td:first-child {
     transform: translateX(25px);
     background: var(--white-darknes);
+    font-family: "Montserrat", sans-serif;
+    font-weight: 600;
     border-top-left-radius: 12px;
     border-bottom-left-radius: 12px;
     text-align: left;
@@ -470,14 +429,9 @@ table {
     border-top-right-radius: 12px;
     border-bottom-right-radius: 12px;
     text-align: center;
+    font-family: "Montserrat", sans-serif;
+    font-weight: 600;
 }
-
-/* 
-.pill-row:hover {
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.25);
-    border: 1px solid rgba(0, 0, 0, 0.25);
-    transition: all 0.3s ease;
-} */
 
 .pill-row:nth-child(even) {
     background: linear-gradient(to bottom, rgba(248, 250, 252, 0.9) 0%, rgba(248, 250, 252, 0.5) 50%, rgba(248, 250, 252, 0.1) 100%);
@@ -504,8 +458,6 @@ table {
     transform: translateY(-1px);
 }
 
-
-
 .col-excluir button {
     background: transparent;
     border: none;
@@ -525,6 +477,8 @@ table {
     object-fit: contain;
     pointer-events: none;
 }
+
+
 
 /* ================================
    ROTINAS – ÁREA ROLÁVEL
@@ -586,8 +540,6 @@ table {
     scrollbar-color: #222 transparent;
 }
 
-
-
 /* ================================
    FUNCIONÁRIOS – ÁREA ROLÁVEL
 ================================ */
@@ -634,7 +586,6 @@ table {
     scrollbar-color: #222 transparent;
 }
 
-
 .senha-container {
     position: relative;
 }
@@ -680,13 +631,3 @@ table {
     overscroll-behavior: contain;
     scrollbar-width: none;
 }
-
-/* 
-#Celula_pulinho_sem {
-    transition: transform 0.12s ease, box-shadow 0.12s ease;
-}
-
-#Celula_pulinho_sem:hover {
-    transform: translateY(-1px);
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.08);
-} */

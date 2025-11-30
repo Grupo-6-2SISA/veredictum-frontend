@@ -14,6 +14,7 @@ import ModalVerMaisFunc from './Support/ModalVerMaisFunc';
 
 
 // Rotina
+import SwitchAlert from '../../components/SwitchAlert/SwitchAlert';
 import ModalConfirmarRotina from '../PainelControle/Support/ModalDesativarRotina';
 import ModalEditarRotina from '../PainelControle/Support/ModalEditarRotina';
 import ModalVerMaisRotina from '../PainelControle/Support/ModalVerMaisRotina';
@@ -58,6 +59,20 @@ export default function PainelControle() {
   const [rotinaVerMais, setRotinaVerMais] = useState(null);
   const [isModalConfirmarRotinaOpen, setIsModalConfirmarRotinaOpen] = useState(false);
   const [rotinaConfirmar, setRotinaConfirmar] = useState(null);
+  // SwitchAlert global para a página
+  const [switchAlertState, setSwitchAlertState] = useState({
+    visible: false,
+    message: '',
+    type: 'success',
+    duration: 2500,
+  });
+
+  const showSwitchAlert = (message, type = 'success', duration = 2500) => {
+    setSwitchAlertState({ visible: true, message, type, duration });
+    if (duration > 0) {
+      setTimeout(() => setSwitchAlertState(s => ({ ...s, visible: false })), duration);
+    }
+  };
 
   // --- FETCH FUNCIONÁRIOS ---
   useEffect(() => {
@@ -130,6 +145,8 @@ export default function PainelControle() {
   const handleCadastroFuncionario = () => {
     console.log("Cadastrando funcionário...");
     closeModalCriar();
+    // exibe notificação
+    showSwitchAlert('Funcionário cadastrado com sucesso!', 'success', 2200);
   };
 
   const closeModalEditar = () => {
@@ -281,6 +298,14 @@ export default function PainelControle() {
     <div className="container">
       <Sidebar />
       <main className="main-content_Davidson">
+        {/* SwitchAlert global */}
+        <SwitchAlert
+          visible={switchAlertState.visible}
+          message={switchAlertState.message}
+          type={switchAlertState.type}
+          duration={switchAlertState.duration}
+          onClose={() => setSwitchAlertState(s => ({ ...s, visible: false }))}
+        />
         <h1 className="page-title_Davidson" style={{ transform: "translateY(-10px)" }}>Painel de Controle</h1>
 
         <div className="panels-container">
@@ -415,6 +440,7 @@ export default function PainelControle() {
           isModalOpen={isModalCriarOpen}
           closeModalCriar={closeModalCriar}
           handleCadastro={handleCadastroFuncionario}
+          showAlert={showSwitchAlert}
           FecharIcone={FecharIcone}
         />
 
@@ -423,6 +449,7 @@ export default function PainelControle() {
           closeModalEditar={closeModalEditar}
           handleSalvar={handleSalvarEdicao}
           funcionarioData={funcionarioEditando}
+          showAlert={showSwitchAlert}
           FecharIcone={FecharIcone}
         />
 
@@ -431,6 +458,7 @@ export default function PainelControle() {
           closeModalConfirmar={closeModalConfirmar}
           confirmarDesativacao={confirmarDesativacao}
           funcionarioData={funcionarioConfirmar}
+          showAlert={showSwitchAlert}
           CloseBlackIcon={CloseBlackIcon}
         />
 
@@ -438,6 +466,7 @@ export default function PainelControle() {
           isModalOpen={isModalVerMaisFuncOpen}
           closeModalVerMaisFunc={closeModalVerMaisFunc}
           funcionarioData={funcionarioVerMais}
+          showAlert={showSwitchAlert}
           FecharIcone={FecharIcone}
         />
 
@@ -446,6 +475,7 @@ export default function PainelControle() {
           isModalOpen={isModalEditarRotinaOpen}
           closeModalEditarRotina={closeModalEditarRotina}
           handleSalvar={handleSalvarEdicaoRotina}
+          showAlert={showSwitchAlert}
           rotinaData={rotinaEditando}
           FecharIcone={FecharIcone}
         />
@@ -462,6 +492,7 @@ export default function PainelControle() {
           closeModalConfirmarRotina={closeModalConfirmarRotina}
           confirmarDesativacaoRotina={confirmarDesativacaoRotina}
           rotinaData={rotinaConfirmar}
+          showAlert={showSwitchAlert}
           CloseBlackIcon={CloseBlackIcon}
         />
       </main>

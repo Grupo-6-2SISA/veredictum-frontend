@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import ModalContainer from './ModalContainer';
 import { criarAtendimento, apiClient } from "../Agenda.js";
 import PropTypes from 'prop-types';
+import SwitchAlert from "../../../components/SwitchAlert/SwitchAlert";
 
 // Helpers: data e hora local no formato dos inputs
 const pad2 = (n) => String(n).padStart(2, '0');
@@ -19,6 +20,12 @@ export default function ModalAdicionarAtendimento({ show, onClose, atualizarList
   const [isPago, setIsPago] = useState(false);
   const [clientes, setClientes] = useState([]);
   const [usuarios, setUsuarios] = useState([]);
+  const [alertState, setAlertState] = useState({
+    visible: false,
+    message: '',
+    type: 'info',
+    duration: 3000,
+  });
 
   useEffect(() => {
     if (!show) return;
@@ -58,19 +65,23 @@ export default function ModalAdicionarAtendimento({ show, onClose, atualizarList
 
     // Validações
     if (!fkCliente) {
-      alert("Selecione o cliente.");
+      // alert("Selecione o cliente.");
+      setAlertState({ visible: true, message: "Selecione o cliente.", type: "error", duration: 3000 });
       return;
     }
     if (!fkUsuario) {
-      alert("Selecione o responsável.");
+      // alert("Selecione o responsável.");
+      setAlertState({ visible: true, message: "Selecione o responsável.", type: "error", duration: 3000 });
       return;
     }
     if (!data || !hora) {
-      alert("Selecione data e hora de início.");
+      // alert("Selecione data e hora de início.");
+      setAlertState({ visible: true, message: "Selecione data e hora de início.", type: "error", duration: 3000 });
       return;
     }
     if (descricao && descricao.length < 3) {
-      alert("Descrição muito curta.");
+      // alert("Descrição muito curta.");
+      setAlertState({ visible: true, message: "Descrição muito curta.", type: "error", duration: 3000 });
       return;
     }
 
@@ -109,13 +120,15 @@ export default function ModalAdicionarAtendimento({ show, onClose, atualizarList
     try {
       const res = await criarAtendimento(atendimentoDTO, 1);
       console.log('Atendimento criado:', res?.data);
-      alert('Atendimento criado com sucesso!');
+      // alert('Atendimento criado com sucesso!');
+      setAlertState({ visible: true, message: 'Atendimento criado com sucesso!', type: 'success', duration: 3000 });
       if (typeof atualizarLista === 'function') await atualizarLista();
       onClose();
     } catch (err) {
       console.error('Erro ao criar atendimento:', err);
       const msg = err?.response?.data?.message || err?.message || 'Erro de conexão';
-      alert('Erro ao criar atendimento: ' + msg);
+      // alert('Erro ao criar atendimento: ' + msg);
+      setAlertState({ visible: true, message: 'Erro ao criar atendimento: ' + msg, type: 'error', duration: 5000 });
     }
   };
 
@@ -127,6 +140,13 @@ export default function ModalAdicionarAtendimento({ show, onClose, atualizarList
       modalId="ModalAdicionarAtendimento"
       variant="add"
     >
+      <SwitchAlert
+        visible={alertState.visible}
+        message={alertState.message}
+        type={alertState.type}
+        duration={alertState.duration}
+        onClose={() => setAlertState(s => ({ ...s, visible: false }))}
+      />
       <form
         id="appointmentForm"
         className="appointment-form_L"

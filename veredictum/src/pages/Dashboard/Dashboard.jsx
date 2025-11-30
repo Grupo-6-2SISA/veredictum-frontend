@@ -102,7 +102,7 @@ const Dashboard = () => {
             }
 
             // ==============================
-            // 🔧 Transformar dados em série mensal
+            //  Transformar dados em série mensal
             // ==============================
             const meses = ["JAN", "FEV", "MAR", "ABR", "MAI", "JUN", "JUL", "AGO", "SET", "OUT", "NOV", "DEZ"];
 

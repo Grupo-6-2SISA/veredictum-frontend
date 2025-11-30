@@ -2,8 +2,11 @@ import React from "react";
 import FecharIcon from "../../../assets/svg/fechar.svg";
 import "../GestaoDespesas.css";
 import { atualizarDespesa } from "../GestaoDespesas";
+import SwitchAlert from "../../../components/SwitchAlert/SwitchAlert";
 
 export default function ModalEditarDespesa({ show, onClose, editingItem, atualizarLista }) {
+    const [alertState, setAlertState] = React.useState({ visible: false, message: "", type: "info", duration: 3000 });
+
     if (!show || !editingItem) return null;
 
     const handleSubmit = async (e) => {
@@ -21,22 +24,26 @@ export default function ModalEditarDespesa({ show, onClose, editingItem, atualiz
         const regexTexto = /^[A-Za-zÀ-ú\s.\-]+$/;
 
         if (!etiqueta || etiqueta.length < 3 || !regexTexto.test(etiqueta)) {
-            alert("❌ Etiqueta deve ter pelo menos 3 caracteres e pode conter letras, espaços, pontos e traços (sem números).");
+            // alert("❌ Etiqueta deve ter pelo menos 3 caracteres e pode conter letras, espaços, pontos e traços (sem números).");
+            setAlertState({ visible: true, message: "Etiqueta deve ter pelo menos 3 caracteres e pode conter letras, espaços, pontos e traços (sem números).", type: "error", duration: 3500 });
             return;
         }
 
         if (!descricao || descricao.length < 3 || !regexTexto.test(descricao)) {
-            alert("❌ Descrição deve ter pelo menos 3 caracteres e pode conter letras, espaços, pontos e traços (sem números).");
+            // alert("❌ Descrição deve ter pelo menos 3 caracteres e pode conter letras, espaços, pontos e traços (sem números).");
+            setAlertState({ visible: true, message: "Descrição deve ter pelo menos 3 caracteres e pode conter letras, espaços, pontos e traços (sem números).", type: "error", duration: 3500 });
             return;
         }
 
         if (urlNuvem && !(/\.(pdf|com|br)$/i).test(urlNuvem)) {
-            alert("❌ URL deve terminar com .pdf, .com ou .br");
+            // alert("❌ URL deve terminar com .pdf, .com ou .br");
+            setAlertState({ visible: true, message: "URL deve terminar com .pdf, .com ou .br", type: "error", duration: 3500 });
             return;
         }
 
         if (isNaN(valor) || valor < 0) {
-            alert("❌ Valor não pode ser negativo.");
+            // alert("❌ Valor não pode ser negativo.");
+            setAlertState({ visible: true, message: "Valor não pode ser negativo.", type: "error", duration: 3500 });
             return;
         }
 
@@ -58,20 +65,31 @@ export default function ModalEditarDespesa({ show, onClose, editingItem, atualiz
             const response = await atualizarDespesa(editingItem.idConta, updatedData);
             console.log("✅ [SUCESSO] Despesa atualizada:", response.data);
 
-            alert("✅ Conta atualizada com sucesso");
+            // alert("✅ Conta atualizada com sucesso");
+            setAlertState({ visible: true, message: "Conta atualizada com sucesso", type: "success", duration: 2200 });
+
+            atualizarLista();
 
             onClose();
             window.location.reload();
 
         } catch (error) {
             console.error("❌ [ERRO] Falha ao atualizar despesa:", error);
-            alert("Erro ao atualizar despesa. Verifique o console para mais detalhes.");
+            // alert("Erro ao atualizar despesa. Verifique o console para mais detalhes.");
+            setAlertState({ visible: true, message: "Erro ao atualizar despesa. Verifique o console para mais detalhes.", type: "error", duration: 3500 });
         }
 
     };
 
     return (
         <div id="editExpenseModal_Davidson" className="modal_Adicionar_Despesas">
+            <SwitchAlert
+                visible={alertState.visible}
+                message={alertState.message}
+                type={alertState.type}
+                duration={alertState.duration}
+                onClose={() => setAlertState(s => ({ ...s, visible: false }))}
+            />
             <div className="modal-content-despesas" style={{ maxHeight: "600px" }}>
 
                 <div id="modal-header-top" style={{ backgroundColor: '#414141', borderBottom: 'none' }} className="modal-header">

@@ -3,6 +3,7 @@ import ModalContainer from './ModalContainer';
 import { editarAtendimento, apiClient } from "../Agenda.js";
 import PropTypes from 'prop-types';
 import { format } from 'date-fns';
+import SwitchAlert from "../../../components/SwitchAlert/SwitchAlert";
 
 const formatDateTime = (isoDate) => {
   if (!isoDate) return { date: '', time: '' };
@@ -22,6 +23,7 @@ export default function ModalEditarAtendimento({ show, onClose, atualizarLista, 
   const [clientes, setClientes] = useState([]);
   const [usuarios, setUsuarios] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [alertState, setAlertState] = useState({ visible: false, message: "", type: "info", duration: 3000 });
 
   const [formState, setFormState] = useState({
     fkCliente: '',
@@ -108,7 +110,8 @@ export default function ModalEditarAtendimento({ show, onClose, atualizarLista, 
     e.preventDefault();
 
     if (!editingItem || (!editingItem.idAgendamento && !editingItem.idAtendimento)) {
-      alert("ID do agendamento para edição não encontrado.");
+      // alert("ID do agendamento para edição não encontrado.");
+      setAlertState({ visible: true, message: "ID do agendamento para edição não encontrado.", type: "error", duration: 3500 });
       return;
     }
 
@@ -119,19 +122,23 @@ export default function ModalEditarAtendimento({ show, onClose, atualizarLista, 
     } = formState;
 
     if (!fkCliente) {
-      alert("Selecione o cliente.");
+      // alert("Selecione o cliente.");
+      setAlertState({ visible: true, message: "Selecione o cliente.", type: "error", duration: 3000 });
       return;
     }
     if (!fkUsuario) {
-      alert("Selecione o responsável.");
+      // alert("Selecione o responsável.");
+      setAlertState({ visible: true, message: "Selecione o responsável.", type: "error", duration: 3000 });
       return;
     }
     if (!date || !time) {
-      alert("Selecione data e hora de início.");
+      // alert("Selecione data e hora de início.");
+      setAlertState({ visible: true, message: "Selecione data e hora de início.", type: "error", duration: 3000 });
       return;
     }
     if (descricao && descricao.length < 3) {
-      alert("Descrição muito curta.");
+      // alert("Descrição muito curta.");
+      setAlertState({ visible: true, message: "Descrição muito curta.", type: "error", duration: 3000 });
       return;
     }
 
@@ -169,13 +176,15 @@ export default function ModalEditarAtendimento({ show, onClose, atualizarLista, 
     try {
       const res = await editarAtendimento(idToEdit, atendimentoDTO);
       console.log('Atendimento editado:', res?.data);
-      alert('Atendimento atualizado com sucesso!');
+      // alert('Atendimento atualizado com sucesso!');
+      setAlertState({ visible: true, message: 'Atendimento atualizado com sucesso!', type: 'success', duration: 3000 });
       if (typeof atualizarLista === 'function') await atualizarLista();
       onClose();
     } catch (err) {
       console.error('Erro ao editar atendimento:', err);
       const msg = err?.response?.data?.message || err?.message || 'Erro de conexão';
-      alert('Erro ao editar atendimento: ' + msg);
+      // alert('Erro ao editar atendimento: ' + msg);
+      setAlertState({ visible: true, message: 'Erro ao editar atendimento: ' + msg, type: 'error', duration: 5000 });
     }
   };
 
@@ -187,6 +196,13 @@ export default function ModalEditarAtendimento({ show, onClose, atualizarLista, 
       modalId="ModalEditarAtendimento"
       variant="edit"
     >
+      <SwitchAlert
+        visible={alertState.visible}
+        message={alertState.message}
+        type={alertState.type}
+        duration={alertState.duration}
+        onClose={() => setAlertState(s => ({ ...s, visible: false }))}
+      />
       {loading ? (
         <div style={{ padding: '20px', textAlign: 'center' }}>Carregando dados...</div>
       ) : (
@@ -327,12 +343,12 @@ export default function ModalEditarAtendimento({ show, onClose, atualizarLista, 
             <label
               htmlFor="shouldEnviarEmail"
               style={{
-              fontWeight: 'normal',
-              fontSize: '14px',
-              color: '#e9e9e9',
-              margin: 0,
-              cursor: 'pointer'
-            }}>
+                fontWeight: 'normal',
+                fontSize: '14px',
+                color: '#e9e9e9',
+                margin: 0,
+                cursor: 'pointer'
+              }}>
               Enviar e-mail de lembrete?
             </label>
           </div>

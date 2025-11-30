@@ -3,6 +3,7 @@ import Sidebar from '../../components/Sidebar/Sidebar';
 import Modal from '../../components/Modal_P/Modal_P';
 import '../../components/Button/Button_P';
 import './NotasFiscais.css';
+import SwitchAlert from '../../components/SwitchAlert/SwitchAlert';
 
 import {
   getNotasFiscais,
@@ -24,6 +25,14 @@ const NotasFiscais = () => {
   const [clientesData, setClientesData] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+
+  // SwitchAlert state
+  const [alertState, setAlertState] = useState({
+    visible: false,
+    message: '',
+    type: 'info',
+    duration: 3000,
+  });
 
   const getEmitidaText = (isEmitida) =>
     (isEmitida === 1 || isEmitida === "1" || isEmitida === true || isEmitida === "true") ? 'Sim' : 'Não';
@@ -107,7 +116,8 @@ const NotasFiscais = () => {
       });
 
       if (duplicada) {
-        alert('Já existe uma nota fiscal cadastrada com este número. Escolha outro número.');
+        // alert('Já existe uma nota fiscal cadastrada com este número. Escolha outro número.');
+        setAlertState({ visible: true, message: 'Já existe uma nota fiscal cadastrada com este número. Escolha outro número.', type: 'error', duration: 4000 });
         return;
       }
     }
@@ -115,18 +125,21 @@ const NotasFiscais = () => {
     try {
       const response = await createNotaFiscal(notaFiscalData, 1);
       setNotasFiscaisData(prev => [...prev, response.data]);
-      alert('Nota fiscal criada com sucesso!');
+      // alert('Nota fiscal criada com sucesso!');
+      setAlertState({ visible: true, message: 'Nota fiscal criada com sucesso!', type: 'success', duration: 3000 });
       closeModal();
       e.target.reset();
     } catch (err) {
-      alert('Erro ao criar nota fiscal: ' + (err.response?.data?.message || err.message));
+      // alert('Erro ao criar nota fiscal: ' + (err.response?.data?.message || err.message));
+      setAlertState({ visible: true, message: 'Erro ao criar nota fiscal: ' + (err.response?.data?.message || err.message), type: 'error', duration: 5000 });
     }
   };
 
   const handleEdit = (nota) => {
     const notaId = getNormalizedId(nota);
     if (!notaId) {
-      alert('Erro: ID da nota fiscal não encontrado');
+      // alert('Erro: ID da nota fiscal não encontrado');
+      setAlertState({ visible: true, message: 'Erro: ID da nota fiscal não encontrado', type: 'error', duration: 4000 });
       return;
     }
 
@@ -150,7 +163,8 @@ const NotasFiscais = () => {
     const notaId = editingNota?.id_nota_fiscal;
 
     if (!notaId || !formData.get('cliente')) {
-      alert('Erro: Dados obrigatórios não preenchidos');
+      // alert('Erro: Dados obrigatórios não preenchidos');
+      setAlertState({ visible: true, message: 'Erro: Dados obrigatórios não preenchidos', type: 'error', duration: 4000 });
       return;
     }
 
@@ -175,7 +189,8 @@ const NotasFiscais = () => {
       });
 
       if (duplicadaEdit) {
-        alert('Já existe outra nota fiscal com esse número.');
+        // alert('Já existe outra nota fiscal com esse número.');
+        setAlertState({ visible: true, message: 'Já existe outra nota fiscal com esse número.', type: 'error', duration: 4000 });
         return;
       }
     }
@@ -194,17 +209,20 @@ const NotasFiscais = () => {
         } : nota)
       );
 
-      alert('Nota fiscal editada com sucesso!');
+      // alert('Nota fiscal editada com sucesso!');
+      setAlertState({ visible: true, message: 'Nota fiscal editada com sucesso!', type: 'success', duration: 3000 });
       closeEditModal();
     } catch (err) {
-      alert('Erro ao editar nota fiscal: ' + (err.response?.data?.message || err.message));
+      // alert('Erro ao editar nota fiscal: ' + (err.response?.data?.message || err.message));
+      setAlertState({ visible: true, message: 'Erro ao editar nota fiscal: ' + (err.response?.data?.message || err.message), type: 'error', duration: 5000 });
     }
   };
 
   const handleDelete = async (nota) => {
     const notaId = getNormalizedId(nota);
     if (!notaId) {
-      alert('Erro: ID da nota fiscal não encontrado');
+      // alert('Erro: ID da nota fiscal não encontrado');
+      setAlertState({ visible: true, message: 'Erro: ID da nota fiscal não encontrado', type: 'error', duration: 4000 });
       return;
     }
 
@@ -214,12 +232,14 @@ const NotasFiscais = () => {
     try {
       await deleteNotaFiscal(notaId);
       setNotasFiscaisData(prev => prev.filter(item => getNormalizedId(item) != notaId));
-      alert('Nota fiscal excluída com sucesso!');
+      // alert('Nota fiscal excluída com sucesso!');
+      setAlertState({ visible: true, message: 'Nota fiscal excluída com sucesso!', type: 'success', duration: 3000 });
     } catch (err) {
       const message = err.response?.status === 409
         ? 'Não é possível excluir esta nota fiscal pois existem registros dependentes.'
         : 'Erro ao excluir nota fiscal: ' + (err.response?.data?.message || err.message);
-      alert(message);
+      // alert(message);
+      setAlertState({ visible: true, message: message, type: 'error', duration: 5000 });
     }
   };
 
@@ -229,19 +249,22 @@ const NotasFiscais = () => {
     try {
       await deleteNotaFiscal(deletingNota.id_nota_fiscal);
       setNotasFiscaisData(prev => prev.filter(item => getNormalizedId(item) != deletingNota.id_nota_fiscal));
-      alert('Nota fiscal excluída com sucesso!');
+      // alert('Nota fiscal excluída com sucesso!');
+      setAlertState({ visible: true, message: 'Nota fiscal excluída com sucesso!', type: 'success', duration: 3000 });
       closeDeleteModal();
     } catch (err) {
       const message = err.response?.status === 409
         ? 'Não é possível excluir esta nota fiscal pois existem registros dependentes.'
         : 'Erro ao excluir nota fiscal: ' + (err.response?.data?.message || err.message);
-      alert(message);
+      // alert(message);
+      setAlertState({ visible: true, message: message, type: 'error', duration: 5000 });
     }
   };
 
   const handleViewInfo = (nota) => {
     if (!getNormalizedId(nota)) {
-      alert('Erro: ID da nota fiscal não encontrado');
+      // alert('Erro: ID da nota fiscal não encontrado');
+      setAlertState({ visible: true, message: 'Erro: ID da nota fiscal não encontrado', type: 'error', duration: 4000 });
       return;
     }
     setViewingNota(nota);
@@ -284,6 +307,13 @@ const NotasFiscais = () => {
       <Sidebar />
 
       <div className="notas-fiscais-content">
+        <SwitchAlert
+          visible={alertState.visible}
+          message={alertState.message}
+          type={alertState.type}
+          duration={alertState.duration}
+          onClose={() => setAlertState(s => ({ ...s, visible: false }))}
+        />
         <div className="header-top-nf">
           <div className="head-description">
             <div className="div_topo">
@@ -308,12 +338,12 @@ const NotasFiscais = () => {
             <div className="card-content">
               <div className="list-header-nf">
                 <p>Número</p>
-                <p style={{transform: "translateX(40px)" }}>Etiqueta</p>
+                <p style={{ transform: "translateX(40px)" }}>Etiqueta</p>
                 <p>Data Vencimento</p>
                 <p>Emitida</p>
-                <p style={{transform: "translateX(10px)" }}>Editar</p>
-                <p style={{transform: "translateX(10px)" }}>Excluir</p>
-                <p style={{transform: "translateX(23px)" }}>Ver mais</p>
+                <p style={{ transform: "translateX(10px)" }}>Editar</p>
+                <p style={{ transform: "translateX(10px)" }}>Excluir</p>
+                <p style={{ transform: "translateX(23px)" }}>Ver mais</p>
               </div>
 
               {loading ? (
@@ -345,7 +375,7 @@ const NotasFiscais = () => {
                         <p>{nota.numero}</p>
 
                         <p className="nf-etiqueta" title={nota.etiqueta}>{nota.etiqueta}</p>
-                        <p  style={{transform: "translateX(15px)" }}>{formatDateForDisplay(nota.dataVencimento)}</p>
+                        <p style={{ transform: "translateX(15px)" }}>{formatDateForDisplay(nota.dataVencimento)}</p>
                         <p style={{
                           color: emitidaText === 'Sim' ? 'green' : 'red',
                           fontWeight: 'bold'

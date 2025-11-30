@@ -10,6 +10,7 @@ function ModalEditarFuncionario({
     atualizarLista,
     funcionarioData,
     FecharIcone,
+    showAlert
 }) {
     const [formData, setFormData] = useState({
         idUsuario: null,
@@ -49,18 +50,21 @@ function ModalEditarFuncionario({
 
         const nomeRegex = /^[A-Za-zÀ-ÖØ-öø-ÿ\s]+$/;
         if (!nomeRegex.test(nome.trim())) {
-            alert("❌ O nome deve conter apenas letras e espaços.");
+            // alert("❌ O nome deve conter apenas letras e espaços.");
+            showAlert?.("❌ O nome deve conter apenas letras e espaços.", "error", 3500);
             return false;
         }
 
         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
         if (!emailRegex.test(email.trim())) {
-            alert("❌ E-mail inválido. Use o formato: exemplo@dominio.com");
+            // alert("❌ E-mail inválido. Use o formato: exemplo@dominio.com");
+            showAlert?.("❌ E-mail inválido. Use o formato: exemplo@dominio.com", "error", 3500);
             return false;
         }
 
         if (senha.trim() !== "" && senha.length < 6) {
-            alert("❌ A senha deve ter pelo menos 6 caracteres.");
+            // alert("❌ A senha deve ter pelo menos 6 caracteres.");
+            showAlert?.("❌ A senha deve ter pelo menos 6 caracteres.", "error", 3500);
             return false;
         }
 
@@ -94,13 +98,15 @@ function ModalEditarFuncionario({
             const response = await atualizarFuncionario(formData.idUsuario, funcionarioAtualizado);
             console.log("Resposta do backend:", response.data);
 
-            alert("✅ Funcionário atualizado com sucesso!");
+            // alert("✅ Funcionário atualizado com sucesso!");
+            showAlert?.("Funcionário atualizado com sucesso!", "success", 2200);
             atualizarLista?.();
             closeModalEditar();
             window.location.reload();
         } catch (error) {
             console.error("❌ Erro ao atualizar funcionário:", error);
-            alert("Falha ao atualizar funcionário. Verifique os dados e tente novamente.");
+            // alert("Falha ao atualizar funcionário. Verifique os dados e tente novamente.");
+            showAlert?.("Falha ao atualizar funcionário. Verifique os dados e tente novamente.", "error", 3500);
         }
     };
 

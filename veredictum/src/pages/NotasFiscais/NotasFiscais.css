@@ -130,6 +130,7 @@
 
 .list-header-nf p {
     font-weight: bold;
+    font-family: "Montserrat", sans-serif;
     margin: 0;
 }
 
@@ -137,6 +138,7 @@
     display: grid;
     grid-template-columns: 2fr 2fr 2fr 1fr 1fr 1fr 1.5fr;
     gap: 1rem;
+    font-family: "Montserrat", sans-serif;
     align-items: center;
     padding: 0.3rem 1.2rem;
     box-shadow: 0 1px 3px #424242;
@@ -146,8 +148,9 @@
 }
 
 .nf-list-item p {
+    font-family: "Montserrat", sans-serif;
     margin: 0;
-    font-size: 1rem;
+    font-size: 15px;
     color: var(--dark-black);
     font-weight: bold;
 }
@@ -195,12 +198,13 @@
 }
 
 .nf-list-item .nf-etiqueta {
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  max-width: 220px; /* ajuste conforme necessário */
-  display: inline-block;
-  vertical-align: middle;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 220px;
+    /* ajuste conforme necessário */
+    display: inline-block;
+    vertical-align: middle;
 }
 
 /* Modal */
@@ -353,7 +357,7 @@
     .nf-table-card {
         width: 90vw;
     }
-    
+
     .div_topo h1 {
         font-size: 28px;
     }
@@ -365,25 +369,25 @@
         height: auto;
         min-height: 100vh;
     }
-    
+
     .notas-fiscais-content {
         margin-left: 0;
         width: 100vw;
         height: auto;
         padding: 15px;
     }
-    
+
     .nf-management-section {
         height: auto;
         margin-top: 20px;
     }
-    
+
     .nf-table-card {
         width: 95vw;
         height: auto;
         min-height: 400px;
     }
-    
+
     .list-header-nf,
     .nf-list-item {
         grid-template-columns: 1fr 1fr 1fr 0.8fr 0.8fr 0.8fr 1fr;
@@ -391,46 +395,46 @@
         padding: 0.5rem;
         font-size: 0.8rem;
     }
-    
+
     .nf-list-item img {
         width: 24px;
         height: 24px;
     }
-    
+
     .div_topo h1 {
         font-size: 24px;
     }
-    
+
     .header-top {
         flex-direction: column;
         align-items: flex-start;
         gap: 20px;
         padding: 0;
     }
-    
+
     .modal-content {
         width: 95%;
         max-height: 95vh;
         margin: 20px;
     }
-    
+
     .form-row {
         grid-template-columns: 1fr;
         gap: 16px;
     }
-    
+
     .modal-header {
         padding: 16px 20px;
     }
-    
+
     .modal-header h2 {
         font-size: 20px;
     }
-    
+
     .modal-form {
         padding: 20px;
     }
-    
+
     .form-group-notas input,
     .form-group-notas select {
         padding: 10px;

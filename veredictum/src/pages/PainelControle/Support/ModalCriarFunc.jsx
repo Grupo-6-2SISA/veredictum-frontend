@@ -4,7 +4,7 @@ import { criarFuncionario } from "../Painel";
 import OlhoAberto from '../../../assets/img/olho-aberto.png';
 import OlhoFechado from '../../../assets/img/olho-vermelho.png';
 
-function ModalCriarFuncionario({ isModalOpen, closeModalCriar, atualizarLista, FecharIcone }) {
+function ModalCriarFuncionario({ isModalOpen, closeModalCriar, atualizarLista, FecharIcone,  showAlert }) {
     const [formData, setFormData] = useState({
         nome: "",
         email: "",
@@ -55,17 +55,18 @@ function ModalCriarFuncionario({ isModalOpen, closeModalCriar, atualizarLista, F
             };
 
             await criarFuncionario(novoFuncionario);
-            alert("✅ Funcionário cadastrado com sucesso!");
+            showAlert?.("Funcionário cadastrado com sucesso!", "success", 2200);
 
             atualizarLista();
             closeModalCriar();
-            window.location.reload();
+            // window.location.reload();
 
             setFormData({ nome: "", email: "", senha: "", tipoUsuario: "Usuário" });
         } catch (error) {
             console.error("Erro ao cadastrar funcionário:", error);
-            alert("❌ Falha ao cadastrar funcionário. Verifique os dados.");
-            window.location.reload();
+            // alert("❌ Falha ao cadastrar funcionário. Verifique os dados.");
+            // window.location.reload();
+            showAlert?.("Falha ao cadastrar funcionário. Verifique os dados.", "error", 3500);
         }
     };
 

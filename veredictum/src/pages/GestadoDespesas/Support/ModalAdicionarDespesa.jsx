@@ -1,9 +1,19 @@
 import React, { useState } from "react";
 import FecharIcon from "../../../assets/svg/fechar.svg";
 import { adicionarDespesa } from "../GestaoDespesas";
+import SwitchAlert from "../../../components/SwitchAlert/SwitchAlert";
 
 export default function ModalAdicionarDespesa({ show, onClose, atualizarLista }) {
     const [isPago, setIsPago] = useState(false);
+
+    // switch alert local
+    const [alertState, setAlertState] = useState({
+        visible: false,
+        message: "",
+        type: "info",
+        duration: 3000,
+    });
+
 
     if (!show) return null;
 
@@ -22,22 +32,26 @@ export default function ModalAdicionarDespesa({ show, onClose, atualizarLista })
         const regexTexto = /^[A-Za-zÀ-ú\s.\-]+$/;
 
         if (!etiqueta || etiqueta.length < 3 || !regexTexto.test(etiqueta)) {
-            alert("❌ Etiqueta deve ter pelo menos 3 caracteres e pode conter letras, espaços, pontos e traços (sem números).");
+            // alert("❌ Etiqueta deve ter pelo menos 3 caracteres e pode conter letras, espaços, pontos e traços (sem números).");
+            setAlertState({ visible: true, message: "Etiqueta deve ter pelo menos 3 caracteres e pode conter letras, espaços, pontos e traços (sem números).", type: "error", duration: 3500 });
             return;
         }
 
         if (!descricao || descricao.length < 3 || !regexTexto.test(descricao)) {
-            alert("❌ Descrição deve ter pelo menos 3 caracteres e pode conter letras, espaços, pontos e traços (sem números).");
+            // alert("❌ Descrição deve ter pelo menos 3 caracteres e pode conter letras, espaços, pontos e traços (sem números).");
+            setAlertState({ visible: true, message: "Descrição deve ter pelo menos 3 caracteres e pode conter letras, espaços, pontos e traços (sem números).", type: "error", duration: 3500 });
             return;
         }
 
         if (urlNuvem && !(/\.(pdf|com|br)$/i).test(urlNuvem)) {
-            alert("❌ URL deve terminar com .pdf, .com ou .br");
+            // alert("❌ URL deve terminar com .pdf, .com ou .br");
+            setAlertState({ visible: true, message: "URL deve terminar com .pdf, .com ou .br", type: "error", duration: 3500 });
             return;
         }
 
         if (isNaN(valor) || valor < 0) {
-            alert("❌ Valor não pode ser negativo.");
+            // alert("❌ Valor não pode ser negativo.");
+            setAlertState({ visible: true, message: "Valor não pode ser negativo.", type: "error", duration: 3500 });
             return;
         }
 
@@ -58,7 +72,8 @@ export default function ModalAdicionarDespesa({ show, onClose, atualizarLista })
             const response = await adicionarDespesa(formData);
             console.log("✅ [SUCESSO] Resposta do backend:", response.data);
 
-            alert("✅ Despesa adicionada com sucesso!");
+            // alert("✅ Despesa adicionada com sucesso!");
+            setAlertState({ visible: true, message: "Despesa adicionada com sucesso!", type: "success", duration: 2200 });
 
             atualizarLista();
             onClose();
@@ -69,7 +84,8 @@ export default function ModalAdicionarDespesa({ show, onClose, atualizarLista })
 
         } catch (error) {
             console.error("❌ [ERRO] Falha ao adicionar despesa:", error);
-            alert("Erro ao adicionar despesa. Verifique o console para mais detalhes.");
+            // alert("Erro ao adicionar despesa. Verifique o console para mais detalhes.");
+            setAlertState({ visible: true, message: "Erro ao adicionar despesa. Verifique o console para mais detalhes.", type: "error", duration: 3500 });
 
             setTimeout(() => {
                 window.location.reload();
@@ -81,6 +97,13 @@ export default function ModalAdicionarDespesa({ show, onClose, atualizarLista })
 
     return (
         <div id="ModalAdicionarDespesa_Davidson" className="modal_Adicionar_Despesas">
+            <SwitchAlert
+                visible={alertState.visible}
+                message={alertState.message}
+                type={alertState.type}
+                duration={alertState.duration}
+                onClose={() => setAlertState(s => ({ ...s, visible: false }))}
+            />
             <div className="modal_add_despesas">
                 <div className="modal-header" style={{ backgroundColor: '#424242', borderBottom: 'none', paddingBottom: "40px" }}>
                     <h2 style={{ fontSize: "45px", paddingLeft: "60px" }}>Adicionar Despesa</h2>
