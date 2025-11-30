@@ -67,12 +67,14 @@
     font-size: 1rem;
     margin: 0 0 5px 0;
     font-weight: 600;
+    font-family: "Montserrat", sans-serif;
 }
 
 .chart-tooltip p {
     font-size: 0.9rem;
     margin: 0;
     line-height: 1.4;
+    font-family: "Montserrat", sans-serif;
 }
 
 .info-tooltip-wrapper:hover .chart-tooltip {

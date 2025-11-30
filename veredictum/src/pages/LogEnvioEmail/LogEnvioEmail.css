@@ -1,17 +1,3 @@
-/* ============================
-   LogEnvioEmail - organized CSS
-   ============================ */
-
-/* Variables (fallbacks) */
-/* :root {
-  --text-primary: #111;
-  --white-normal: #fff;
-  --card-shadow: 0 6px 20px rgba(0, 0, 0, 0.06);
-  --input-shadow: 0 6px 18px rgba(0, 0, 0, 0.04);
-  --accent: #0b74ff;
-  --accent-dark: #0066cc;
-} */
-
 /* ----------------------------
    Page title / description
    ---------------------------- */
@@ -59,7 +45,7 @@
 
 /* Each filter group */
 .log-email-filtro-group-logs {
-  flex: 1 1 260px; /* base size, will wrap when necessary */
+  flex: 1 1 260px;
   display: flex;
   flex-direction: column;
   gap: 10px;
@@ -76,9 +62,8 @@
   min-width: 140px;
 }
 
-/* ----------------------------
-   Form controls (select / input / date)
-   ---------------------------- */
+/* Form controls (select / input / date) */
+
 /* Unified styles for select, text and date inputs */
 .log-email-filtro-group-logs select,
 .log-email-filtro-group-logs input[type="text"],
@@ -164,7 +149,7 @@
 
 .card-box-logs {
   width: 90vw;
-  min-height: 340px; /* <-- aumente esse valor conforme necessário */
+  min-height: 340px;
   height: auto;
   background: var(--white-normal);
   border-radius: 12px;
@@ -175,70 +160,76 @@
   margin-bottom: 18px;
   display: flex;
   flex-direction: column;
-  overflow: auto;
+  overflow: visible; 
 }
 
 .card-box-logs .listagem-body {
+  flex: 1 1 auto;
   min-height: 0;
   overflow-y: auto;
-  padding-right: 6px;
+  overflow-x: hidden;
+  padding-right: 8px;
+  max-height: calc(60vh - 160px);
 }
-
 
 .card-box-logs .listagem-row {
-  gap: 24px;
+  gap: 10px;
   align-items: center;
+  font-family: "Montserrat", sans-serif;
 }
 .card-box-logs .listagem-header {
-  gap: 24px;
+  gap: 10px;
   z-index: 50;
-  margin-top: -20px;
   margin-bottom: 80px;
-  height: 60px;
+  height: 30px;
   align-items: center;
   position: sticky;
   margin-bottom: 12px;
+  font-family: "Montserrat", sans-serif;
 }
-/* Scrollbar - preto (WebKit + Firefox) */
-.log-email-listagem-logs,
+
+.card-box-logs .listagem-header-cell {
+  font-weight: 700;
+  font-family: "Montserrat", sans-serif;
+  flex: 1 1 auto;
+}
+
+.btn.btn-sm.btn-primary {
+    cursor: pointer;
+    font-family: "Montserrat", sans-serif;
+    }
+
+/* Scrollbar preto aplicado APENAS dentro da listagem (WebKit + Firefox) */
 .card-box-logs .listagem-body,
-html,
-body {
+.listagem-body {
   /* Firefox */
   scrollbar-width: thin;
-  scrollbar-color: #000000 #00000000; /* thumb, track */
+  scrollbar-color: #000 #00000000; /* thumb, track */
 }
 
 /* WebKit (Chrome, Edge, Safari) */
-.log-email-listagem-logs::-webkit-scrollbar,
 .card-box-logs .listagem-body::-webkit-scrollbar,
-html::-webkit-scrollbar,
-body::-webkit-scrollbar {
-  width: 8px;
-  height: 8px;
+.listagem-body::-webkit-scrollbar {
+  width: 20px;
+  height: 10px;
 }
 
-.log-email-listagem-logs::-webkit-scrollbar-track,
 .card-box-logs .listagem-body::-webkit-scrollbar-track,
-html::-webkit-scrollbar-track,
-body::-webkit-scrollbar-track {
-  background: #000000; /* track preto */
+.listagem-body::-webkit-scrollbar-track {
+  background: #000; /* track preto */
+  border-radius: 10px;
 }
 
-.log-email-listagem-logs::-webkit-scrollbar-thumb,
 .card-box-logs .listagem-body::-webkit-scrollbar-thumb,
-html::-webkit-scrollbar-thumb,
-body::-webkit-scrollbar-thumb {
-  background: #00000000; /* thumb preto */
+.listagem-body::-webkit-scrollbar-thumb {
+  background: #000; /* thumb preto */
   border-radius: 10px;
   border: 2px solid #00000000;
 }
 
-.log-email-listagem-logs::-webkit-scrollbar-thumb:hover,
 .card-box-logs .listagem-body::-webkit-scrollbar-thumb:hover,
-html::-webkit-scrollbar-thumb:hover,
-body::-webkit-scrollbar-thumb:hover {
-  background: #111111;
+.listagem-body::-webkit-scrollbar-thumb:hover {
+  background: #11111100;
 }
 
 

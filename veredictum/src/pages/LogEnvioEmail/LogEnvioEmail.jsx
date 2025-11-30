@@ -14,7 +14,7 @@ const COLUNAS_LOG_EMAIL = [
   { key: "acoes", titulo: "Ações" },
 ];
 
-const GRID_TEMPLATE_LOG_EMAIL = "1fr 2fr 1.5fr 2fr 1fr";
+const GRID_TEMPLATE_LOG_EMAIL = "1.2fr 1fr 2.5fr 1.2fr 1fr";
 const API_BASE_URL = import.meta.env.VITE_API_URL || "http://localhost:8080";
 
 const LogEnvioEmail = () => {
@@ -217,6 +217,7 @@ const LogEnvioEmail = () => {
             role="region"
             aria-label="Logs de Email"
           >
+            {/* <div className="boxTitle">Logs de Email</div> */}
             {carregando ? (
               <p>Carregando logs...</p>
             ) : erro ? (

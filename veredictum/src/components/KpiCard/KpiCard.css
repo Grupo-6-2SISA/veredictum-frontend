@@ -212,6 +212,7 @@
     font-weight: bold;
     color: var(--normal-black, #333);
     margin: 0 0 5px 0;
+    font-family: "Montserrat", sans-serif;
 }
 
 .kpi-tooltip .tooltip-text {
@@ -219,6 +220,7 @@
     color: #666;
     line-height: 1.4;
     margin: 0;
+    font-family: "Montserrat", sans-serif;
 }
 
 .kpi-card:hover .kpi-tooltip {

@@ -50,10 +50,6 @@
     margin-bottom: 10px;
     background-color: #f6f6f6;
     border-radius: 12px;
-
-    /* Verifique se esta margem lateral não está causando um desalinhamento. */
-    /* Se o padding do .listagem-container for 0, use margin-left: 15px; */
-    /* Se o .listagem-container tiver padding, use margin-left: 0; */
     margin-left: 13px;
     box-shadow: 0 1px 3px #424242;
 }
@@ -71,7 +67,6 @@
 /* Card 1: Próximos Atendimentos (Nome, Dia, Horário) - 3 colunas */
 .listagem-header,
 .listagem-row {
-    /* Layout Padrão: 3 colunas, 3fr (Nome), 2fr (Dia), 1fr (Horário) */
     grid-template-columns: 3fr 2fr 1fr;
 }
 
@@ -143,16 +138,5 @@
 
 .listagem-header,
 .listagem-row {
-    /* Layout Padrão: 3 colunas, 3fr (Nome), 2fr (Dia), 1fr (Horário) */
     grid-template-columns: 3fr 3fr 1fr;
-    /* Aumente a largura da coluna de Data de Envio */
-}
-/* Garanta que o corpo da listagem não tenha z-index que concorra com o header. */
-.card-box-logs .listagem-body {
-    /* ... */
-    overflow-y: auto; 
-    overflow-x: auto;
-    /* Certifique-se de que não há um z-index aqui */
-    /* z-index: auto; (valor padrão) */
-    /* ... */
 }
