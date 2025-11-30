@@ -1,4 +1,4 @@
-// src/pages/Dashboard/BarChartStatic.jsx (NOVO com Recharts)
+// src/pages/Dashboard/BarChartStatic.jsx
 
 import React from 'react';
 import {
@@ -7,13 +7,35 @@ import {
     XAxis,
     YAxis,
     CartesianGrid,
-    Tooltip,
+    Tooltip, // 🚀 Mantenha o Tooltip importado
     Legend,
     ResponsiveContainer
 } from 'recharts';
 
-// Dados estáticos de exemplo (simulando a aparência do seu dashboard)
-const data = [
+const CustomTooltip = ({ active, payload, label }) => {
+    if (active && payload && payload.length) {
+        return (
+            <div style={{
+                background: '#fff',
+                padding: '10px',
+                borderRadius: '1px',
+                boxShadow: '0 2px 10px rgba(0,0,0,0.15)',
+                fontSize: '12px'
+            }}>
+                <strong>{label}</strong>
+                {payload.map((item, index) => (
+                    <p key={index} style={{ margin: 0, color: item.color }}>
+                        {item.name}: <strong>{item.value}</strong>
+                    </p>
+                ))}
+            </div>
+        );
+    }
+    return null;
+};
+
+// 🚀 1. Renomeie 'data' para 'defaultData' (se for usar Tooltip customizado, pule para o Bloco 2)
+const defaultData = [
     { name: 'JAN', 'Ano Anterior': 20, 'Ano Atual': 10 },
     { name: 'FEV', 'Ano Anterior': 45, 'Ano Atual': 35 },
     { name: 'MAR', 'Ano Anterior': 30, 'Ano Atual': 65 },
@@ -28,44 +50,77 @@ const data = [
     { name: 'DEZ', 'Ano Anterior': 65, 'Ano Atual': 100 },
 ];
 
-const BarChartStatic = () => {
+
+
+// 🚀 2. Aceita a prop 'data'
+const BarChartStatic = ({ data }) => {
+
+    // 🚀 3. Define qual dado usar
+    const chartData = data && data.length > 0 ? data : defaultData;
+
     return (
-        // ResponsiveContainer garante que o gráfico se ajuste ao ChartContainer
         <ResponsiveContainer width="100%" height="100%">
-            <BarChart
-                data={data}
-                margin={{ top: 5, right: 30, left: 20, bottom: 5 }}
-                barCategoryGap={5} // Espaço entre os grupos de barras (opcional)
-                barGap={1} // Espaço entre as barras do mesmo grupo
-            >
-                <CartesianGrid vertical={false} strokeDasharray="3 3" stroke="#ededed" />
-                
-                {/* Eixo X: Meses */}
-                <XAxis dataKey="name" axisLine={false} tickLine={false} style={{ fontSize: '10px' }} />
-                
-                {/* Eixo Y: Valores (0 a 100) */}
-                <YAxis 
-                    domain={[0, 100]} 
-                    axisLine={false} 
-                    tickLine={false} 
-                    style={{ fontSize: '10px', fontFamily: "Montserrat" }} 
-                    tickCount={11} // De 0 a 100 de 10 em 10
-                />
-                
-                {/* Tooltip (removido para manter estático, mas pode ser reativado se necessário) */}
-                {/* <Tooltip /> */}
-                
-                {/* Legenda (na parte inferior) */}
-                <Legend iconType="square" wrapperStyle={{ bottom: 0, fontSize: '10px' }} />
-                
-                {/* Barras do Ano Anterior (Cinza) */}
-                <Bar dataKey="Ano Anterior" fill="#A9A9A9" />
-                
-                {/* Barras do Ano Atual (Escuro) */}
-                <Bar dataKey="Ano Atual" fill="#333333" />
-            </BarChart>
+                <BarChart
+                    data={chartData}
+                    // 🚀 Margens alteradas
+                    margin={{ top: 15, right: 20, left: 10, bottom: 10 }}
+                    // 🚀 Espaçamento entre grupos e entre barras
+                    barCategoryGap="25%"
+                    barGap={8}
+                >
+                    <CartesianGrid vertical={false} strokeDasharray="3 3" stroke="#ededed" />
+
+                    {/* Eixo X: Meses */}
+                    <XAxis
+                        dataKey="name"
+                        axisLine={false}
+                        tickLine={false}
+                        // 🚀 Tamanho da fonte alterado
+                        style={{ fontSize: '11px' }}
+                    />
+
+                    {/* Eixo Y: Valores */}
+                    <YAxis
+                        // 🚀 Removido domain e tickCount
+                        axisLine={false}
+                        tickLine={false}
+                        // 🚀 Tamanho da fonte e formato
+                        style={{ fontSize: '11px' }}
+                        allowDecimals={false} // Não permite decimais
+                    />
+
+                    {/* Tooltip (remover o antigo e adicionar o novo) */}
+                    <Tooltip content={<CustomTooltip />} /> 
+
+                    {/* Legenda (na parte inferior) */}
+                    <Legend
+                        iconType="square"
+                        // 🚀 Tamanho da fonte alterado
+                        wrapperStyle={{ bottom: 0, fontSize: '11px' }}
+                    />
+
+                    {/* Barras do Ano Anterior (Cinza) */}
+                    <Bar
+                        dataKey="Ano Anterior"
+                        fill="#A9A9A9"
+                        // 🚀 Adicionado largura, raio e animação
+                        barSize={26}
+                        radius={[1, 1, 0, 0]}
+                        animationDuration={900}
+                    />
+
+                    {/* Barras do Ano Atual (Escuro) */}
+                    <Bar
+                        dataKey="Ano Atual"
+                        fill="#333333"
+                        // 🚀 Adicionado largura, raio e animação
+                        barSize={26}
+                        radius={[1, 1, 0, 0]}
+                        animationDuration={900}
+                    />
+                </BarChart>
         </ResponsiveContainer>
     );
 };
-
+    
 export default BarChartStatic;

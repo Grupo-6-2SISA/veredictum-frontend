@@ -1,13 +1,14 @@
 import React from 'react';
 import './ChartContainer.css';
-import BarChartStatic from './BarChartStatic';
 import InfoIcon from '../../assets/svg/info.svg';
 
-const ChartContainer = ({ title, tooltipTitle, tooltipText }) => {
+
+const ChartContainer = ({ title, tooltipTitle, tooltipText, children }) => {
     return (
         <div className="chart-container">
             <div className="chart-header">
                 <h3 className="chart-title">{title}</h3>
+
                 <div className="info-tooltip-wrapper">
                     <img
                         src={InfoIcon}
@@ -25,7 +26,7 @@ const ChartContainer = ({ title, tooltipTitle, tooltipText }) => {
             </div>
 
             <div className="chart-content">
-                <BarChartStatic />
+                {children}
             </div>
         </div>
     );

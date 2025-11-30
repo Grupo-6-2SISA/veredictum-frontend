@@ -75,10 +75,13 @@ const LogEnvioEmail = () => {
     const dataOk = (() => {
       if (!filtroData) return true;
       try {
-        const dataLog = log.dataEnvio
-          ? new Date(log.dataEnvio).toISOString().slice(0, 10)
-          : "";
-        return dataLog === filtroData;
+        // converter "DD/MM/YYYY - HH:mm:ss" para "YYYY-MM-DD"
+        const [dia, mes, ano] = log.dataEnvio.split(" - ")[0].split("/");
+        const dataLogFormatada = `${ano}-${mes.padStart(2, "0")}-${dia.padStart(
+          2,
+          "0"
+        )}`;
+        return dataLogFormatada === filtroData;
       } catch {
         return true;
       }
@@ -113,38 +116,30 @@ const LogEnvioEmail = () => {
     ),
   }));
 
-  // função de exportação CSV usando os dados já filtrados
-  const exportToCSV = () => {
-    if (!logsFiltrados || logsFiltrados.length === 0) return;
+  const exportToCSV = async () => {
+    try {
+      const response = await axios.get(
+        `${API_BASE_URL}/log-envio-lembrete/csv-logs`,
+        { responseType: "blob" }
+      );
 
-    const headers = COLUNAS_LOG_EMAIL.filter((c) => c.key !== "acoes").map(
-      (c) => c.titulo
-    );
+      const blob = new Blob([response.data], { type: "text/csv" });
+      const url = URL.createObjectURL(blob);
 
-    const rows = logsFiltrados.map((log) => {
-      const dataIso = log.dataEnvio ? new Date(log.dataEnvio).toISOString() : "";
-      const dataFormatada = dataIso ? new Date(dataIso).toLocaleString("pt-BR") : "";
-      return [
-        log.tipo ?? "",
-        dataFormatada,
-        (log.mensagem ?? "").replace(/\r?\n/g, " ").replace(/;/g, ","),
-        log.clienteRelacionado ?? "",
-      ];
-    });
+      const link = document.createElement("a");
+      link.href = url;
+      link.download = `historico_log_envio_${new Date()
+        .toISOString()
+        .slice(0, 10)}.csv`;
 
-    const csvArray = [headers, ...rows].map((row) =>
-      row.map((cell) => `"${String(cell).replace(/"/g, '""')}"`).join(";")
-    );
-    const csvContent = csvArray.join("\r\n");
-    const blob = new Blob(["\ufeff", csvContent], { type: "text/csv;charset=utf-8;" });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement("a");
-    a.href = url;
-    a.download = `logs_envio_${new Date().toISOString().slice(0, 10)}.csv`;
-    document.body.appendChild(a);
-    a.click();
-    a.remove();
-    URL.revokeObjectURL(url);
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+      URL.revokeObjectURL(url);
+    } catch (e) {
+      console.error("Erro ao baixar CSV:", e);
+      alert("Não foi possível baixar o CSV.");
+    }
   };
 
   return (
@@ -217,7 +212,6 @@ const LogEnvioEmail = () => {
             role="region"
             aria-label="Logs de Email"
           >
-            {/* <div className="boxTitle">Logs de Email</div> */}
             {carregando ? (
               <p>Carregando logs...</p>
             ) : erro ? (
