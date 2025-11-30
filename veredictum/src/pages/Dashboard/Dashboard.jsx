@@ -6,11 +6,39 @@ import ChartContainer from '../../components/ChartContainer/ChartContainer';
 import BarChartStatic from '../../components/ChartContainer/BarChartStatic.jsx';
 
 import {
-    contasPagas, contasAbertas, totalContas, graficoAtrasadas, graficoPagas, graficoAtendimentosConcluidos,
+    contasPagasMes,
+    contasNaoPagas,
+    contasTotalMes,
+    graficoAtrasadas,
+    graficoPagas,
+
+    graficoAtendimentosConcluidos,
     graficoAtendimentosAtrasados,
     graficoNotasPendentes,
-    graficoNotasEmitidas
+    graficoNotasEmitidas,
+
+    atendimentosConcluidos,
+    atendimentosNaoConcluidos,
+    atendimentosTotalMes,
+
+    notasEmitidasMes,
+    notasPendentesMes,
+    notasTotalMes,
+
+    contasPagasMesComPercentual,
+    contasNaoPagasMesComPercentual,
+    contasTotalMesComPercentual,
+
+    notasEmitidasMesComPercentual,
+    notasPendentesMesComPercentual,
+    notasTotalMesComPercentual,
+
+    atendimentosConcluidosMesComPercentual,
+    atendimentosNaoConcluidosMesComPercentual,
+    atendimentosTotalMesComPercentual
+
 } from './Dashboard.js';
+
 import './Dashboard.css';
 
 // Esqueleto inicial dos KPIs
@@ -25,6 +53,7 @@ const mockAtendimentos = {
     kpi3: { value: 7, change: '-4%' },
     kpi4: { value: 39, change: '+5%' }
 };
+
 const mockNotas = {
     kpi2: { value: 15, change: '+8%' },
     kpi3: { value: 3, change: '-2%' },
@@ -77,9 +106,6 @@ const Dashboard = () => {
 
             let pagasRes, atrasadasRes;
 
-            // ==============================
-            // 🔥 SELEÇÃO DO CATÁLOGO
-            // ==============================
             if (catalog === 'contas') {
                 [pagasRes, atrasadasRes] = await Promise.all([
                     graficoPagas(anoAnterior, anoAtual),
@@ -101,9 +127,6 @@ const Dashboard = () => {
                 ]);
             }
 
-            // ==============================
-            //  Transformar dados em série mensal
-            // ==============================
             const meses = ["JAN", "FEV", "MAR", "ABR", "MAI", "JUN", "JUL", "AGO", "SET", "OUT", "NOV", "DEZ"];
 
             function transformar(data) {
@@ -133,62 +156,154 @@ const Dashboard = () => {
             setGraficoAtrasadasAno([]);
         }
     };
-
-    // ====================================================
-    // CARREGAR KPIs
-    // ====================================================
     const carregarKpisContas = async () => {
         try {
-            const [pagasRes, abertasRes, totalRes] = await Promise.all([
-                contasPagas(), contasAbertas(), totalContas()
-            ]);
-
-            const pagasCount = pagasRes?.data?.length || 0;
-            const totalCount = totalRes?.data?.length || 0;
-
-            const vencidasCount = (abertasRes?.data || [])
-                .filter(c => new Date(c.dataVencimento) < new Date())
-                .length;
-
             const hoje = new Date();
             const mesAtual = hoje.getMonth() + 1;
             const anoAtual = hoje.getFullYear();
-            const mesAnterior = mesAtual === 1 ? 12 : mesAtual - 1;
-            const anoAnterior = mesAtual === 1 ? anoAtual - 1 : anoAtual;
 
-            const contasMesAtual = (totalRes?.data || []).filter(c => {
-                const d = new Date(c.dataCriacao);
-                return d.getMonth() + 1 === mesAtual && d.getFullYear() === anoAtual;
-            });
+            // Obtém os valores do mês atual e do mês anterior
+            const [pagasRes, naoPagasRes, totalRes] = await Promise.all([
+                contasPagasMesComPercentual(mesAtual, anoAtual),
+                contasNaoPagasMesComPercentual(mesAtual, anoAtual),
+                contasTotalMesComPercentual(mesAtual, anoAtual)
+            ]);
 
-            const contasMesAnterior = (totalRes?.data || []).filter(c => {
-                const d = new Date(c.dataCriacao);
-                return d.getMonth() + 1 === mesAnterior && d.getFullYear() === anoAnterior;
-            });
+            setKpis(prev =>
+                prev.map(kpi => {
+                    if (kpi.id === 'kpi2') {
+                        return {
+                            ...kpi,
+                            value: pagasRes.valor,
+                            // Se anterior for 0, mostra "-", senão mostra percentual
+                            change: pagasRes.percentual !== null ? `${pagasRes.percentual}%` : '-'
+                        };
+                    }
+                    if (kpi.id === 'kpi3') {
+                        return {
+                            ...kpi,
+                            value: naoPagasRes.valor,
+                            change: naoPagasRes.percentual !== null ? `${naoPagasRes.percentual}%` : '-'
+                        };
+                    }
+                    if (kpi.id === 'kpi4') {
+                        return {
+                            ...kpi,
+                            value: totalRes.valor,
+                            change: totalRes.percentual !== null ? `${totalRes.percentual}%` : '-'
+                        };
+                    }
+                    return kpi;
+                })
+            );
 
-            let crescimento = "0%";
-            if (contasMesAnterior.length === 0 && contasMesAtual.length > 0) crescimento = "+100%";
-            else if (contasMesAnterior.length !== 0)
-                crescimento = `${((contasMesAtual.length - contasMesAnterior.length) / contasMesAnterior.length * 100).toFixed(0)}%`;
-
-            setKpis(prev => prev.map(kpi => {
-                if (kpi.id === 'kpi2') return { ...kpi, value: pagasCount };
-                if (kpi.id === 'kpi3') return { ...kpi, value: vencidasCount };
-                if (kpi.id === 'kpi4') return { ...kpi, value: totalCount, change: crescimento };
-                return kpi;
-            }));
         } catch (e) {
             console.error("Erro ao carregar KPIs:", e);
         }
     };
 
+
+
+    // ====================================================
+    // CARREGAR KPIs DE ATENDIMENTOS USANDO NOVOS ENDPOINTS
+    // ====================================================
+    const carregarKpisAtendimentos = async () => {
+        try {
+            const hoje = new Date();
+            const mesAtual = hoje.getMonth() + 1;
+            const anoAtual = hoje.getFullYear();
+
+            // Obtém valores e percentuais
+            const [concluidosRes, naoConcluidosRes, totalRes] = await Promise.all([
+                atendimentosConcluidosMesComPercentual(mesAtual, anoAtual),
+                atendimentosNaoConcluidosMesComPercentual(mesAtual, anoAtual),
+                atendimentosTotalMesComPercentual(mesAtual, anoAtual)
+            ]);
+
+            setKpis([
+                {
+                    id: 'kpi2',
+                    label: 'Atendimentos Concluídos',
+                    value: concluidosRes.valor,
+                    change: concluidosRes.percentual !== null ? `${concluidosRes.percentual}%` : '-'
+                },
+                {
+                    id: 'kpi3',
+                    label: 'Atendimentos Pendentes',
+                    value: naoConcluidosRes.valor,
+                    change: naoConcluidosRes.percentual !== null ? `${naoConcluidosRes.percentual}%` : '-'
+                },
+                {
+                    id: 'kpi4',
+                    label: 'Total de Atendimentos',
+                    value: totalRes.valor,
+                    change: totalRes.percentual !== null ? `${totalRes.percentual}%` : '-'
+                }
+            ]);
+
+        } catch (e) {
+            console.error("Erro ao carregar KPIs de atendimentos:", e);
+        }
+    };
+
+
+    // ====================================================
+    // CARREGAR KPIs DE NOTAS FISCAIS USANDO NOVOS ENDPOINTS
+    // ====================================================
+    const carregarKpisNotas = async () => {
+        try {
+            const hoje = new Date();
+            const mesAtual = hoje.getMonth() + 1;
+            const anoAtual = hoje.getFullYear();
+
+            const [emitidasRes, pendentesRes, totalRes] = await Promise.all([
+                notasEmitidasMesComPercentual(mesAtual, anoAtual),
+                notasPendentesMesComPercentual(mesAtual, anoAtual),
+                notasTotalMesComPercentual(mesAtual, anoAtual)
+            ]);
+
+            setKpis([
+                {
+                    id: 'kpi2',
+                    label: 'Notas Emitidas',
+                    value: emitidasRes.valor,
+                    change: emitidasRes.percentual !== null ? `${emitidasRes.percentual}%` : '-'
+                },
+                {
+                    id: 'kpi3',
+                    label: 'Notas Pendentes',
+                    value: pendentesRes.valor,
+                    change: pendentesRes.percentual !== null ? `${pendentesRes.percentual}%` : '-'
+                },
+                {
+                    id: 'kpi4',
+                    label: 'Total de Notas',
+                    value: totalRes.valor,
+                    change: totalRes.percentual !== null ? `${totalRes.percentual}%` : '-'
+                }
+            ]);
+
+        } catch (e) {
+            console.error("Erro ao carregar KPIs de notas fiscais:", e);
+        }
+    };
+
+
+
+
+
     // ====================================================
     // EXECUTAR AO MONTAR
     // ====================================================
     useEffect(() => {
-        carregarKpisContas();
+        atualizarKpisPorCatalogo('contas');
         carregarGraficos('contas');
     }, []);
+
+    useEffect(() => {
+        atualizarKpisPorCatalogo(catalogFilter);
+    }, [catalogFilter]);
+
 
 
     // ====================================================
@@ -207,27 +322,26 @@ const Dashboard = () => {
             setPeriodTo('');
         }
 
-        applyKpiMock(catalog);
+        atualizarKpisPorCatalogo(catalog);
 
         carregarGraficos(catalog || 'contas');
     };
 
 
-    const applyKpiMock = (catalog) => {
-        if (catalog === 'contas' || catalog === 'catalogo') { carregarKpisContas(); return; }
-        if (catalog === 'atendimentos') {
-            setKpis([
-                { id: 'kpi2', label: 'Atendimentos Concluídos', value: mockAtendimentos.kpi2.value, change: mockAtendimentos.kpi2.change },
-                { id: 'kpi3', label: 'Atendimentos Pendentes', value: mockAtendimentos.kpi3.value, change: mockAtendimentos.kpi3.change },
-                { id: 'kpi4', label: 'Total de Atendimentos', value: mockAtendimentos.kpi4.value, change: mockAtendimentos.kpi4.change }
-            ]);
+    const atualizarKpisPorCatalogo = (catalog) => {
+        if (catalog === 'contas' || catalog === '' || catalog === 'catalogo') {
+            carregarKpisContas();
+            return;
         }
+
+        if (catalog === 'atendimentos') {
+            carregarKpisAtendimentos();
+            return;
+        }
+
         if (catalog === 'notas') {
-            setKpis([
-                { id: 'kpi2', label: 'Notas Emitidas', value: mockNotas.kpi2.value, change: mockNotas.kpi2.change },
-                { id: 'kpi3', label: 'Notas Pendentes', value: mockNotas.kpi3.value, change: mockNotas.kpi3.change },
-                { id: 'kpi4', label: 'Total de Notas', value: mockNotas.kpi4.value, change: mockNotas.kpi4.change }
-            ]);
+            carregarKpisNotas();
+            return;
         }
     };
 
@@ -270,21 +384,11 @@ const Dashboard = () => {
 
                 <section className="dashboard-charts">
 
-                    {/* GRÁFICO 1 */}
-                    <ChartContainer
-                        title={chartTitles[0]}
-                        tooltipTitle={chartTitles[0]}
-                        tooltipText="Mostra a evolução do indicador selecionado."
-                    >
+                    <ChartContainer title={chartTitles[0]} tooltipTitle={chartTitles[0]} tooltipText="Mostra a evolução do indicador selecionado.">
                         <BarChartStatic data={graficoPagasAno} />
                     </ChartContainer>
 
-                    {/* GRÁFICO 2 */}
-                    <ChartContainer
-                        title={chartTitles[1]}
-                        tooltipTitle={chartTitles[1]}
-                        tooltipText="Exibe a evolução mensal do segundo indicador."
-                    >
+                    <ChartContainer title={chartTitles[1]} tooltipTitle={chartTitles[1]} tooltipText="Exibe a evolução mensal do segundo indicador.">
                         <BarChartStatic data={graficoAtrasadasAno} />
                     </ChartContainer>
 

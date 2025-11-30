@@ -1,46 +1,69 @@
-// src/pages/Dashboard/DashboardFilter.jsx (Ajustado)
-
 import React, { useState } from 'react';
 import './DashboardFilter.css';
 
 const DashboardFilter = ({ onApplyFilter }) => {
     const [selectedCatalog, setSelectedCatalog] = useState('');
-    const [fromPeriod, setFromPeriod] = useState(''); // format YYYY-MM
+    const [fromPeriod, setFromPeriod] = useState('');
     const [toPeriod, setToPeriod] = useState('');
 
+    const handleCatalogChange = (newCatalog) => {
+        setSelectedCatalog(newCatalog);
+
+        if (onApplyFilter) {
+            onApplyFilter({
+                catalog: newCatalog,
+                from: '',
+                to: ''
+            });
+        }
+    };
+
     const handleApply = () => {
-        // valida campos preenchidos
         if (!selectedCatalog || !fromPeriod || !toPeriod) {
             alert('Preencha Catálogo, De e Para antes de filtrar.');
             return;
         }
-        // valida intervalo
+
         if (fromPeriod > toPeriod) {
             alert('Período inválido: "De" deve ser anterior ou igual a "Para".');
             return;
         }
-        if (!onApplyFilter) return;
-        onApplyFilter({ catalog: selectedCatalog, from: fromPeriod, to: toPeriod });
+
+        if (onApplyFilter) {
+            onApplyFilter({
+                catalog: selectedCatalog,
+                from: fromPeriod,
+                to: toPeriod
+            });
+        }
     };
 
     return (
         <div className="dashboard-filter-bar">
 
-            {/* Input "De" (mês/ano) */}
+            {/* Input "De" */}
             <div className="filter-input-group">
                 <label htmlFor="date-from">De</label>
                 <div className="input-with-icon">
-                    <input type="month" id="date-from" value={fromPeriod} onChange={e => setFromPeriod(e.target.value)} />
-                    {/* <span className="icon-calendar"></span> */}
+                    <input
+                        type="month"
+                        id="date-from"
+                        value={fromPeriod}
+                        onChange={e => setFromPeriod(e.target.value)}
+                    />
                 </div>
             </div>
 
-            {/* Input "Para" (mês/ano) */}
+            {/* Input "Para" */}
             <div className="filter-input-group">
                 <label htmlFor="date-to">Para</label>
                 <div className="input-with-icon">
-                    <input type="month" id="date-to" value={toPeriod} onChange={e => setToPeriod(e.target.value)} />
-                    {/* <span className="icon-calendar"></span> */}
+                    <input
+                        type="month"
+                        id="date-to"
+                        value={toPeriod}
+                        onChange={e => setToPeriod(e.target.value)}
+                    />
                 </div>
             </div>
 
@@ -48,24 +71,39 @@ const DashboardFilter = ({ onApplyFilter }) => {
             <div className="filter-input-group">
                 <label htmlFor="catalog">Catálogo</label>
                 <div className="input-with-icon select-container">
-                    <select id="catalog" onChange={e => setSelectedCatalog(e.target.value)} value={selectedCatalog}>
+
+                    <select
+                        id="catalog"
+                        value={selectedCatalog}
+                        onChange={e => handleCatalogChange(e.target.value)}
+                    >
                         <option value="" disabled>Geral</option>
                         <option value="atendimentos">Atendimentos</option>
                         <option value="contas">Contas</option>
                         <option value="notas">Notas Fiscais</option>
                     </select>
 
-                    {/* Seta para baixo para o select */}
                     <span className="select-arrow" aria-hidden="true">
                         <svg width="14" height="8" viewBox="0 0 14 8" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <path d="M1 1L7 7L13 1" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                            <path
+                                d="M1 1L7 7L13 1"
+                                stroke="currentColor"
+                                strokeWidth="2"
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                            />
                         </svg>
                     </span>
                 </div>
             </div>
 
-            {/* Botão Filtrar (Estilo Sólido Escuro) */}
-            <button className="filter-button button-dark-solid" onClick={handleApply}>Filtrar</button>
+            {/* Botão Filtrar */}
+            <button
+                className="filter-button button-dark-solid"
+                onClick={handleApply}
+            >
+                Filtrar
+            </button>
         </div>
     );
 };
