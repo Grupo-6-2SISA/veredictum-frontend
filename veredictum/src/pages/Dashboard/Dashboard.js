@@ -393,3 +393,135 @@ export const notasTotalMesComPercentual = async (mes, ano) => {
         return { valor: 0, percentual: null };
     }
 };
+
+
+// ====================================================
+// FILTRO CONTAS
+// ====================================================
+
+function gerarMesesEntre(from, to) {
+    if (!from || !to) return [];
+
+    const meses = [];
+    const [anoFrom, mesFrom] = from.split('-').map(Number);
+    const [anoTo, mesTo] = to.split('-').map(Number);
+
+    let ano = anoFrom;
+    let mes = mesFrom;
+
+    while (ano < anoTo || (ano === anoTo && mes <= mesTo)) {
+        meses.push({ ano, mes });
+        mes++;
+        if (mes > 12) {
+            mes = 1;
+            ano++;
+        }
+    }
+
+    return meses;
+}
+
+export const carregarKpisContasPeriodo = async (from, to, setKpis) => {
+    if (!from || !to) return;
+
+    const meses = gerarMesesEntre(from, to);
+
+    try {
+        const resultadosPagas = await Promise.all(
+            meses.map(m => contasPagasMes(m.mes, m.ano))
+        );
+        const resultadosNaoPagas = await Promise.all(
+            meses.map(m => contasNaoPagas(m.mes, m.ano))
+        );
+        const resultadosTotal = await Promise.all(
+            meses.map(m => contasTotalMes(m.mes, m.ano))
+        );
+
+        const totalPagas = resultadosPagas.reduce((acc, res) => acc + (res.data || 0), 0);
+        const totalNaoPagas = resultadosNaoPagas.reduce((acc, res) => acc + (res.data || 0), 0);
+        const totalGeral = resultadosTotal.reduce((acc, res) => acc + (res.data || 0), 0);
+
+        setKpis(prev =>
+            prev.map(kpi => {
+                if (kpi.id === 'kpi2') return { ...kpi, value: totalPagas, change: '-' };
+                if (kpi.id === 'kpi3') return { ...kpi, value: totalNaoPagas, change: '-' };
+                if (kpi.id === 'kpi4') return { ...kpi, value: totalGeral, change: '-' };
+                return kpi;
+            })
+        );
+
+    } catch (err) {
+        console.error("Erro ao carregar KPIs de contas por período:", err);
+    }
+};
+
+
+export const carregarKpisAtendimentosPeriodo = async (from, to, setKpis) => {
+    if (!from || !to) return;
+
+    const meses = gerarMesesEntre(from, to);
+
+    try {
+        const resultadosConcluidos = await Promise.all(
+            meses.map(m => atendimentosConcluidos(m.mes, m.ano))
+        );
+        const resultadosNaoConcluidos = await Promise.all(
+            meses.map(m => atendimentosNaoConcluidos(m.mes, m.ano))
+        );
+        const resultadosTotal = await Promise.all(
+            meses.map(m => atendimentosTotalMes(m.mes, m.ano))
+        );
+
+        const totalConcluidos = resultadosConcluidos.reduce((acc, res) => acc + (res.data || 0), 0);
+        const totalNaoConcluidos = resultadosNaoConcluidos.reduce((acc, res) => acc + (res.data || 0), 0);
+        const totalGeral = resultadosTotal.reduce((acc, res) => acc + (res.data || 0), 0);
+
+        setKpis(prev =>
+            prev.map(kpi => {
+                if (kpi.id === 'kpi2') return { ...kpi, value: totalConcluidos, change: '-' };
+                if (kpi.id === 'kpi3') return { ...kpi, value: totalNaoConcluidos, change: '-' };
+                if (kpi.id === 'kpi4') return { ...kpi, value: totalGeral, change: '-' };
+                return kpi;
+            })
+        );
+
+    } catch (err) {
+        console.error("Erro ao carregar KPIs de atendimentos por período:", err);
+    }
+};
+
+
+
+export const carregarKpisNotasPeriodo = async (from, to, setKpis) => {
+    if (!from || !to) return;
+
+    const meses = gerarMesesEntre(from, to);
+
+    try {
+        const resultadosEmitidas = await Promise.all(
+            meses.map(m => notasEmitidasMes(m.mes, m.ano))
+        );
+        const resultadosPendentes = await Promise.all(
+            meses.map(m => notasPendentesMes(m.mes, m.ano))
+        );
+        const resultadosTotal = await Promise.all(
+            meses.map(m => notasTotalMes(m.mes, m.ano))
+        );
+
+        const totalEmitidas = resultadosEmitidas.reduce((acc, res) => acc + (res.data || 0), 0);
+        const totalPendentes = resultadosPendentes.reduce((acc, res) => acc + (res.data || 0), 0);
+        const totalGeral = resultadosTotal.reduce((acc, res) => acc + (res.data || 0), 0);
+
+        setKpis(prev =>
+            prev.map(kpi => {
+                if (kpi.id === 'kpi2') return { ...kpi, value: totalEmitidas, change: '-' };
+                if (kpi.id === 'kpi3') return { ...kpi, value: totalPendentes, change: '-' };
+                if (kpi.id === 'kpi4') return { ...kpi, value: totalGeral, change: '-' };
+                return kpi;
+            })
+        );
+
+    } catch (err) {
+        console.error("Erro ao carregar KPIs de notas fiscais por período:", err);
+    }
+};

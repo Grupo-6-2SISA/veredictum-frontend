@@ -1,7 +1,7 @@
 import React from 'react';
 import './KpiCard.css';
 
-const KpiCard = ({ label, value, change, status, tooltipTitle, tooltipText }) => {
+const KpiCard = ({ label, value, change, status, tooltipTitle, tooltipText, disableNegative }) => {
     const isSkeleton = !value && !change;
     const displayValue = value || '0';
     const displayChange = change || '0%';
@@ -10,6 +10,7 @@ const KpiCard = ({ label, value, change, status, tooltipTitle, tooltipText }) =>
     let changeClass = '';
     let changeIcon = null;
     let changeNumber = null;
+
     if (change) {
         const parsed = parseFloat(String(change).replace(/[^0-9.-]/g, ''));
         changeNumber = isNaN(parsed) ? null : parsed;
@@ -20,16 +21,27 @@ const KpiCard = ({ label, value, change, status, tooltipTitle, tooltipText }) =>
             changeClass = 'change-positive';
             changeIcon = '▲';
         } else if (changeNumber < 0) {
-            changeClass = 'change-negative';
-            changeIcon = '▼';
+            // Só aplica negativo se disableNegative não estiver ativo
+            if (!disableNegative) {
+                changeClass = 'change-negative';
+                changeIcon = '▼';
+            } else {
+                changeClass = '';
+                changeIcon = null;
+            }
         }
     } else {
         if (change && String(change).includes('+')) {
             changeClass = 'change-positive';
             changeIcon = '▲';
         } else if (change && String(change).includes('-')) {
-            changeClass = 'change-negative';
-            changeIcon = '▼';
+            if (!disableNegative) {
+                changeClass = 'change-negative';
+                changeIcon = '▼';
+            } else {
+                changeClass = '';
+                changeIcon = null;
+            }
         }
     }
 

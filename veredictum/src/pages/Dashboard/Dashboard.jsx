@@ -4,7 +4,6 @@ import DashboardFilter from '../../components/DashboardFilter/DashboardFilter';
 import KpiCard from '../../components/KpiCard/KpiCard';
 import ChartContainer from '../../components/ChartContainer/ChartContainer';
 import BarChartStatic from '../../components/ChartContainer/BarChartStatic.jsx';
-
 import {
     contasPagasMes,
     contasNaoPagas,
@@ -35,7 +34,11 @@ import {
 
     atendimentosConcluidosMesComPercentual,
     atendimentosNaoConcluidosMesComPercentual,
-    atendimentosTotalMesComPercentual
+    atendimentosTotalMesComPercentual,
+
+    carregarKpisContasPeriodo,
+    carregarKpisAtendimentosPeriodo,
+    carregarKpisNotasPeriodo
 
 } from './Dashboard.js';
 
@@ -311,18 +314,35 @@ const Dashboard = () => {
     // ====================================================
     const handleApplyFilter = (payload) => {
         const catalog = typeof payload === 'string' ? payload : payload?.catalog || '';
-
         setCatalogFilter(catalog);
 
+        let from = '';
+        let to = '';
+
         if (typeof payload !== 'string') {
-            setPeriodFrom(payload.from || '');
-            setPeriodTo(payload.to || '');
+            from = payload.from || '';
+            to = payload.to || '';
+
+            // Validação lógica: DE não pode ser maior que PARA
+            if (from && to && new Date(from) > new Date(to)) {
+                alert('O período "DE" não pode ser posterior ao período "PARA".');
+                return; // Sai da função sem aplicar o filtro
+            }
+
+            setPeriodFrom(from);
+            setPeriodTo(to);
         } else {
             setPeriodFrom('');
             setPeriodTo('');
         }
 
-        atualizarKpisPorCatalogo(catalog);
+        if (from && to) {
+            if (catalog === 'contas') carregarKpisContasPeriodo(from, to, setKpis);
+            if (catalog === 'atendimentos') carregarKpisAtendimentosPeriodo(from, to, setKpis);
+            if (catalog === 'notas') carregarKpisNotasPeriodo(from, to, setKpis);
+        } else {
+            atualizarKpisPorCatalogo(catalog);
+        }
 
         carregarGraficos(catalog || 'contas');
     };
@@ -347,11 +367,11 @@ const Dashboard = () => {
 
     const chartTitleByCatalog = {
         atendimentos: ['Atendimentos - Concluídos', 'Atendimentos - Pendentes'],
-        contas: ['Contas Pagas', 'Taxa de Contas Vencidas'],
+        contas: ['Contas Pagas', 'Percentual de Contas Vencidas'],
         notas: ['Notas - Emitidas', 'Notas - Pendentes']
     };
 
-    const chartTitles = chartTitleByCatalog[catalogFilter] || ['Contas Pagas', 'Taxa de Contas Vencidas'];
+    const chartTitles = chartTitleByCatalog[catalogFilter] || ['Contas Pagas', 'Percentual de Contas Vencidas'];
 
     return (
         <div className="container">
@@ -377,6 +397,8 @@ const Dashboard = () => {
                                 tooltipTitle={kpi.tooltipTitle}
                                 tooltipText="Descrição detalhada do KPI."
                                 status={kpi.status}
+                                disableNegative={periodFrom && periodTo}
+
                             />
                         ))}
                     </div>
