@@ -2,8 +2,11 @@ import React from 'react';
 import './ChartContainer.css';
 import InfoIcon from '../../assets/svg/info.svg';
 
-
 const ChartContainer = ({ title, tooltipTitle, tooltipText, children }) => {
+    
+    const finalTooltipText = tooltipText || "Informações sobre este gráfico.";
+    const finalTooltipTitle = tooltipTitle || title;
+
     return (
         <div className="chart-container">
             <div className="chart-header">
@@ -16,10 +19,11 @@ const ChartContainer = ({ title, tooltipTitle, tooltipText, children }) => {
                         className="info-icon"
                         style={{ width: '16px', height: '16px', display: 'block' }}
                     />
-                    {tooltipTitle && (
+
+                    {finalTooltipTitle && (
                         <div className="chart-tooltip">
-                            <h4>{tooltipTitle}</h4>
-                            <p>{tooltipText}</p>
+                            <h4>{finalTooltipTitle}</h4>
+                            <p>{finalTooltipText}</p>
                         </div>
                     )}
                 </div>

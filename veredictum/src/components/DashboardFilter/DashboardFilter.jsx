@@ -1,10 +1,19 @@
 import React, { useState } from 'react';
 import './DashboardFilter.css';
 
+
+const getCurrentMonth = () => {
+    const now = new Date();
+    const year = now.getFullYear();
+    const month = String(now.getMonth() + 1).padStart(2, '0');
+    return `${year}-${month}`;
+};
+
+
 const DashboardFilter = ({ onApplyFilter }) => {
     const [selectedCatalog, setSelectedCatalog] = useState('');
-    const [fromPeriod, setFromPeriod] = useState('');
-    const [toPeriod, setToPeriod] = useState('');
+    const [fromPeriod, setFromPeriod] = useState(getCurrentMonth());
+    const [toPeriod, setToPeriod] = useState(getCurrentMonth());
 
     const handleCatalogChange = (newCatalog) => {
         setSelectedCatalog(newCatalog);

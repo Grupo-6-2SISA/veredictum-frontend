@@ -44,7 +44,6 @@ import {
 
 import './Dashboard.css';
 
-// Esqueleto inicial dos KPIs
 const kpiDataEsqueleto = [
     { id: 'kpi2', label: 'Contas Pagas', tooltipTitle: 'Contas Pagas', value: '0', change: '+55%', status: null },
     { id: 'kpi3', label: 'Contas Vencidas (5%)', tooltipTitle: 'Contas Vencidas', value: '0', change: '-40%', status: 'Cuidado' },
@@ -159,56 +158,74 @@ const Dashboard = () => {
             setGraficoAtrasadasAno([]);
         }
     };
+
+    const semanticPositive = {
+        contas: {
+            kpi2: true,
+            kpi3: false,
+            kpi4: false
+        },
+        atendimentos: {
+            kpi2: true,
+            kpi3: false,
+            kpi4: false
+        },
+        notas: {
+            kpi2: true,
+            kpi3: false,
+            kpi4: false
+        }
+    };
+
+    // ====================================================
+    // KPIs DE CONTAS
+    // ====================================================
     const carregarKpisContas = async () => {
         try {
             const hoje = new Date();
             const mesAtual = hoje.getMonth() + 1;
             const anoAtual = hoje.getFullYear();
 
-            // Obtém os valores do mês atual e do mês anterior
             const [pagasRes, naoPagasRes, totalRes] = await Promise.all([
                 contasPagasMesComPercentual(mesAtual, anoAtual),
                 contasNaoPagasMesComPercentual(mesAtual, anoAtual),
                 contasTotalMesComPercentual(mesAtual, anoAtual)
             ]);
 
-            setKpis(prev =>
-                prev.map(kpi => {
-                    if (kpi.id === 'kpi2') {
-                        return {
-                            ...kpi,
-                            value: pagasRes.valor,
-                            // Se anterior for 0, mostra "-", senão mostra percentual
-                            change: pagasRes.percentual !== null ? `${pagasRes.percentual}%` : '-'
-                        };
-                    }
-                    if (kpi.id === 'kpi3') {
-                        return {
-                            ...kpi,
-                            value: naoPagasRes.valor,
-                            change: naoPagasRes.percentual !== null ? `${naoPagasRes.percentual}%` : '-'
-                        };
-                    }
-                    if (kpi.id === 'kpi4') {
-                        return {
-                            ...kpi,
-                            value: totalRes.valor,
-                            change: totalRes.percentual !== null ? `${totalRes.percentual}%` : '-'
-                        };
-                    }
-                    return kpi;
-                })
-            );
+            setKpis([
+                {
+                    id: 'kpi2',
+                    label: 'Contas Pagas',
+                    tooltipTitle: 'Contas Pagas',
+                    value: pagasRes.valor,
+                    change: pagasRes.percentual !== null ? `${pagasRes.percentual}%` : '-',
+                    positiveOnIncrease: semanticPositive.contas.kpi2
+                },
+                {
+                    id: 'kpi3',
+                    label: 'Contas Vencidas',
+                    tooltipTitle: 'Contas Vencidas',
+                    value: naoPagasRes.valor,
+                    change: naoPagasRes.percentual !== null ? `${naoPagasRes.percentual}%` : '-',
+                    positiveOnIncrease: semanticPositive.contas.kpi3
+                },
+                {
+                    id: 'kpi4',
+                    label: 'Total de Contas',
+                    tooltipTitle: 'Total de Contas',
+                    value: totalRes.valor,
+                    change: totalRes.percentual !== null ? `${totalRes.percentual}%` : '-',
+                    positiveOnIncrease: semanticPositive.contas.kpi4
+                }
+            ]);
 
         } catch (e) {
             console.error("Erro ao carregar KPIs:", e);
         }
     };
 
-
-
     // ====================================================
-    // CARREGAR KPIs DE ATENDIMENTOS USANDO NOVOS ENDPOINTS
+    // KPIs ATENDIMENTOS
     // ====================================================
     const carregarKpisAtendimentos = async () => {
         try {
@@ -216,7 +233,6 @@ const Dashboard = () => {
             const mesAtual = hoje.getMonth() + 1;
             const anoAtual = hoje.getFullYear();
 
-            // Obtém valores e percentuais
             const [concluidosRes, naoConcluidosRes, totalRes] = await Promise.all([
                 atendimentosConcluidosMesComPercentual(mesAtual, anoAtual),
                 atendimentosNaoConcluidosMesComPercentual(mesAtual, anoAtual),
@@ -228,19 +244,22 @@ const Dashboard = () => {
                     id: 'kpi2',
                     label: 'Atendimentos Concluídos',
                     value: concluidosRes.valor,
-                    change: concluidosRes.percentual !== null ? `${concluidosRes.percentual}%` : '-'
+                    change: concluidosRes.percentual !== null ? `${concluidosRes.percentual}%` : '-',
+                    positiveOnIncrease: semanticPositive.atendimentos.kpi2
                 },
                 {
                     id: 'kpi3',
                     label: 'Atendimentos Pendentes',
                     value: naoConcluidosRes.valor,
-                    change: naoConcluidosRes.percentual !== null ? `${naoConcluidosRes.percentual}%` : '-'
+                    change: naoConcluidosRes.percentual !== null ? `${naoConcluidosRes.percentual}%` : '-',
+                    positiveOnIncrease: semanticPositive.atendimentos.kpi3
                 },
                 {
                     id: 'kpi4',
                     label: 'Total de Atendimentos',
                     value: totalRes.valor,
-                    change: totalRes.percentual !== null ? `${totalRes.percentual}%` : '-'
+                    change: totalRes.percentual !== null ? `${totalRes.percentual}%` : '-',
+                    positiveOnIncrease: semanticPositive.atendimentos.kpi4
                 }
             ]);
 
@@ -249,9 +268,8 @@ const Dashboard = () => {
         }
     };
 
-
     // ====================================================
-    // CARREGAR KPIs DE NOTAS FISCAIS USANDO NOVOS ENDPOINTS
+    // KPIs NOTAS
     // ====================================================
     const carregarKpisNotas = async () => {
         try {
@@ -270,19 +288,22 @@ const Dashboard = () => {
                     id: 'kpi2',
                     label: 'Notas Emitidas',
                     value: emitidasRes.valor,
-                    change: emitidasRes.percentual !== null ? `${emitidasRes.percentual}%` : '-'
+                    change: emitidasRes.percentual !== null ? `${emitidasRes.percentual}%` : '-',
+                    positiveOnIncrease: semanticPositive.notas.kpi2
                 },
                 {
                     id: 'kpi3',
                     label: 'Notas Pendentes',
                     value: pendentesRes.valor,
-                    change: pendentesRes.percentual !== null ? `${pendentesRes.percentual}%` : '-'
+                    change: pendentesRes.percentual !== null ? `${pendentesRes.percentual}%` : '-',
+                    positiveOnIncrease: semanticPositive.notas.kpi3
                 },
                 {
                     id: 'kpi4',
                     label: 'Total de Notas',
                     value: totalRes.valor,
-                    change: totalRes.percentual !== null ? `${totalRes.percentual}%` : '-'
+                    change: totalRes.percentual !== null ? `${totalRes.percentual}%` : '-',
+                    positiveOnIncrease: semanticPositive.notas.kpi4
                 }
             ]);
 
@@ -291,12 +312,8 @@ const Dashboard = () => {
         }
     };
 
-
-
-
-
     // ====================================================
-    // EXECUTAR AO MONTAR
+    // INICIALIZAÇÃO
     // ====================================================
     useEffect(() => {
         atualizarKpisPorCatalogo('contas');
@@ -307,10 +324,8 @@ const Dashboard = () => {
         atualizarKpisPorCatalogo(catalogFilter);
     }, [catalogFilter]);
 
-
-
     // ====================================================
-    // FILTRO
+    // FILTROS
     // ====================================================
     const handleApplyFilter = (payload) => {
         const catalog = typeof payload === 'string' ? payload : payload?.catalog || '';
@@ -323,10 +338,9 @@ const Dashboard = () => {
             from = payload.from || '';
             to = payload.to || '';
 
-            // Validação lógica: DE não pode ser maior que PARA
             if (from && to && new Date(from) > new Date(to)) {
                 alert('O período "DE" não pode ser posterior ao período "PARA".');
-                return; // Sai da função sem aplicar o filtro
+                return;
             }
 
             setPeriodFrom(from);
@@ -336,6 +350,7 @@ const Dashboard = () => {
             setPeriodTo('');
         }
 
+        // PERÍODO ATIVO
         if (from && to) {
             if (catalog === 'contas') carregarKpisContasPeriodo(from, to, setKpis);
             if (catalog === 'atendimentos') carregarKpisAtendimentosPeriodo(from, to, setKpis);
@@ -346,7 +361,6 @@ const Dashboard = () => {
 
         carregarGraficos(catalog || 'contas');
     };
-
 
     const atualizarKpisPorCatalogo = (catalog) => {
         if (catalog === 'contas' || catalog === '' || catalog === 'catalogo') {
@@ -365,6 +379,24 @@ const Dashboard = () => {
         }
     };
 
+    const chartTooltipByCatalog = {
+        atendimentos: [
+            "Apresenta a variação mensal dos atendimentos concluídos ao longo do ano, permitindo acompanhar a eficiência operacional e a evolução da demanda resolvida.",
+            "Exibe a evolução mensal dos atendimentos pendentes, facilitando a identificação de acúmulos, gargalos e períodos de maior retenção."
+        ],
+
+        contas: [
+            "Mostra a distribuição mensal das contas pagas no ano, refletindo o desempenho da cobrança e a regularidade dos pagamentos.",
+            "Apresenta a tendência mensal do percentual de contas vencidas, auxiliando na avaliação de inadimplência e riscos financeiros."
+        ],
+
+        notas: [
+            "Exibe a evolução mensal das notas fiscais emitidas ao longo do ano, demonstrando o volume efetivo de documentos validados e processados.",
+            "Mostra a variação mensal das notas pendentes, ajudando a identificar atrasos no fluxo fiscal e oportunidades de otimização no processo de emissão."
+        ]
+    };
+
+
     const chartTitleByCatalog = {
         atendimentos: ['Atendimentos - Concluídos', 'Atendimentos - Pendentes'],
         contas: ['Contas Pagas', 'Percentual de Contas Vencidas'],
@@ -372,6 +404,11 @@ const Dashboard = () => {
     };
 
     const chartTitles = chartTitleByCatalog[catalogFilter] || ['Contas Pagas', 'Percentual de Contas Vencidas'];
+
+    const chartTooltips = chartTooltipByCatalog[catalogFilter] || [
+        "Mostra a distribuição mensal das contas pagas no ano, refletindo o desempenho da cobrança e a regularidade dos pagamentos.",
+        "Apresenta a tendência mensal do percentual de contas vencidas, auxiliando na avaliação de inadimplência e riscos financeiros."
+    ];
 
     return (
         <div className="container">
@@ -383,10 +420,12 @@ const Dashboard = () => {
                 <section className="dashboard-header filter-version">
                     <DashboardFilter onApplyFilter={handleApplyFilter} />
                 </section>
-
                 <section className="kpi-section">
                     <div className="kpi-grid">
-                        <ActiveFilterCard currentFilter={catalogFilter} currentPeriod={{ from: periodFrom, to: periodTo }} />
+                        <ActiveFilterCard
+                            currentFilter={catalogFilter}
+                            currentPeriod={{ from: periodFrom, to: periodTo }}
+                        />
 
                         {kpis.map(kpi => (
                             <KpiCard
@@ -395,26 +434,36 @@ const Dashboard = () => {
                                 value={kpi.value}
                                 change={kpi.change}
                                 tooltipTitle={kpi.tooltipTitle}
-                                tooltipText="Descrição detalhada do KPI."
+                                tooltipText={null}
                                 status={kpi.status}
-                                disableNegative={periodFrom && periodTo}
-
+                                positiveOnIncrease={kpi.positiveOnIncrease}
+                                disableNegative={!!(periodFrom && periodTo)}
                             />
                         ))}
                     </div>
                 </section>
 
+
                 <section className="dashboard-charts">
 
-                    <ChartContainer title={chartTitles[0]} tooltipTitle={chartTitles[0]} tooltipText="Mostra a evolução do indicador selecionado.">
+                    <ChartContainer
+                        title={chartTitles[0]}
+                        tooltipTitle={chartTitles[0]}
+                        tooltipText={chartTooltips[0]}
+                    >
                         <BarChartStatic data={graficoPagasAno} />
                     </ChartContainer>
 
-                    <ChartContainer title={chartTitles[1]} tooltipTitle={chartTitles[1]} tooltipText="Exibe a evolução mensal do segundo indicador.">
+                    <ChartContainer
+                        title={chartTitles[1]}
+                        tooltipTitle={chartTitles[1]}
+                        tooltipText={chartTooltips[1]}
+                    >
                         <BarChartStatic data={graficoAtrasadasAno} />
                     </ChartContainer>
 
                 </section>
+
             </main>
         </div>
     );

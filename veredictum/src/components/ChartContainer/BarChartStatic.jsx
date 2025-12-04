@@ -1,5 +1,3 @@
-// src/pages/Dashboard/BarChartStatic.jsx
-
 import React from 'react';
 import {
     BarChart,
@@ -7,7 +5,7 @@ import {
     XAxis,
     YAxis,
     CartesianGrid,
-    Tooltip, // 🚀 Mantenha o Tooltip importado
+    Tooltip,
     Legend,
     ResponsiveContainer
 } from 'recharts';
